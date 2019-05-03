@@ -6,7 +6,7 @@ const arr1=[
     ,{id:5,pid:2,data:'e'}
     ,{id:6,pid:3,data:'f'}
     ,{id:7,data:'g'}
-    ,{id:3,pid:9,data:'h'}
+    ,{id:8,pid:9,data:'h'}
     ,{id:9,pid:3,data:'i'}
     ,{id:10,pid:1,data:'j'}
 ];
@@ -31,7 +31,7 @@ const createTreeOrder = (arrIn, idKey, parentKey, startWith, level, arrOut) => {
 }
 
 
-const createTree = (arrIn,idKey,parentKey,startWith,level)=>{
+const createTreeSub = (arrIn,idKey,parentKey,startWith,level)=>{
     let myLevel = level?level:1;
     var roots = arrIn.filter(x=>
         (x[parentKey] === startWith)
@@ -41,7 +41,7 @@ const createTree = (arrIn,idKey,parentKey,startWith,level)=>{
     if (roots&&roots.length>0){
          roots.forEach(el => {
             el.$level= myLevel;
-            el.$children = createTree(arrIn,idKey,parentKey,el[idKey],myLevel+1)
+            el.$children = createTreeSub(arrIn,idKey,parentKey,el[idKey],myLevel+1)
         })
         return roots;
     }else {
@@ -58,8 +58,11 @@ const createTree = (arrIn,idKey,parentKey,startWith,level)=>{
 // console.log('kq',outPut);
 
 // console.log('subtree'
-// , JSON.stringify(createTree(arr1,"id","pid",null))
+// , JSON.stringify(createTreeSub(arr1,"id","pid",2))
 // );
 
 //order array
 
+const utils = require('./utils/array-object');
+
+console.log(utils.sortArray(arr1,"pid",true));

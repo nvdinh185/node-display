@@ -111,14 +111,15 @@ const createTreeOrder = (arrIn, idKey, parentKey, startWith, level, arrOut) => {
 
 
 /**
- * tao cay co children
+ * tao cay co $children,$level,$is_leaf
+ * su dung tao cay menu
  * @param {*} arrIn 
  * @param {*} idKey 
  * @param {*} parentKey 
  * @param {*} startWith 
  * @param {*} level 
  */
-const createTree = (arrIn,idKey,parentKey,startWith,level)=>{
+const createTreeSub = (arrIn,idKey,parentKey,startWith,level)=>{
     let myLevel = level?level:1;
     var roots = arrIn.filter(x=>
         (x[parentKey] === startWith)
@@ -128,7 +129,7 @@ const createTree = (arrIn,idKey,parentKey,startWith,level)=>{
     if (roots&&roots.length>0){
          roots.forEach(el => {
             el.$level= myLevel;
-            el.$children = createTree(arrIn,idKey,parentKey,el[idKey],myLevel+1)
+            el.$children = createTreeSub(arrIn,idKey,parentKey,el[idKey],myLevel+1)
         })
         return roots;
     }else {
@@ -186,6 +187,21 @@ const getMatrix = (maskMatrix, data, point) => {
     return matrix;
 }
 
+/**
+ * sap xep mang theo truong
+ * @param {*} arr 
+ * @param {*} key 
+ * @param {*} isDesc 
+ */
+const sortArray = (arr,key,isDesc)=>{
+    arr.sort((a, b)=>{
+        if (a[key] > b[key]) {return isDesc?-1:1;}
+        if (a[key] < b[key]) {return isDesc?1:-1;}
+        return 0;
+        });
+    return arr;
+}
+
 module.exports = {
     clone: clone,
     deleteObjectKey: deleteObjectKey,
@@ -195,8 +211,9 @@ module.exports = {
     ConvertKeysToLowerCase: ConvertKeysToLowerCase,
 
     createTreeOrder: createTreeOrder,  //sap xep lai trat tu theo cay
-    createTree: createTree,  //tao tree -->children
-    
+    createTreeSub: createTreeSub,  //tao tree -->children
+    sortArray: sortArray,  //sap xep mang
+
     compare2Objects: isEquikeylent, //so sanh 2 object
     getMatrix: getMatrix, //tao ma tran in
 };
