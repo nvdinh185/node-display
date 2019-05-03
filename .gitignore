@@ -21,15 +21,33 @@ npm-debug.log*
 coverage/
 dist/
 node_modules/
+keys/
 tmp/
+#khong chuyen file database len vi se bi ghi de mat so lieu
+#/db/*.db
+gmap-test/
+
+db/excel/~$*.*
+
 temp/
+#phai day www len server cho ionic hoat dong
+www/
+#khong day google-key
+www/index.html
+#khong day google-key
+src/index.html
+
+#khong truyen file upload len hoac xuong
+upload_files/
+#khong truyen file screen_shot_images len
+screen_shot_images/
 platforms/
 plugins/
 plugins/android.json
 plugins/ios.json
-www/
 $RECYCLE.BIN/
 
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+#.gitignore
