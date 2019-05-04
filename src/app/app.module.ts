@@ -68,6 +68,7 @@ import { FriendsPage } from '../pages/friends/friends';
 import { ReversePipe } from '../pipes/reverse-pipe';
 import { ChattingPrivatePage } from '../pages/chatting-private/chatting-private';
 import { ChattingRoomPage } from '../pages/chatting-room/chatting-room';
+import { ReportPage } from '../pages/report/report';
 
 
 @NgModule({
@@ -103,7 +104,8 @@ import { ChattingRoomPage } from '../pages/chatting-room/chatting-room';
     Autosize,
     FriendsPage,
     ChattingPrivatePage,
-    ChattingRoomPage
+    ChattingRoomPage,
+    ReportPage
   ],
   imports: [
     BrowserModule,
@@ -142,7 +144,8 @@ import { ChattingRoomPage } from '../pages/chatting-room/chatting-room';
     HandDrawPage,
     FriendsPage,
     ChattingPrivatePage,
-    ChattingRoomPage
+    ChattingRoomPage,
+    ReportPage
   ],
   providers: [
     StatusBar,

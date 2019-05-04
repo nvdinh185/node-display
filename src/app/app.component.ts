@@ -27,6 +27,7 @@ import { ContactsPage } from '../pages/contacts/contacts';
 import { CordovaPage } from '../pages/cordova-info/cordova-info';
 import { ApiContactService } from '../services/apiContactService';
 import { ApiChatService } from '../services/apiChatService';
+import { ReportPage } from '../pages/report/report';
 
 
 @Component({
@@ -185,9 +186,80 @@ export class MyApp {
   }
 
 
-  resetTreeMenu() {
+ getPage(strPage){
+   switch (strPage){
+     case "HomeMenuPage":
+        return HomeMenuPage
+     case "MaintenanecePage":
+        return HomeMenuPage
+     case "AddMaintenancePage":
+        return HomeMenuPage
+     case "ReviewMaintenancePage":
+        return HomeMenuPage
+     case "GoogleMap":
+        return GoogleMapPage
+     case "ReportPage":
+        return ReportPage
+     case "DocumentsPage":
+        return HomeMenuPage
+     case "LoginPage":
+        return LoginPage
+     default:
+        return this.rootPage;
+   }
+
+ } 
+
+ async resetTreeMenu() {
+
+    this.treeMenu = [
+      {
+        name: "1. Trang chủ",
+        size: "1.3em",
+        click: true,
+        next: this.rootPage,
+        icon: "home"
+      }
+    ];
+
+    //cach 1 lay bat dong bo
+    /* this.apiAuth.getDynamicUrl("http://localhost:9238/site-manager/get-menu")
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.log(err);
+    }); */
+
+
+    //lay theo kieu dong bo
+    try{
+      let data = await this.apiAuth.getDynamicUrl("http://localhost:9238/site-manager/get-menu");
+      console.log (data);
+      if (Array.isArray(data)){
+        this.treeMenu = [];
+        data.forEach((el,idx)=>{
+          this.treeMenu.push({
+            name: el.name,
+            size: el.size,
+            click: el.click,
+            type: el.type,
+            next: this.getPage(el.next),
+            icon: el.icon
+          });
+        })
+      }
+
+    }catch(e){
+      console.log(e);
+    }
+
+
+
+
+
     //tuy thuoc vao tung user se co menu khac nhau
-    if (this.userInfo
+    /* if (this.userInfo
       && (this.userInfo.username === '903500888'
         || this.userInfo.username === '702418821'
         || this.userInfo.username === '905000551'
@@ -565,7 +637,7 @@ export class MyApp {
           icon: "log-in"
         }
       ]
-    }
+    } */
 
     //bao hieu da login xong
     this.events.publish('event-main-login-checked', {

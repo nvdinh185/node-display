@@ -27,6 +27,12 @@ tmp/
 #/db/*.db
 gmap-test/
 
+create-oracle-from-excel.js
+test-oracle-private.js
+test-oracle.js
+
+
+
 db/excel/~$*.*
 
 temp/

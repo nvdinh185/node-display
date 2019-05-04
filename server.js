@@ -16,6 +16,10 @@ function main(isHttp) {
   const cors = require('./handlers/cors-handler');
   app.use(cors.CorsHandler.cors);
   
+
+  //khai route 
+  app.use('/site-manager/',require('./routes/site-manager-route'));
+
   
   //ham tra loi cac dia chi khong co
   //The 404 Route (ALWAYS Keep this as the last route)
