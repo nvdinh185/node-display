@@ -28,6 +28,8 @@ import { CordovaPage } from '../pages/cordova-info/cordova-info';
 import { ApiContactService } from '../services/apiContactService';
 import { ApiChatService } from '../services/apiChatService';
 import { ReportPage } from '../pages/report/report';
+import { MaintenanecePage } from '../pages/maintenanece/maintenanece';
+import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
 
 
 @Component({
@@ -191,9 +193,9 @@ export class MyApp {
      case "HomeMenuPage":
         return HomeMenuPage
      case "MaintenanecePage":
-        return HomeMenuPage
+        return MaintenanecePage
      case "AddMaintenancePage":
-        return HomeMenuPage
+        return AddMaintenancePage
      case "ReviewMaintenancePage":
         return HomeMenuPage
      case "GoogleMap":

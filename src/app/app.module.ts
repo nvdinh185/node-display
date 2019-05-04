@@ -69,6 +69,8 @@ import { ReversePipe } from '../pipes/reverse-pipe';
 import { ChattingPrivatePage } from '../pages/chatting-private/chatting-private';
 import { ChattingRoomPage } from '../pages/chatting-room/chatting-room';
 import { ReportPage } from '../pages/report/report';
+import { MaintenanecePage } from '../pages/maintenanece/maintenanece';
+import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
 
 
 @NgModule({
@@ -105,7 +107,9 @@ import { ReportPage } from '../pages/report/report';
     FriendsPage,
     ChattingPrivatePage,
     ChattingRoomPage,
-    ReportPage
+    ReportPage,
+    MaintenanecePage,
+    AddMaintenancePage
   ],
   imports: [
     BrowserModule,
@@ -145,7 +149,9 @@ import { ReportPage } from '../pages/report/report';
     FriendsPage,
     ChattingPrivatePage,
     ChattingRoomPage,
-    ReportPage
+    ReportPage,
+    MaintenanecePage,
+    AddMaintenancePage
   ],
   providers: [
     StatusBar,
