@@ -71,6 +71,8 @@ import { ChattingRoomPage } from '../pages/chatting-room/chatting-room';
 import { ReportPage } from '../pages/report/report';
 import { MaintenanecePage } from '../pages/maintenanece/maintenanece';
 import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
+import { ReviewMaintenancePage } from '../pages/review-maintenance/review-maintenance';
+import { DocumentsPage } from '../pages/documents/documents';
 
 
 @NgModule({
@@ -109,7 +111,9 @@ import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
     ChattingRoomPage,
     ReportPage,
     MaintenanecePage,
-    AddMaintenancePage
+    AddMaintenancePage,
+    ReviewMaintenancePage,
+    DocumentsPage
   ],
   imports: [
     BrowserModule,
@@ -151,7 +155,9 @@ import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
     ChattingRoomPage,
     ReportPage,
     MaintenanecePage,
-    AddMaintenancePage
+    AddMaintenancePage,
+    ReviewMaintenancePage,
+    DocumentsPage
   ],
   providers: [
     StatusBar,

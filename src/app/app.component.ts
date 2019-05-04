@@ -30,6 +30,8 @@ import { ApiChatService } from '../services/apiChatService';
 import { ReportPage } from '../pages/report/report';
 import { MaintenanecePage } from '../pages/maintenanece/maintenanece';
 import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
+import { ReviewMaintenancePage } from '../pages/review-maintenance/review-maintenance';
+import { DocumentsPage } from '../pages/documents/documents';
 
 
 @Component({
@@ -197,13 +199,13 @@ export class MyApp {
      case "AddMaintenancePage":
         return AddMaintenancePage
      case "ReviewMaintenancePage":
-        return HomeMenuPage
+        return ReviewMaintenancePage
      case "GoogleMap":
         return GoogleMapPage
      case "ReportPage":
         return ReportPage
      case "DocumentsPage":
-        return HomeMenuPage
+        return DocumentsPage
      case "LoginPage":
         return LoginPage
      default:
