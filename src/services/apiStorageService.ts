@@ -13,7 +13,7 @@ export class ApiStorageService {
     public static chatServer = 'https://c3.mobifone.vn'; 
     public static mediaServer = 'https://c3.mobifone.vn/media'; 
     public static resourceServer = 'https://c3.mobifone.vn/qld'; 
-    public static authenticationServer = 'https://c3.mobifone.vn/api';
+    public static authServer = 'https://c3.mobifone.vn/api';
 
     constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) {
     }

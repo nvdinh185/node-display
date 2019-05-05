@@ -13,7 +13,7 @@ import NodeRSA from 'node-rsa';
 @Injectable()
 export class ApiAuthService {
 
-    public authenticationServer = ApiStorageService.authenticationServer;
+    public authServer = ApiStorageService.authServer;
 
     public tokenObject: any;
     public userInfo: any;
@@ -73,7 +73,7 @@ export class ApiAuthService {
             if (deviceKey) {
                 let savedKeyOnServe;
                 try{
-                    savedKeyOnServe = await this.postDynamicForm(ApiStorageService.authenticationServer+"/ext-auth/key-device-json",{id:deviceKey.id});
+                    savedKeyOnServe = await this.postDynamicForm(this.authServer+"/ext-auth/key-device-json",{id:deviceKey.id});
                 }catch(e){}
 
                 if (savedKeyOnServe){
@@ -93,7 +93,7 @@ export class ApiAuthService {
             
             let yourDevice;
             try{
-                yourDevice = await this.getDynamicUrl(ApiStorageService.authenticationServer+"/ext-public/your-device");
+                yourDevice = await this.getDynamicUrl(this.authServer+"/ext-public/your-device");
             }catch(e){}
             
             //console.log('your device',yourDevice);
@@ -132,7 +132,7 @@ export class ApiAuthService {
                     )
                     , 'base64','utf8');
                     //console.log(encrypted);
-                    this.postDynamicForm(ApiStorageService.authenticationServer+"/ext-auth/key-device",{encrypted: encrypted})
+                    this.postDynamicForm(this.authServer+"/ext-auth/key-device",{encrypted: encrypted})
                     .then(data=>{
                         this.apiStorage.saveDeviceKey(deviceKey);
                         resolve(deviceKey);
@@ -190,7 +190,7 @@ export class ApiAuthService {
         //console.log('severId',serverId);
         if (!serverId || !serverId.id || isRenew){
             let serverPublicKey;
-            return this.httpClient.get(this.authenticationServer + '/ext-auth/key-json')
+            return this.httpClient.get(this.authServer + '/ext-auth/key-json')
                             .toPromise()
                             .then(data => {
                                let sData;
@@ -216,7 +216,7 @@ export class ApiAuthService {
 
     login(formData) {
         this.reqInterceptor.setRequestToken(null); //login nguoi khac
-        return this.httpClient.post(this.authenticationServer + '/ext-auth/login', formData)
+        return this.httpClient.post(this.authServer + '/ext-auth/login', formData)
             .toPromise()
             .then(data => {
                 this.tokenObject = data;
@@ -233,7 +233,7 @@ export class ApiAuthService {
         if (this.tokenObject && this.tokenObject.token) {
                 //truong hop user co luu tren session thi xoa session di
             this.reqInterceptor.setRequestToken(this.tokenObject.token); //login nguoi khac
-            return this.httpClient.get(this.authenticationServer + '/ext-auth/logout')
+            return this.httpClient.get(this.authServer + '/ext-auth/logout')
                 .toPromise()
                 .then(data => {
                     //console.log(data);
@@ -257,7 +257,7 @@ export class ApiAuthService {
     }
 
     register(formData) {
-        return this.httpClient.post(this.authenticationServer + '/ext-auth/register', formData)
+        return this.httpClient.post(this.authServer + '/ext-auth/register', formData)
             .toPromise()
             .then(data => {
                 console.log(data);
@@ -273,7 +273,7 @@ export class ApiAuthService {
     editUser(formData) {
         //them token vao truoc khi edit
         this.reqInterceptor.setRequestToken(this.tokenObject.token);
-        return this.httpClient.post(this.authenticationServer + '/ext-auth/edit', formData)
+        return this.httpClient.post(this.authServer + '/ext-auth/edit', formData)
             .toPromise()
             .then(data => {
                 console.log(data);
@@ -290,7 +290,7 @@ export class ApiAuthService {
         if (this.tokenObject && this.tokenObject.token) {
             //them token vao truoc khi edit
             this.reqInterceptor.setRequestToken(this.tokenObject.token);
-            return this.httpClient.get(this.authenticationServer + '/ext-auth/get-user')
+            return this.httpClient.get(this.authServer + '/ext-auth/get-user')
                 .toPromise()
                 .then(jsonData => {
                     //this.userSetting = jsonData;
@@ -334,7 +334,7 @@ export class ApiAuthService {
      * @param token 
      */
     authorize(token){
-        return this.httpClient.post(this.authenticationServer + '/ext-auth/authorize-token',JSON.stringify({
+        return this.httpClient.post(this.authServer + '/ext-auth/authorize-token',JSON.stringify({
             token: token
         }))
             .toPromise()
@@ -350,7 +350,7 @@ export class ApiAuthService {
 
     //send sms
     sendSMS(isdn,sms){
-       return this.httpClient.post(this.authenticationServer + '/ext-auth/send-sms', JSON.stringify({
+       return this.httpClient.post(this.authServer + '/ext-auth/send-sms', JSON.stringify({
             isdn:isdn,
             sms:sms
             }))
@@ -368,7 +368,7 @@ export class ApiAuthService {
      */
     requestIsdn(jsonString){
         //chuyen len bang form co ma hoa
-        return this.httpClient.post(this.authenticationServer + '/ext-auth/request-isdn', jsonString)
+        return this.httpClient.post(this.authServer + '/ext-auth/request-isdn', jsonString)
              .toPromise()
              .then(data => {
                 let rtn:any;
@@ -384,7 +384,7 @@ export class ApiAuthService {
       */
     confirmKey(jsonString){
          //chuyen di bang form co ma hoa
-        return this.httpClient.post(this.authenticationServer + '/ext-auth/confirm-key', jsonString)
+        return this.httpClient.post(this.authServer + '/ext-auth/confirm-key', jsonString)
              .toPromise()
              .then(data => {
                  this.tokenObject = data;
