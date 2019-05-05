@@ -30,6 +30,10 @@ gmap-test/
 create-oracle-from-excel.js
 test-oracle-private.js
 test-oracle.js
+handler/user-handler.js
+handler/site-handler.js
+handler/location-handler.js
+handler/oracle-handler.js
 
 
 
