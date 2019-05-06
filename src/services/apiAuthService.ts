@@ -10,7 +10,7 @@ import { RequestInterceptor } from '../interceptors/requestInterceptor';
 import NodeRSA from 'node-rsa';
 /* import jwt from 'jsonwebtoken'; */
 
-import crypto, { CipherGCM } from 'crypto';
+//import crypto, { CipherGCM } from 'crypto';
 
 @Injectable()
 export class ApiAuthService {
@@ -129,7 +129,7 @@ export class ApiAuthService {
      * @param text 
      * @param password 
      */
-    encryptCrypto(text, password: string) {
+    /* encryptCrypto(text, password: string) {
         var cipher = <CipherGCM>crypto.createCipheriv('aes-256-ccm', this.cryptoKey, password)
         var encrypted = cipher.update(text, 'utf8', 'hex')
         encrypted += cipher.final('hex');
@@ -146,7 +146,7 @@ export class ApiAuthService {
         var dec = decipher.update(encrypted.content, 'hex', 'utf8')
         dec += decipher.final('utf8');
         return dec;
-    }
+    } */
 
 
     /**

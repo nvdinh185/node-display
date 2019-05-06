@@ -1,0 +1,474 @@
+{
+    "plus_code" : {
+       "compound_code" : "3525+MW Hòa Khánh Nam, Liên Chiểu, Da Nang, Vietnam",
+       "global_code" : "7P8C3525+MW"
+    },
+    "results" : [
+       {
+          "address_components" : [
+             {
+                "long_name" : "8",
+                "short_name" : "8",
+                "types" : [ "street_number" ]
+             },
+             {
+                "long_name" : "Nguyễn Minh Chấn",
+                "short_name" : "Nguyễn Minh Chấn",
+                "types" : [ "route" ]
+             },
+             {
+                "long_name" : "Liên Chiểu",
+                "short_name" : "Liên Chiểu",
+                "types" : [ "administrative_area_level_2", "political" ]
+             },
+             {
+                "long_name" : "Đà Nẵng",
+                "short_name" : "Đà Nẵng",
+                "types" : [ "administrative_area_level_1", "political" ]
+             },
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             },
+             {
+                "long_name" : "550000",
+                "short_name" : "550000",
+                "types" : [ "postal_code" ]
+             }
+          ],
+          "formatted_address" : "8 Nguyễn Minh Chấn, Hoà Khánh Nam, Liên Chiểu, Đà Nẵng 550000, Vietnam",
+          "geometry" : {
+             "location" : {
+                "lat" : 16.0517086,
+                "lng" : 108.1587789
+             },
+             "location_type" : "ROOFTOP",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 16.0530575802915,
+                   "lng" : 108.1601278802915
+                },
+                "southwest" : {
+                   "lat" : 16.05035961970849,
+                   "lng" : 108.1574299197085
+                }
+             }
+          },
+          "place_id" : "ChIJUYoxbzkZQjER2_wib7HNu-k",
+          "plus_code" : {
+             "compound_code" : "3525+MG Hòa Khánh Nam, Liên Chiểu, Da Nang, Vietnam",
+             "global_code" : "7P8C3525+MG"
+          },
+          "types" : [ "street_address" ]
+       },
+       {
+          "address_components" : [
+             {
+                "long_name" : "Hoàng Minh Thảo",
+                "short_name" : "Hoàng Minh Thảo",
+                "types" : [ "route" ]
+             },
+             {
+                "long_name" : "Liên Chiểu",
+                "short_name" : "Liên Chiểu",
+                "types" : [ "administrative_area_level_2", "political" ]
+             },
+             {
+                "long_name" : "Đà Nẵng",
+                "short_name" : "Đà Nẵng",
+                "types" : [ "administrative_area_level_1", "political" ]
+             },
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             },
+             {
+                "long_name" : "550000",
+                "short_name" : "550000",
+                "types" : [ "postal_code" ]
+             }
+          ],
+          "formatted_address" : "Hoàng Minh Thảo, Hoà Khánh Nam, Liên Chiểu, Đà Nẵng 550000, Vietnam",
+          "geometry" : {
+             "bounds" : {
+                "northeast" : {
+                   "lat" : 16.0524336,
+                   "lng" : 108.160114
+                },
+                "southwest" : {
+                   "lat" : 16.0509233,
+                   "lng" : 108.1596351
+                }
+             },
+             "location" : {
+                "lat" : 16.0516785,
+                "lng" : 108.1598746
+             },
+             "location_type" : "GEOMETRIC_CENTER",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 16.05302743029151,
+                   "lng" : 108.1612235302915
+                },
+                "southwest" : {
+                   "lat" : 16.0503294697085,
+                   "lng" : 108.1585255697085
+                }
+             }
+          },
+          "place_id" : "ChIJP_xGRTkZQjEROPvzQkhjrv0",
+          "types" : [ "route" ]
+       },
+       {
+          "address_components" : [
+             {
+                "long_name" : "8",
+                "short_name" : "8",
+                "types" : [ "street_number" ]
+             },
+             {
+                "long_name" : "Nguyễn Minh Chấn",
+                "short_name" : "Nguyễn Minh Chấn",
+                "types" : [ "route" ]
+             },
+             {
+                "long_name" : "Liên Chiểu",
+                "short_name" : "Liên Chiểu",
+                "types" : [ "administrative_area_level_2", "political" ]
+             },
+             {
+                "long_name" : "Đà Nẵng",
+                "short_name" : "Đà Nẵng",
+                "types" : [ "administrative_area_level_1", "political" ]
+             },
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             },
+             {
+                "long_name" : "550000",
+                "short_name" : "550000",
+                "types" : [ "postal_code" ]
+             }
+          ],
+          "formatted_address" : "8 Nguyễn Minh Chấn, Hoà Khánh Nam, Liên Chiểu, Đà Nẵng 550000, Vietnam",
+          "geometry" : {
+             "location" : {
+                "lat" : 16.0516834,
+                "lng" : 108.158693
+             },
+             "location_type" : "RANGE_INTERPOLATED",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 16.0530323802915,
+                   "lng" : 108.1600419802915
+                },
+                "southwest" : {
+                   "lat" : 16.0503344197085,
+                   "lng" : 108.1573440197085
+                }
+             }
+          },
+          "place_id" : "Ekw4IE5ndXnhu4VuIE1pbmggQ2jhuqVuLCBIb8OgIEtow6FuaCBOYW0sIExpw6puIENoaeG7g3UsIMSQw6AgTuG6tW5nLCBWaWV0bmFtIhoSGAoUChIJ4eBtbDkZQjERR6n3Heq5cdEQCA",
+          "types" : [ "street_address" ]
+       },
+       {
+          "address_components" : [
+             {
+                "long_name" : "Hòa Khánh Nam",
+                "short_name" : "Hòa Khánh Nam",
+                "types" : [ "political", "sublocality", "sublocality_level_1" ]
+             },
+             {
+                "long_name" : "Liên Chiểu",
+                "short_name" : "Liên Chiểu",
+                "types" : [ "administrative_area_level_2", "political" ]
+             },
+             {
+                "long_name" : "Da Nang",
+                "short_name" : "Da Nang",
+                "types" : [ "administrative_area_level_1", "political" ]
+             },
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             }
+          ],
+          "formatted_address" : "Hòa Khánh Nam, Liên Chiểu, Da Nang, Vietnam",
+          "geometry" : {
+             "bounds" : {
+                "northeast" : {
+                   "lat" : 16.0712796,
+                   "lng" : 108.1628896
+                },
+                "southwest" : {
+                   "lat" : 16.0338112,
+                   "lng" : 108.1283212
+                }
+             },
+             "location" : {
+                "lat" : 16.0534112,
+                "lng" : 108.1487964
+             },
+             "location_type" : "APPROXIMATE",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 16.0712796,
+                   "lng" : 108.1628896
+                },
+                "southwest" : {
+                   "lat" : 16.0338112,
+                   "lng" : 108.1283212
+                }
+             }
+          },
+          "place_id" : "ChIJGVUa_jQZQjERn9NHONW30UU",
+          "types" : [ "political", "sublocality", "sublocality_level_1" ]
+       },
+       {
+          "address_components" : [
+             {
+                "long_name" : "Hoà Khánh Nam",
+                "short_name" : "Hoà Khánh Nam",
+                "types" : [ "administrative_area_level_3", "political" ]
+             },
+             {
+                "long_name" : "Liên Chiểu",
+                "short_name" : "Liên Chiểu",
+                "types" : [ "administrative_area_level_2", "political" ]
+             },
+             {
+                "long_name" : "Đà Nẵng",
+                "short_name" : "Đà Nẵng",
+                "types" : [ "administrative_area_level_1", "political" ]
+             },
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             }
+          ],
+          "formatted_address" : "Hoà Khánh Nam, Liên Chiểu, Đà Nẵng, Vietnam",
+          "geometry" : {
+             "bounds" : {
+                "northeast" : {
+                   "lat" : 16.0718079,
+                   "lng" : 108.161665
+                },
+                "southwest" : {
+                   "lat" : 16.033088,
+                   "lng" : 108.1286139
+                }
+             },
+             "location" : {
+                "lat" : 16.0534112,
+                "lng" : 108.1487964
+             },
+             "location_type" : "APPROXIMATE",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 16.0718079,
+                   "lng" : 108.161665
+                },
+                "southwest" : {
+                   "lat" : 16.033088,
+                   "lng" : 108.1286139
+                }
+             }
+          },
+          "place_id" : "ChIJz_xvjTQZQjERvIrCJTZ53nE",
+          "types" : [ "administrative_area_level_3", "political" ]
+       },
+       {
+          "address_components" : [
+             {
+                "long_name" : "Liên Chiểu",
+                "short_name" : "Liên Chiểu",
+                "types" : [ "administrative_area_level_2", "political" ]
+             },
+             {
+                "long_name" : "Da Nang",
+                "short_name" : "Da Nang",
+                "types" : [ "administrative_area_level_1", "political" ]
+             },
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             }
+          ],
+          "formatted_address" : "Liên Chiểu, Da Nang, Vietnam",
+          "geometry" : {
+             "bounds" : {
+                "northeast" : {
+                   "lat" : 16.2255181,
+                   "lng" : 108.210961
+                },
+                "southwest" : {
+                   "lat" : 16.033088,
+                   "lng" : 108.061557
+                }
+             },
+             "location" : {
+                "lat" : 16.0717704,
+                "lng" : 108.1503823
+             },
+             "location_type" : "APPROXIMATE",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 16.2255181,
+                   "lng" : 108.210961
+                },
+                "southwest" : {
+                   "lat" : 16.033088,
+                   "lng" : 108.061557
+                }
+             }
+          },
+          "place_id" : "ChIJyb6S5M4YQjERKVxzH6OrFVw",
+          "types" : [ "administrative_area_level_2", "political" ]
+       },
+       {
+          "address_components" : [
+             {
+                "long_name" : "550000",
+                "short_name" : "550000",
+                "types" : [ "postal_code" ]
+             },
+             {
+                "long_name" : "Ngũ Hành Sơn",
+                "short_name" : "Ngũ Hành Sơn",
+                "types" : [ "administrative_area_level_2", "political" ]
+             },
+             {
+                "long_name" : "Đà Nẵng",
+                "short_name" : "Đà Nẵng",
+                "types" : [ "administrative_area_level_1", "political" ]
+             },
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             }
+          ],
+          "formatted_address" : "Ngũ Hành Sơn, Đà Nẵng 550000, Vietnam",
+          "geometry" : {
+             "bounds" : {
+                "northeast" : {
+                   "lat" : 16.1135636,
+                   "lng" : 108.3474974
+                },
+                "southwest" : {
+                   "lat" : 15.880773,
+                   "lng" : 108.1235969
+                }
+             },
+             "location" : {
+                "lat" : 16.0023889,
+                "lng" : 108.2616456
+             },
+             "location_type" : "APPROXIMATE",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 16.1135636,
+                   "lng" : 108.3474974
+                },
+                "southwest" : {
+                   "lat" : 15.880773,
+                   "lng" : 108.1235969
+                }
+             }
+          },
+          "place_id" : "ChIJVb9TiscQQjERPjlZ5KYF6BU",
+          "types" : [ "postal_code" ]
+       },
+       {
+          "address_components" : [
+             {
+                "long_name" : "Da Nang",
+                "short_name" : "Da Nang",
+                "types" : [ "administrative_area_level_1", "political" ]
+             },
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             }
+          ],
+          "formatted_address" : "Da Nang, Vietnam",
+          "geometry" : {
+             "bounds" : {
+                "northeast" : {
+                   "lat" : 16.2255181,
+                   "lng" : 108.3379139
+                },
+                "southwest" : {
+                   "lat" : 15.9181,
+                   "lng" : 107.818339
+                }
+             },
+             "location" : {
+                "lat" : 16.0544563,
+                "lng" : 108.0717219
+             },
+             "location_type" : "APPROXIMATE",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 16.2255181,
+                   "lng" : 108.3379139
+                },
+                "southwest" : {
+                   "lat" : 15.9181,
+                   "lng" : 107.818339
+                }
+             }
+          },
+          "place_id" : "ChIJEyolkscZQjERBn5yhkvL8B0",
+          "types" : [ "administrative_area_level_1", "political" ]
+       },
+       {
+          "address_components" : [
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             }
+          ],
+          "formatted_address" : "Vietnam",
+          "geometry" : {
+             "bounds" : {
+                "northeast" : {
+                   "lat" : 23.3926504,
+                   "lng" : 109.6765
+                },
+                "southwest" : {
+                   "lat" : 8.195200099999999,
+                   "lng" : 102.1439156
+                }
+             },
+             "location" : {
+                "lat" : 14.058324,
+                "lng" : 108.277199
+             },
+             "location_type" : "APPROXIMATE",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 23.3926504,
+                   "lng" : 109.6765
+                },
+                "southwest" : {
+                   "lat" : 8.195200099999999,
+                   "lng" : 102.1439156
+                }
+             }
+          },
+          "place_id" : "ChIJXx5qc016FTERvmL-4smwO7A",
+          "types" : [ "country", "political" ]
+       }
+    ],
+    "status" : "OK"
+ }
