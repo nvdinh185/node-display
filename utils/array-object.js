@@ -93,11 +93,11 @@ const convertSqlFromJson = (tablename, json, idWheres) => {
  * treeOrder sap xep mang nhu oracle
  */
 const createTreeOrder = (arrIn, idKey, parentKey, startWith, level, arrOut) => {
-    let myLevel = level?level:1;
+    let myLevel = level ? level : 1;
     if (arrIn && arrOut && arrIn.length > arrOut.length) {
         let parents = arrIn.filter(obj => (obj[parentKey] === startWith)
-        ||(startWith==null&&obj[parentKey]==undefined)
-        ||(startWith==undefined&&obj[parentKey]==null)
+            || (startWith == null && obj[parentKey] == undefined)
+            || (startWith == undefined && obj[parentKey] == null)
         )
         if (parents) {
             parents.forEach(el => {
@@ -111,30 +111,29 @@ const createTreeOrder = (arrIn, idKey, parentKey, startWith, level, arrOut) => {
 
 
 /**
- * tao cay co $children,$level,$is_leaf
- * su dung tao cay menu
+ * tao cay co children
  * @param {*} arrIn 
  * @param {*} idKey 
  * @param {*} parentKey 
  * @param {*} startWith 
  * @param {*} level 
  */
-const createTreeSub = (arrIn,idKey,parentKey,startWith,level)=>{
-    let myLevel = level?level:1;
-    var roots = arrIn.filter(x=>
+const createTree = (arrIn, idKey, parentKey, startWith, level) => {
+    let myLevel = level ? level : 1;
+    var roots = arrIn.filter(x =>
         (x[parentKey] === startWith)
-        ||(startWith==null&&x[parentKey]==undefined)
-        ||(startWith==undefined&&x[parentKey]==null)
-        );
-    if (roots&&roots.length>0){
-         roots.forEach(el => {
-            el.$level= myLevel;
-            el.$children = createTreeSub(arrIn,idKey,parentKey,el[idKey],myLevel+1)
+        || (startWith == null && x[parentKey] == undefined)
+        || (startWith == undefined && x[parentKey] == null)
+    );
+    if (roots && roots.length > 0) {
+        roots.forEach(el => {
+            el.$level = myLevel;
+            el.$children = createTree(arrIn, idKey, parentKey, el[idKey], myLevel + 1)
         })
         return roots;
-    }else {
-        let leafChildren = arrIn.find(x=>x[idKey]===startWith);
-        if (leafChildren){
+    } else {
+        let leafChildren = arrIn.find(x => x[idKey] === startWith);
+        if (leafChildren) {
             leafChildren.$is_leaf = 1;
         }
         return undefined;
@@ -187,21 +186,6 @@ const getMatrix = (maskMatrix, data, point) => {
     return matrix;
 }
 
-/**
- * sap xep mang theo truong
- * @param {*} arr 
- * @param {*} key 
- * @param {*} isDesc 
- */
-const sortArray = (arr,key,isDesc)=>{
-    arr.sort((a, b)=>{
-        if (a[key] > b[key]) {return isDesc?-1:1;}
-        if (a[key] < b[key]) {return isDesc?1:-1;}
-        return 0;
-        });
-    return arr;
-}
-
 module.exports = {
     clone: clone,
     deleteObjectKey: deleteObjectKey,
@@ -211,8 +195,7 @@ module.exports = {
     ConvertKeysToLowerCase: ConvertKeysToLowerCase,
 
     createTreeOrder: createTreeOrder,  //sap xep lai trat tu theo cay
-    createTreeSub: createTreeSub,  //tao tree -->children
-    sortArray: sortArray,  //sap xep mang
+    createTree: createTree,  //tao tree -->children
 
     compare2Objects: isEquikeylent, //so sanh 2 object
     getMatrix: getMatrix, //tao ma tran in

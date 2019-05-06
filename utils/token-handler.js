@@ -1,5 +1,11 @@
 "use strict"
 
+/**
+ * version 1.4
+ * 06/05/2019
+ * cuong.dq
+ */
+
 const jwt = require('jsonwebtoken');
 const jwtConfig = require('../jwt/jwt-config');
 const url = require('url');
@@ -40,6 +46,19 @@ var getToken = (req, res, next)=> {
    }
  }
 
+var getTokenNext = (req, res, next)=> {
+  let token = req.headers['x-access-token'] || req.headers['authorization'];
+   if (!token) token = url.parse(req.url, true, false).query.token;
+   if (!token) token = req.json_data?req.json_data.token:''; //lay them tu json_data post
+   req.token = req.token?req.token:token; // uu tien token truyen trong json gan truoc do
+   if (req.token) {
+     req.token = req.token.startsWith('Bearer ')?req.token.slice(7):req.token;      
+     next();
+   } else {
+     next();
+   }
+ }
+
 /**
  * 
  * @param {*} req 
@@ -52,13 +71,18 @@ var getToken = (req, res, next)=> {
   * @param {*} expires Thời gian hiệu lực
   * @param {*} isProxy   Tạo token xác thực bất kỳ đâu (cấp cho origin) - authentication server # resource server
   */
-var tokenSign = (req,expires,isProxy) => {
-  let localTime = new Date().getTime()+7*60*60*1000;
-  let secret = jwtConfig.secret + req.clientIp + req.headers["user-agent"] + localTime;
+var tokenSign = (req, expires, isProxy) => {
+
+  let GMTOffsetTimezone = new Date().getTimezoneOffset();
+  
+  //console.log('GMTOffsetTimezone',GMTOffsetTimezone);
+
+  let GMT_time = new Date().getTime() + GMTOffsetTimezone*60*1000;
+  let secret = jwtConfig.secret + req.clientIp + req.headers["user-agent"] + GMT_time;
 
   if (req.user && req.user.username) {
     if (req.origin&&isProxy){
-      secret = jwtConfig.secret + localTime;
+      secret = jwtConfig.secret + GMT_time;
       console.log('Sign secret for user resource server level 2:', secret);
       return jwt.sign({
         username: req.user.username,
@@ -69,11 +93,11 @@ var tokenSign = (req,expires,isProxy) => {
         image: req.user.image?req.user.image : undefined,
         role: req.user.role?req.user.role:undefined,
         level: 2, //cap do xac thuc
-        local_time: localTime
+        local_time: GMT_time
       },
       secret, 
       {
-        expiresIn: expires?expires:'24h' // expires in 24 hours
+        expiresIn: expires?expires:'24h' // expires in 1 day
       });
     }else{
       console.log('Sign secret for user device level 1:', secret);
@@ -83,7 +107,7 @@ var tokenSign = (req,expires,isProxy) => {
         image: req.user.image?req.user.image : undefined,
         role: req.user.role?req.user.role:undefined,
         level: 1, //cap do xac thuc
-        local_time: localTime
+        local_time: GMT_time
       },
       secret, 
       {
@@ -97,7 +121,7 @@ var tokenSign = (req,expires,isProxy) => {
       username: req.json_data.phone,
       req_device: req.headers["user-agent"],
       level: 3, //cap do xac thuc
-      local_time: localTime
+      local_time: GMT_time
     },
     secret
       , {
@@ -109,7 +133,7 @@ var tokenSign = (req,expires,isProxy) => {
     return jwt.sign({
       req_device: req.headers["user-agent"],
       level: 4, //cap do xac thuc
-      local_time: localTime
+      local_time: GMT_time
     },
     secret
       , {
@@ -129,46 +153,96 @@ var tokenSign = (req,expires,isProxy) => {
   * verify token signed with level
   * 
   * @param {*} req 
+  * @param {*} res 
+  * @param {*} next 
   */
-var tokenVerify = (req) => {
+var tokenVerify = (req, res, next) => {
 
   if (req.token) {
     let token = req.token;
     let userInfo = getInfoFromToken(token);
     //console.log(userInfo);
-    let localTime =  userInfo?userInfo.local_time:'';
+    let GMT_time =  userInfo?userInfo.local_time:'';
     let otpKey = req.keyOTP?req.keyOTP:'';
     let level = userInfo?userInfo.level:4;
 
-    var secret =  jwtConfig.secret + req.clientIp + req.headers["user-agent"] + localTime;
+    var secret =  jwtConfig.secret + req.clientIp + req.headers["user-agent"] + GMT_time;
 
     if (level===1){
-      secret =  jwtConfig.secret + req.clientIp + req.headers["user-agent"] + localTime;
+      secret =  jwtConfig.secret + req.clientIp + req.headers["user-agent"] + GMT_time;
     }else if (level===2){
-      secret = (jwtConfig.secret + localTime);
+      secret = (jwtConfig.secret + GMT_time);
     }else if (level===3){
       secret += otpKey;
     }else if (level===4){
-      secret = (jwtConfig.secret + localTime);
+      secret = (jwtConfig.secret + GMT_time);
     }
 
-    console.log('Verify secret level '+ (level?level:4) +':',secret);
-    return jwt.verify(token
+    console.log('Verify secret level ', (level?level:4) +':',secret);
+    
+    jwt.verify(token
         , secret
         , (err, decoded) => {
-          if (err) return false;
-          req.user = decoded;
-          return true;
+
+          if (err) {
+            console.log('err Token', err);
+            res.writeHead(403, {'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify({message:'token INVALID!', error: err}));
+          }else{
+            req.user = decoded;
+            next();
+          };
         })
+
   } else {
-    return false;
+    res.writeHead(403, {'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({message:'no token in req.token!'}));
+  }
+};
+
+var tokenVerifyNext = (req, res, next) => {
+
+  if (req.token) {
+    let token = req.token;
+    let userInfo = getInfoFromToken(token);
+    //console.log(userInfo);
+    let GMT_time =  userInfo?userInfo.local_time:'';
+    let otpKey = req.keyOTP?req.keyOTP:'';
+    let level = userInfo?userInfo.level:4;
+
+    var secret =  jwtConfig.secret + req.clientIp + req.headers["user-agent"] + GMT_time;
+
+    if (level===1){
+      secret =  jwtConfig.secret + req.clientIp + req.headers["user-agent"] + GMT_time;
+    }else if (level===2){
+      secret = (jwtConfig.secret + GMT_time);
+    }else if (level===3){
+      secret += otpKey;
+    }else if (level===4){
+      secret = (jwtConfig.secret + GMT_time);
+    }
+    jwt.verify(token
+        , secret
+        , (err, decoded) => {
+          if (err) {
+            next()
+          }else{
+            req.user = decoded;
+            next();
+          };
+        })
+
+  } else {
+    next()
   }
 };
 
 
 module.exports = {
   getInfoFromToken: getInfoFromToken,
+  getTokenNext: getTokenNext, //tra ve req.token next() neu khong co
   getToken: getToken,
   tokenSign: tokenSign,
+  tokenVerifyNext: tokenVerifyNext, //tra ve next() voi moi truong hop, buoc tiep kiem tra req.user
   tokenVerify: tokenVerify
 };
