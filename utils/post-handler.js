@@ -1,5 +1,10 @@
 "use strict"
-
+/**
+ * process post data from client
+ * return:
+ * req.form_data -save file to json
+ * req.json_data -convert to json
+ */
 const fs = require('fs');
 const dirUpload = 'upload_files';
 const systempath = require('path');
@@ -76,7 +81,7 @@ var formProcess = (req, res, next) => {
                     , file_size: files[key].size
                     , file_type: contentType }, //gia tri bien duoc bind vao bindVars.p_in_0,1,...n
             writable: false, //khong cho phep sua du lieu sau khi gan gia tri vao
-            enumerable: true //cho phep gan thanh thuoc tinh truy van sau khi hoan thanh
+            enumerable: true //cho phep for (let key in obj)
           });
 
         }

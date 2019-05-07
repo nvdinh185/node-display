@@ -4,13 +4,17 @@
  * version 1.4
  * 06/05/2019
  * cuong.dq
+ * 
+ * chuyen doi cac query => req.token (next=> cho phien tiep)
+ * sign token => ky tao ra token de gui di cho user
+ * verify this token => true => req.user (next=>cho phien tiep)
+ * convert token => infor of token
+ * 
  */
 
 const jwt = require('jsonwebtoken');
 const jwtConfig = require('../jwt/jwt-config');
 const url = require('url');
-
-
 
 /**
  * input: token
@@ -70,12 +74,12 @@ var getTokenNext = (req, res, next)=> {
   * @param {*} req     biến vào request chứa thông tin tham số xử lý
   * @param {*} expires Thời gian hiệu lực
   * @param {*} isProxy   Tạo token xác thực bất kỳ đâu (cấp cho origin) - authentication server # resource server
+  * 
+  * return token ==> chuyen giao cho client web
   */
 var tokenSign = (req, expires, isProxy) => {
 
   let GMTOffsetTimezone = new Date().getTimezoneOffset();
-  
-  //console.log('GMTOffsetTimezone',GMTOffsetTimezone);
 
   let GMT_time = new Date().getTime() + GMTOffsetTimezone*60*1000;
   let secret = jwtConfig.secret + req.clientIp + req.headers["user-agent"] + GMT_time;
@@ -83,7 +87,7 @@ var tokenSign = (req, expires, isProxy) => {
   if (req.user && req.user.username) {
     if (req.origin&&isProxy){
       secret = jwtConfig.secret + GMT_time;
-      console.log('Sign secret for user resource server level 2:', secret);
+      console.log('Sign token for user level 2:', secret);
       return jwt.sign({
         username: req.user.username,
         origin: req.origin, //chung thuc cap cho website nay truy van
@@ -100,7 +104,7 @@ var tokenSign = (req, expires, isProxy) => {
         expiresIn: expires?expires:'24h' // expires in 1 day
       });
     }else{
-      console.log('Sign secret for user device level 1:', secret);
+      console.log('Sign token for device level 1:', secret);
       return jwt.sign({
         username: req.user.username,
         nickname: req.user.nickname?req.user.nickname : undefined,
@@ -116,7 +120,7 @@ var tokenSign = (req, expires, isProxy) => {
     }
   } else if (req.json_data&&req.json_data.phone&&req.json_data.key) {
     secret += req.json_data.key;
-    console.log('Sign secret for phone number level 3:', secret);
+    console.log('Sign token for phone number level 3:', secret);
     return jwt.sign({
       username: req.json_data.phone,
       req_device: req.headers["user-agent"],
@@ -129,7 +133,7 @@ var tokenSign = (req, expires, isProxy) => {
       }
     );
   } else {
-    console.log('Sign secret level 4:', secret);
+    console.log('Sign token level 4:', secret);
     return jwt.sign({
       req_device: req.headers["user-agent"],
       level: 4, //cap do xac thuc
@@ -239,10 +243,14 @@ var tokenVerifyNext = (req, res, next) => {
 
 
 module.exports = {
-  getInfoFromToken: getInfoFromToken,
-  getTokenNext: getTokenNext, //tra ve req.token next() neu khong co
   getToken: getToken,
-  tokenSign: tokenSign,
+  getTokenNext: getTokenNext, //tra ve req.token next() neu khong co
+  
+  tokenSign: tokenSign, //ky thong tin thanh token
+
+  tokenVerify: tokenVerify,
   tokenVerifyNext: tokenVerifyNext, //tra ve next() voi moi truong hop, buoc tiep kiem tra req.user
-  tokenVerify: tokenVerify
+
+
+  getInfoFromToken: getInfoFromToken
 };

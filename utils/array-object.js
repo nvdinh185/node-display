@@ -3,7 +3,15 @@
 /**
  * array-object - cuong.dq
  * version 1.4
- * 03/05/2019
+ * 07/05/2019
+ * 
+ * createObject,
+ * Clone
+ * Tree,
+ * Matrix,
+ * Json lowercase
+ * json to sql for db request
+ * 
  */
 
 /**

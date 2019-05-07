@@ -1,6 +1,13 @@
 "use strict"
 
+/**
+ * Tao RSA KEY
+ * return {id: publickey, key: privateKey}
+ * sign/verify, encrypt/decrypt by rsa and encrypt/decrypt by crypto
+ */
+
 const NodeRSA = require('node-rsa');
+
 const crypto = require('crypto');
 const algorithm = 'aes-256-gcm';
 const key = 'cuongdq@3500888$cryptotestkey032';
