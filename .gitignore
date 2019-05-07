@@ -37,6 +37,9 @@ handlers/site-handler.js
 handlers/location-handler.js
 handlers/oracle-handler.js
 
+server.js
+server-test.js
+
 
 
 db/excel/~$*.*
