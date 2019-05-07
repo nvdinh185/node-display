@@ -50,6 +50,8 @@ export class MyApp {
 
   rootPage: any = HomeMenuPage;
 
+  menuServer = "http://10.151.50.35:9238/site-manager" ;
+
   treeMenu: any;
   callbackTreeMenu: any;
 
@@ -238,7 +240,7 @@ export class MyApp {
 
     //lay theo kieu dong bo
     try{
-      let data = await this.apiAuth.getDynamicUrl("http://localhost:9238/site-manager/get-menu");
+      let data = await this.apiAuth.getDynamicUrl(this.menuServer + "/get-menu");
       console.log (data);
       if (Array.isArray(data)){
         this.treeMenu = [];
