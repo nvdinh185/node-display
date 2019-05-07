@@ -456,9 +456,9 @@ class OracleDAO {
 
       Object.defineProperty(bindVars, p_in, {
         value: p, //gia tri bien duoc bind vao bindVars.p_in_0,1,...n
-        writable: false, //khong cho phep sua du lieu sau khi gan gia tri vao
-        enumerable: true, //cho phep gan thanh thuoc tinh truy van sau khi hoan thanh
-        //configurable: false default
+        writable: true, //cho phep chinh sua du lieu 
+        enumerable: true, //cho phep doc bien ra lai
+        configurable: true //cho phep xoa bien 
       });
     }
     return this.executeFunction(

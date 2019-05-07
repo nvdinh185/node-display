@@ -4,7 +4,7 @@
 const url = require('url');
 
 //chi cho phep cac domain chua cac thong tin nhu sau moi duoc phep truy cap
-var Access_Control_Allow_Origin_List=['.mobifone.vn','cuongdq','herokuapp','localhost','file'];
+var Access_Control_Allow_Origin_List=['.mobifone.vn','cuongdq','herokuapp','localhost','ionic','file'];
 
 
 function validateOrigin(originStr){
@@ -19,7 +19,6 @@ function validateOrigin(originStr){
 
 class CorsHandler {
 
-
     /**
      * Tra ve req. tat ca cac bien doi ban dau cua 
      * device, request
@@ -31,7 +30,7 @@ class CorsHandler {
     cors(req, res, next) {
 
        //console.log('*** req.method',req.method);
-       //console.log('*** req.url',req.url);
+       console.log('*** req.url',req.url);
        //console.log('*** req.headers',req.headers);
        //console.log('*** req.url_parse',url.parse(req.url, true, false));
       
@@ -41,17 +40,18 @@ class CorsHandler {
       //console.log('*** req.pathName',req.pathName);
       //console.log('*** req.paramS',req.paramS);
       
+
       let ip;
       if (req.headers["client_ip"]){
         ip=req.headers["client_ip"];
       }else if (req.headers["x-real-ip"]){
-        ip=req.headers["x-real-ip"];
+          ip=req.headers["x-real-ip"];
       }else if (req.headers["x-forwarded-for"]){
-        ip=req.headers["x-forwarded-for"];
+          ip=req.headers["x-forwarded-for"];
       }else if (req.headers["remote_add"]){
-        ip=req.headers["remote_add"];
+          ip=req.headers["remote_add"];
       }else{
-        ip=req.ip;
+          ip=req.ip;
       }
       req.clientIp = ip;
       req.clientDevice = req.headers["user-agent"];
@@ -96,6 +96,4 @@ class CorsHandler {
   
   }
   
-  module.exports = {
-    CorsHandler: new CorsHandler() 
-  };
+  module.exports =  new CorsHandler()

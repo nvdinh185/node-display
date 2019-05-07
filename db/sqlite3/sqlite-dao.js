@@ -12,7 +12,7 @@ class SQLiteDAO {
   constructor(dbFilePath) {
     this.db = new sqlite3.Database(dbFilePath, (err) => {
       if (err) {
-        console.error('Could not connect to database', err);
+        console.error('Could NOT connect to database ' + dbFilePath, err);
       } else {
         console.log('Connected to database ' + dbFilePath);
       }

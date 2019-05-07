@@ -10,17 +10,13 @@ function main(isHttp) {
   
   //web tinh
   app.use(express.static(__dirname + '/platforms/browser/www'));
-  app.use('/qld/',express.static(__dirname + '/www'));
-
+  
   //CORS handle
-  const cors = require('./handlers/cors-handler');
-  app.use(cors.CorsHandler.cors);
-  
+  app.use(require('./handlers/cors-handler').cors);
 
-  //khai route 
-  app.use('/site-manager/',require('./routes/site-manager-route'));
+  //quan ly phan quyen user/menu cho mlmt
+  app.use('/mlmt/site-admin', require('./routes/mlmt/admin-route')); 
 
-  
   //ham tra loi cac dia chi khong co
   //The 404 Route (ALWAYS Keep this as the last route)
   app.all('*',(req, res) => {
@@ -29,10 +25,7 @@ function main(isHttp) {
     res.end('<h1>Xin lỗi trang bạn muốn tìm không tồn tại!</h1>Địa chỉ ip của bạn là : ' + req.clientIp);
   });
 
-  //cac route truoc chi can throw, thi error nay se tra loi cho nguoi sdung
-  //Error handle ALLWAYS keep last route even all
-  const err = require('./handlers/error-handler');
-  app.use(err.ErrorHandler.errors);
+  app.use(require('./handlers/error-handler').errors);
 
   if (isHttp) {
     // For http

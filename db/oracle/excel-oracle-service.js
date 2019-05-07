@@ -26,16 +26,27 @@ class HandleDatabase {
      * @param {*} dbConfig 
      */
     createDatabase(excelFileInput, dbConfig){
-        if (fs.existsSync(excelFileInput)) {
-            db = new OracleDAO(dbConfig);
-            setTimeout(() => {
-                if (db.isConnected()){
-                    console.log('Database Oracle ready!');
-                    this.initTable(excelFileInput);
-                }else{
-                    console.log('DB not Connected! Please check Database Oracle');
-                }
-            }, 3000); //doi 3 giay de ket noi database roi moi tao bang
+        
+        if (dbConfig) {
+
+        db = new OracleDAO(dbConfig);
+
+            if (fs.existsSync(excelFileInput)) {
+                setTimeout(() => {
+                    if (db.isConnected()){
+                        console.log('Database Oracle ready!');
+                        this.initTable(excelFileInput);
+                    }else{
+                        console.log('DB not Connected! Please check Database Oracle');
+                    }
+                }, 3000); //doi 3 giay de ket noi database roi moi tao bang
+            }else{
+                console.log('File ' + excelFileInput + ' do NOT Exist!')
+            }
+        }
+        else
+        {
+            console.log('No Database Config!')
         }
     }
 
@@ -195,6 +206,4 @@ class HandleDatabase {
 
 }
 
-module.exports = {
-    handler: new HandleDatabase()
-};
+module.exports =  new HandleDatabase()
