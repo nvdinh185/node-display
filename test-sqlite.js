@@ -1,17 +1,13 @@
 "use strict"
 
-
-const fs = require('fs');
-const mime = require('mime-types');
-const systempath = require('path');
-
 const SQLiteDAO = require('./db/sqlite3/sqlite-dao');
-const dbFile = './db/vn-prefix-change.db';
+const dbFile = './db/database/mlmt-site-manager-v1.db';
 const db = new SQLiteDAO(dbFile);
 
 
 setTimeout(() => {
-    db.getRsts("select * from change_prefix")
+    db.getRsts("select * from sites\
+                where site_id like 'DNTK14%'")
     .then(data=>{
         console.log(data);
     });
