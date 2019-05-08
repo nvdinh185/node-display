@@ -5,7 +5,7 @@
 const arrObj = require('../../utils/array-object');
 
 const SQLiteDAO = require('../../db/sqlite3/sqlite-dao');
-const dbFile = './db/database/mlmt-site-manager-v2.db';
+const dbFile = './db/database/mlmt-site-manager-v3.db';
 const db = new SQLiteDAO(dbFile);
 
 class Handler {

@@ -10,8 +10,8 @@
  //const excelFilename = "./db/excel/admin-user-baoduong-tram.xlsx"; //ten file excel cau hinh
  //const dbFilename = "./db/database/admin-user-site-manager.db";     //ten database muon tao
  
- const excelFilename = "./db/excel/ql-tram.cuongdq.sqlite.v2.xlsx"; //ten file excel cau hinh
- const dbFilename = "./db/database/mlmt-site-manager-v2.db";     //ten database muon tao
+ const excelFilename = "./db/excel/ql-tram.cuongdq.sqlite.v3.xlsx"; //ten file excel cau hinh
+ const dbFilename = "./db/database/mlmt-site-manager-v3.db";     //ten database muon tao
 
  excel_db.Excel2Sqlite.createDatabase(excelFilename,dbFilename);
 
