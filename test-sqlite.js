@@ -1,7 +1,7 @@
 "use strict"
 
 const SQLiteDAO = require('./db/sqlite3/sqlite-dao');
-const dbFile = './db/database/mlmt-site-manager-v2.db';
+const dbFile = './db/database/mlmt-site-manager-v4.db';
 const db = new SQLiteDAO(dbFile);
 
 
