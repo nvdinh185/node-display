@@ -8,7 +8,7 @@ const router = require('express').Router();
 
 const tokenHandler = require('../../utils/token-handler');
 
-const handlers = require('../../handlers/mlmt/site-handler');
+const handlers = require('../../handlers/mlmt/site-manager-handler');
 
 ///mlmt/site-admin/get-menu
 router.get('/get-menu'
