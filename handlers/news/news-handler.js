@@ -16,7 +16,7 @@ class ResourceHandler {
 
     getMediaFile(req, res) {
         let path = req.pathName
-        let params = path.substring('/news/db/get-file/'.length);
+        let params = path.substring('/news/get-file/'.length);
         let fileRead = params.replace('/', systempath.sep);
         let contentType;
         console.log(fileRead)
