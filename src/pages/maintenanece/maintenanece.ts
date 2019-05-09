@@ -48,8 +48,8 @@ export class MaintenanecePage {
         modal.onDidDismiss(data=>{
           //console.log('ket qua xu ly popup xong', data);
           if (data){
-            this.maintenanceCycles = data.maintenance_cycles;
-            this.lastCycle = data.last_cycle;
+            // this.maintenanceCycles = data.maintenance_cycles;
+            // this.lastCycle = data.last_cycle;
           }
         })
     modal.present();
@@ -147,9 +147,27 @@ export class MaintenanecePage {
   callbackRebuild = function(res) {
     console.log('phat hanh',res);
     return new Promise((resolve, reject) => {
-      resolve({
-        next:"CLOSE" 
-      });
+
+      if (res.data) {
+        let index = this.maintenanceCycles.findIndex(x=>x.id===res.data.id);
+        if (index>=0) {
+          this.maintenanceCycles.splice(index,1,res.data);
+        }else{
+          this.maintenanceCycles.unshift(res.data);
+        }
+
+        resolve({
+          next:"CLOSE" 
+        });
+        return;
+      }
+
+      if (res.error){
+        //alert loi
+      }
+
+      resolve();
+
     })
 
   }.bind(this);
@@ -230,62 +248,38 @@ export class MaintenanecePage {
    * @param cycle 
    */
   async onClickItem(cycle){
+    console.log("Cycle: ",cycle);
 
-    
     let data:any = {
-      title: "Lọc theo tiêu chí"
-      , items: [
-        { type: "text", key: "bill_cycle", disabled: true, value: cycle.bill_cycle, name: "Kỳ cước", input_type: "text", icon: "alarm" }
-        ,
-        { type: "select", key: "area_id", name: "Khu vực", value: 0,  options: [{ name: "<<Tất cả>>", value: 0 }] }
-        ,
-        { type: "select", key: "staff_id", name: "Quản lý", value: 0,  options: [{ name: "<<Tất cả>>", value: 0 }] }
-        ,
-        { type: "select", key: "price_id", name: "Loại khách hàng", value: 0,  options: [{ name: "<<Tất cả>>", value: 0 }] }
-        ,
-        { type: "text", key: "cust_id", name: "Mã khách hàng", input_type: "text", icon: "contact" }
-        ,
-        { 
-          type: "button"
-          , options: [
-            { name: "Bỏ qua", next: "CLOSE"}
-            ,{ name: "Tạo trang in", next: "CALLBACK"}
-        ]
-        }
+        
+      title: "CHỈNH SỬA KỲ BẢO DƯỠNG"
+    , home_disable: false //nut home
+    , buttons: [
+        {color:"danger", icon:"close", next:"CLOSE"} 
       ]
-    }
+    , items: [
+      { type: "title",          name: "CHỌN VÀ NHẬP"}
+      , { type: "text", key: "id", disabled: true, name: "Mã chu kỳ", input_type: "text", value: cycle.id, icon: "alarm"}
+      , { type: "datetime", key: "year", name: "Năm", hint: "Hãy chọn năm bảo dưỡng", value: cycle.year, display:"YYYY", picker:"YYYY"}
+      , { type: "select", key: "quarter", name: "Chọn quý", value: cycle.quarter, options: [{ name: "Quý I", value: 1 }, { name: "Quý II", value: 2 }, { name: "Quý III", value: 3 }, { name: "Quý IV", value: 4 }] }
+      , { type: "text", key: "description", name: "Mô tả", hint: "Hãy nhập mô tả kỳ bảo dưỡng", value: cycle.description, input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
+      , 
+      { 
+          type: "button"
+        , options: [
+          { name: "Reset", next: "RESET" }
+          , { name: "Bỏ qua", next: "CLOSE" }
+          , { name: "Xử lý", next: "CALLBACK", url: this.server + "/create-cycle", token: true }
+        ]
+      }
+    ]
+    };
 
-    let staffs = await this.apiAuth.getDynamicUrl(ApiStorageService.resourceServer+"/db/json-parameters"
-                                                              +"?type=4",true);
-    let prices = await this.apiAuth.getDynamicUrl(ApiStorageService.resourceServer+"/db/json-prices",true);
-    let areas = await this.apiAuth.getDynamicUrl(ApiStorageService.resourceServer+"/db/json-parameters"
-                                                            +"?type=6",true);
-
-    areas.forEach(el => {
-      data.items.find(x=>x.key==="area_id")
-      .options.push(
-        { name: el.description, value: parseInt(el.code)}
-        )
-    });
-
-    staffs.forEach(el => {
-      data.items.find(x=>x.key==="staff_id")
-      .options.push(
-        { name: el.description, value: parseInt(el.code)}
-        )
-    });
-
-    prices.forEach(el => {
-      data.items.find(x=>x.key==="price_id")
-      .options.push(
-        { name: el.description, value: parseInt(el.code)}
-        )
-    });
-    
+   
     this.navCtrl.push(DynamicFormWebPage
       , {
         parent: this,
-        callback: this.callbackPrintSelect,
+        callback: this.callbackRebuild,
         form: data
       });
     

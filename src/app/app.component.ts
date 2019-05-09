@@ -51,7 +51,8 @@ export class MyApp {
   
   menuServer = ApiStorageService.siteServer;
   
-  rootPage: any = HomeNewsPage; //HomeMenuPage;
+  //rootPage: any = HomeNewsPage; //HomeMenuPage;
+  rootPage: any =HomeMenuPage;
   
   treeMenu: any;
   callbackTreeMenu: any;

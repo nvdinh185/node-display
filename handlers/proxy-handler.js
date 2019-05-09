@@ -91,6 +91,66 @@ const verifyProxyToken = (req, res, next)=>{
     }
   }
 
+
+  /**
+   * ham nay tuong tu verify nhung se khong bao loi khi khong co token
+   * phuc vu de kiem tra lay thong tin public
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * tra ve req.user neu thanh cong, con req.user khong co la khong thanh cong
+   */
+  
+const verifyProxyTokenNext = (req, res, next)=>{
+    if (req.token){
+        new Promise((resolve, reject) => {
+
+            let aliveToken = tokenSession.find(x=>x.token===req.token)
+
+            if (aliveToken && verifyExpire(req)){
+                aliveToken.last_time = new Date().getTime();
+                aliveToken.status = true;
+
+                resolve({
+                    status: true,
+                    user_info:aliveToken.user_info
+                });
+
+            }else{
+                proxy.post(authServer + '/ext-auth/authorize-token', { json: {token: req.token} } //du lieu parse tu postProcess
+                    , (error, res, body) => {
+                        if (error) {
+                            reject(error);
+                        }
+                        if (res.statusCode == 200&&body.status&&body.user_info) {
+                            tokenSession.push({
+                                create_time: new Date().getTime(),
+                                token: req.token,
+                                user_info: body.user_info
+                            })
+                            resolve(body);
+                        } else {
+                            reject(body);
+                        }
+                    })
+            }
+
+        }).then(tokenData => {
+            if (tokenData.status){
+                req.user = tokenData.user_info;  
+                next();              
+            }else{
+                next();
+            }
+        })
+        .catch(err => {
+            next();
+        })
+    }else{
+        next();
+    }
+  }
+
 const authorizeToken = (req, res, next) => {
     if (req.user){
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -103,6 +163,7 @@ const authorizeToken = (req, res, next) => {
 
 
 module.exports = {
+    verifyProxyTokenNext: verifyProxyTokenNext,
     verifyProxyToken: verifyProxyToken,
     authorizeToken: authorizeToken,
 };
