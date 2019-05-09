@@ -124,7 +124,39 @@ class Handler {
         });
     }
 
+    getMaintenanceCycles(req,res,next){
 
+        // console.log('req.user', req.user);
+        // console.log('req.paramS', req.paramS);
+        // console.log('req.json_data', req.json_data);
+
+        db.getRsts("SELECT a.id,\
+                        a.year,\
+                        a.quarter,\
+                        a.description\
+                    FROM maintenance_cycles a \
+                    where 1=1\
+                    "+(req.paramS.id?"and a.id like '"+req.paramS.id+"%'":"")+"\
+                    order by a.id\
+                    "+(req.paramS.limit?"LIMIT "+req.paramS.limit:"LIMIT 10")+"\
+                    "+(req.paramS.offset?"OFFSET "+req.paramS.offset:"OFFSET 0")+"\
+                 ")
+    .then(results=>{
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify(results
+                , (key, value) => {
+                    if (value === null) { return undefined; }
+                    return value;
+                }
+            ));
+    })
+    .catch(err => {
+        console.log(err);
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(JSON.stringify([]));
+    });
+    ;
+    }
 
     getMaintenanceSites(req,res,next){
 

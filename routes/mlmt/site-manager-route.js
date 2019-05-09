@@ -18,6 +18,13 @@ router.get('/get-menu'
 );
 
 //liet ke cac file bao duong
+router.get('/get-json-cycles'
+    , tokenHandler.getTokenNext    //req.token
+    , tokenHandler.tokenVerifyNext //req.user
+    , handlers.getMaintenanceCycles       //lay Chu ky bao duong
+);
+
+//liet ke cac file bao duong
 router.get('/maintenance-sites'
     , tokenHandler.getTokenNext    //req.token
     , tokenHandler.tokenVerifyNext //req.user

@@ -1,11 +1,8 @@
 "use strict"
 
 const SQLiteDAO = require('./db/sqlite3/sqlite-dao');
-<<<<<<< HEAD
-const dbFile = './db/database/mlmt-site-manager-v3.db';
-=======
+// const dbFile = './db/database/mlmt-site-manager-v3.db';
 const dbFile = './db/database/mlmt-site-manager-v4.db';
->>>>>>> d4aed73366d4a1c7b291be2adf8af803aac5622d
 const db = new SQLiteDAO(dbFile);
 
 
