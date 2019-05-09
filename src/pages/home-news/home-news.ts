@@ -206,7 +206,7 @@ export class HomeNewsPage {
     ]
   };
 
-  server = "http://localhost:9238/news"
+  server = "http://localhost:9238/site-manager/news"
   userInfo: any;
   maxOnePage = 2;
   pageIndexPublic = 0;

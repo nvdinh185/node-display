@@ -49,7 +49,7 @@ export class MyApp {
     //se cho tat ca cac hotkey go duoc
   }
 
-  rootPage: any = HomeNewsPage; //HomeMenuPage;
+  rootPage: any = HomeMenuPage;
 
   menuServer = "http://localhost:9238/site-manager" ;
 

@@ -212,7 +212,7 @@ export class HomeMenuPage {
     //console.log('json_data',json_data);
 
     return this.apiAuth.postDynamicForm(ApiStorageService.mediaServer
-      + "/db/public-groups", json_data)
+      + "/db/public-groups", json_data, true)
       .then(data => {
 
         //console.log('public-groups',data);
