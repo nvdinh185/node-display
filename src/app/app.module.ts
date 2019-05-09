@@ -73,6 +73,8 @@ import { MaintenanecePage } from '../pages/maintenanece/maintenanece';
 import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
 import { ReviewMaintenancePage } from '../pages/review-maintenance/review-maintenance';
 import { DocumentsPage } from '../pages/documents/documents';
+import { HomeNewsPage } from '../pages/home-news/home-news';
+import { PostNewsPage } from '../pages/post-news/post-news';
 
 
 @NgModule({
@@ -113,7 +115,9 @@ import { DocumentsPage } from '../pages/documents/documents';
     MaintenanecePage,
     AddMaintenancePage,
     ReviewMaintenancePage,
-    DocumentsPage
+    DocumentsPage,
+    HomeNewsPage,
+    PostNewsPage
   ],
   imports: [
     BrowserModule,
@@ -157,7 +161,9 @@ import { DocumentsPage } from '../pages/documents/documents';
     MaintenanecePage,
     AddMaintenancePage,
     ReviewMaintenancePage,
-    DocumentsPage
+    DocumentsPage,
+    HomeNewsPage,
+    PostNewsPage
   ],
   providers: [
     StatusBar,

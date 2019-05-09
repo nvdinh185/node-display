@@ -32,6 +32,7 @@ import { MaintenanecePage } from '../pages/maintenanece/maintenanece';
 import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
 import { ReviewMaintenancePage } from '../pages/review-maintenance/review-maintenance';
 import { DocumentsPage } from '../pages/documents/documents';
+import { HomeNewsPage } from '../pages/home-news/home-news';
 
 
 @Component({
@@ -48,7 +49,7 @@ export class MyApp {
     //se cho tat ca cac hotkey go duoc
   }
 
-  rootPage: any = HomeMenuPage;
+  rootPage: any = HomeNewsPage; //HomeMenuPage;
 
   menuServer = "http://localhost:9238/site-manager" ;
 
