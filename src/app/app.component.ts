@@ -32,6 +32,7 @@ import { MaintenanecePage } from '../pages/maintenanece/maintenanece';
 import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
 import { ReviewMaintenancePage } from '../pages/review-maintenance/review-maintenance';
 import { DocumentsPage } from '../pages/documents/documents';
+import { HomeNewsPage } from '../pages/home-news/home-news';
 
 
 @Component({
@@ -48,9 +49,9 @@ export class MyApp {
     //se cho tat ca cac hotkey go duoc
   }
 
-  rootPage: any = HomeMenuPage;
+  rootPage: any = HomeNewsPage; //HomeMenuPage;
 
-  menuServer = "http://10.151.50.35:9238/site-manager" ;
+  menuServer = "http://localhost:9238/site-manager" ;
 
   treeMenu: any;
   callbackTreeMenu: any;
@@ -218,15 +219,229 @@ export class MyApp {
 
  async resetTreeMenu() {
 
-    this.treeMenu = [
-      {
-        name: "1. Trang chủ",
-        size: "1.3em",
-        click: true,
-        next: this.rootPage,
-        icon: "home"
-      }
-    ];
+  this.treeMenu = [
+    {
+      name: "1. Trang chủ",
+      size: "1.3em",
+      click: true,
+      next: this.rootPage,
+      icon: "home"
+    }
+    ,
+    {
+      name: "2. Các liên kết Nội bộ",
+      size: "1.3em",
+      subs: [
+        {
+          name: "2.1 Quản lý công việc - yêu cầu",
+          size: "1.3em",
+          click: true,
+          url: "https://c3.mobifone.vn/qlhs/login",
+          icon: "alarm"
+        }
+        ,
+        {
+          name: "2.2 Hỗ trợ điểm bán lẻ",
+          size: "1.3em",
+          click: true,
+          url: "https://c3.mobifone.vn/dbl/login",
+          icon: "people"
+        }
+        ,
+        {
+          name: "2.3 Chọn số Công ty 3",
+          size: "1.3em",
+          click: true,
+          popup_iframe: LinkPage, //su dung link web ko file
+          url: "https://chonsoc3.mobifone.vn/",
+          icon: "keypad"
+        }
+        ,
+        {
+          name: "2.4 Nối mạng Công ty 3 SSL4",
+          size: "1.3em",
+          click: true,
+          url: "https://ssl4.c3.mobifone.vn/dana-na/auth/url_default/welcome.cgi",
+          icon: "flash"
+        }
+      ]
+    }
+    ,
+    {
+      name: "3. Các mẫu reponsive",
+      size: "1.3em",
+      subs: [
+        {
+          name: "3.1 Các nhập liệu",
+          size: "1.3em",
+          subs: [
+            {
+              name: "3.1.1 Mẫu nhập liệu toàn màn hình dành cho di động",
+              click: true,
+              next: DynamicFormMobilePage,
+              icon: "phone-portrait"
+            }
+            ,
+            {
+              name: "3.1.2 Nhập liệu và hiển thị cho desktop & di động",
+              click: true,
+              next: DynamicFormWebPage,
+              icon: "desktop"
+            }
+            ,
+            {
+              name: "3.1.3 Mẫu nhập chọn & kéo",
+              click: true,
+              next: DynamicRangePage,
+              icon: "radio-button-on"
+            }
+          ]
+        }
+        ,
+        {
+          name: "3.2 Các mẫu hiển thị danh sách",
+          size: "1.3em",
+          subs: [
+            {
+              name: "3.2.1 Mẫu danh sách quẹt nút click",
+              click: true,
+              next: DynamicListPage,
+              icon: "paper"
+            }
+            ,
+            {
+              name: "3.2.2 Mẫu danh sách bảng, liệt kê & sắp xếp lại",
+              click: true,
+              next: DynamicListOrderPage,
+              icon: "reorder"
+            }
+            ,
+            {
+              name: "3.2.3 Mẫu danh sách theo cây FamilyTree",
+              click: true,
+              next: DynamicTreePage,
+              icon: "menu"
+            }
+          ]
+        }
+        ,
+        {
+          name: "3.3 Các mẫu xử lý hình ảnh và file",
+          size: "1.3em",
+          subs: [
+            {
+              name: "3.3.1 Mẫu upload ảnh theo facebook",
+              click: true,
+              next: DynamicMediasPage,
+              icon: "images"
+            }
+            ,
+            {
+              name: "3.3.2 Mẫu hiển thị ảnh và tương tác mạng xã hội",
+              click: true,
+              next: DynamicCardSocialPage,
+              icon: "logo-facebook"
+            }
+            ,
+            {
+              name: "3.3.3 Mẫu vẽ tay lên màn hình trên nền di động",
+              click: true,
+              next: HandDrawPage,
+              icon: "create"
+            }
+          ]
+        }
+      ]
+    }
+    ,
+    {
+      name: "4. Các phôi pdf In",
+      size: "1.3em",
+      subs: [
+        {
+          name: "4.1 Mẫu ma trận điểm A4",
+          size: "1.3em",
+          click: true,
+          url: "https://c3.mobifone.vn/qld/db/matrix-a4",
+          icon: "ios-apps-outline"
+        }
+        ,
+        {
+          name: "4.2 Mẫu ma trận điểm A5",
+          size: "1.3em",
+          click: true,
+          url: "https://c3.mobifone.vn/qld/db/matrix-a5",
+          icon: "md-apps"
+        }
+        ,
+        {
+          name: "4.3 Mở kiểu Popup iframe",
+          size: "1.3em",
+          click: true,
+          popup_iframe: LinkPage, //su dung link web ko file
+          url: "https://dantri.com.vn/",
+          icon: "at"
+        }
+        ,
+        {
+          name: "4.4 Mở kiểu InApp",
+          size: "1.3em",
+          click: true,
+          in_app_browser: LinkPage, //Link page chi gia lap thoi
+          url: "https://dantri.com.vn/",
+          icon: "globe"
+        }
+      ]
+    }
+    ,
+    {
+      name: "5. Speedtest",
+      size: "1.3em",
+      click: true,
+      next: HomeSpeedtestPage,
+      icon: "speedometer"
+    }
+    ,
+    {
+      name: "6. Bản đồ dẫn đường",
+      size: "1.3em",
+      click: true,
+      next: GoogleMapPage,
+      icon: "globe"
+    }
+    ,
+    {
+      name: "7. Qr Bar Scanner",
+      size: "1.3em",
+      click: true,
+      next: QrBarScannerPage,
+      icon: "qr-scanner"
+    }
+    ,
+    {
+      name: "8. Contacts",
+      size: "1.3em",
+      click: true,
+      next: ContactsPage,
+      icon: "contacts"
+    }
+    ,
+    {
+      name: "9. Cordova",
+      size: "1.3em",
+      click: true,
+      next: CordovaPage,
+      icon: "heart"
+    }
+    ,
+    {
+      name: "10. Login",
+      size: "1.3em",
+      click: true,
+      next: LoginPage,
+      icon: "log-in"
+    }
+  ]
 
     //cach 1 lay bat dong bo
     /* this.apiAuth.getDynamicUrl("http://localhost:9238/site-manager/get-menu")

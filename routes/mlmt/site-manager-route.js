@@ -17,4 +17,11 @@ router.get('/get-menu'
     , handlers.getUserMenu             //lay menu theo user cua token neu co
 );
 
+//liet ke cac file bao duong
+router.get('/maintenance-sites'
+    , tokenHandler.getTokenNext    //req.token
+    , tokenHandler.tokenVerifyNext //req.user
+    , handlers.getMaintenanceSites             //lay menu theo user cua token neu co
+);
+
 module.exports = router;

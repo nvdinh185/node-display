@@ -33,24 +33,38 @@ router.get('/list-files'
     , tokenHandler.getToken
     , proxyHandler.verifyProxyToken
     , handlers.getMediaList
-);   
-
-//get publics files
+    );   
+    
+    //get publics files
 router.get('/public-files'
     , handlers.getMediaList
-);   
+    );   
 
-
+router.post('/public-files'
+    , postHandler.jsonProcess //lay du lieu req.json_data.friends/follows/publics/limit/offset
+    , tokenHandler.getTokenNext   //lay du lieu req.token neu co, 
+    , proxyHandler.verifyProxyTokenNext //lay req.user tu req.token new co
+    , handlers.postMediaListAll //lay tin tuc tu req.user?, publics, follows, friends, 
+);       
+    
+    
 router.get('/list-groups'
     , tokenHandler.getToken
     , proxyHandler.verifyProxyToken
     , handlers.getGroupList
-);   
-
+    );   
+    
 router.get('/public-groups'
     , handlers.getGroupList
-);   
+    );   
+    
 
+router.post('/public-groups'
+        , postHandler.jsonProcess //lay du lieu req.json_data.friends/follows/publics/limit/offset
+        , tokenHandler.getTokenNext   //lay du lieu req.token neu co, 
+        , proxyHandler.verifyProxyTokenNext //lay req.user tu req.token neu co
+        , handlers.postGroupListAll //lay tin tuc tu req.user?, publics, follows, friends, 
+    );   
 
 router.post('/upload-files'
     , tokenHandler.getToken          //lay req.token
