@@ -124,6 +124,51 @@ class Handler {
         });
     }
 
+
+
+    getMaintenanceSites(req,res,next){
+
+        console.log('req.user', req.user);
+        console.log('req.paramS', req.paramS);
+        console.log('req.json_data', req.json_data);
+
+        db.getRsts("SELECT a.id,\
+                        a.site_id,\
+                        a.name,\
+                        a.address,\
+                        b.id as maintenance_sheet_id,\
+                        b.sites_id,\
+                        b.year,\
+                        b.quarter,\
+                        c.employee_status,\
+                        c.total_mark,\
+                        c.status as maintenance_status\
+                    FROM sites a \
+                    LEFT JOIN maintenance_sheet b\
+                    ON a.id=b.sites_id\
+                    LEFT JOIN maintenance_sheet_report c\
+                    ON b.id=c.maintenance_sheet_id\
+                    where 1=1\
+                    "+(req.paramS.site_id?"and a.site_id like '"+req.paramS.site_id+"%'":"")+"\
+                    order by a.site_id\
+                    "+(req.paramS.limit?"LIMIT "+req.paramS.limit:"LIMIT 10")+"\
+                    "+(req.paramS.offset?"OFFSET "+req.paramS.offset:"OFFSET 0")+"\
+                 ")
+    .then(results=>{
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify(results
+                , (key, value) => {
+                    if (value === null) { return undefined; }
+                    return value;
+                }
+            ));
+    })
+    .catch(err => {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(JSON.stringify([]));
+    });
+    ;
+    }
 }
 
 module.exports = new Handler()
