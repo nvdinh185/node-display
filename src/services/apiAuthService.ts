@@ -498,7 +498,7 @@ export class ApiAuthService {
 
 
     injectToken(token?: any) {
-        this.tokenObject = { token: token ? token : this.tokenObject.token };
+        this.tokenObject = { token: token && token.length ? token : this.tokenObject.token };
         this.reqInterceptor.setRequestToken(this.tokenObject.token);
     }
 

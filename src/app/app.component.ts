@@ -48,11 +48,11 @@ export class MyApp {
     //console.log('key',this.keyCode);
     //se cho tat ca cac hotkey go duoc
   }
-
+  
+  menuServer = ApiStorageService.siteServer;
+  
   rootPage: any = HomeNewsPage; //HomeMenuPage;
-
-  menuServer = "http://localhost:9238/site-manager" ;
-
+  
   treeMenu: any;
   callbackTreeMenu: any;
 
