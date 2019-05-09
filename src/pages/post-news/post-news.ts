@@ -20,7 +20,7 @@ export class PostNewsPage implements OnInit {
   }
 
   userInfo: any;
-  server = "http://localhost:9238/news"
+  server = ApiStorageService.newsServer;
 
   constructor(
     public navCtrl: NavController,
