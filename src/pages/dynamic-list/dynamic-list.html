@@ -8,7 +8,7 @@
         </ion-buttons>
 
         <ion-buttons end *ngFor="let btn of dynamicList?.buttons">
-            <button ion-button icon-only color="{{btn.color}}" (click)="onClick(btn)">
+            <button ion-button icon-only color="{{btn.color}}" (click)="onClickHeader(btn)">
                 <ion-icon name="{{btn.icon}}"></ion-icon>
             </button>
         </ion-buttons>
@@ -23,48 +23,50 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content no-padding class="background-page gradient">
-    <ion-grid>
-        <ion-row>
-            <ion-col class="background-card gradient grid-border" text-center col-12 offset-xl-3 col-xl-6 offset-lg-3
-                col-lg-6 offset-md-2 col-md-8 col-sm-12>
+<ion-content class="list-avatar-page">
+    <ion-list>
 
-                <ion-list>
+        <ion-item-sliding #slidingItem class="background-list" *ngFor="let it of dynamicList.items; let idx = index">
+            
+                <ion-item #item class="background-item" tappable (click)="onClickDetails(slidingItem,it,0)">
+                    <ion-icon item-start *ngIf="!it.image&&it.icon" name="{{it.icon}}" color="{{it.color}}"></ion-icon>
+                    <ion-avatar *ngIf="it.image" item-start>
+                        <img [src]="it.image">
+                    </ion-avatar>
+                    <ion-title >{{it.title}}</ion-title>
+                    <p text-wrap>{{it.content}}</p>
+                    <ion-note item-end>
+                        {{it.note | timeAgo}}
+                        <p style="text-align: right;" *ngIf="it.alert">
+                            <ion-badge color="danger">{{ it.alert?.length }}</ion-badge>
+                        </p>
+                    </ion-note>
+                </ion-item>
+    
+                <ion-item-options>
+                    <button ion-button color="bg-blue" (click)="onClickDetails(slidingItem, it, 1)">
+                        <ion-icon name="ios-arrow-dropup"></ion-icon>
+                        Pin
+                    </button>
+                    <button ion-button color="secondary" (click)="onClickDetails(slidingItem, it, 2)">
+                        <ion-icon name="volume-off"></ion-icon>
+                        Mute
+                    </button>
+                    <button ion-button color="danger" (click)="onClickDetails(slidingItem, it, 3)">
+                        <ion-icon name="trash"></ion-icon>
+                        Delete
+                    </button>
+                </ion-item-options>
+    
+                <ion-item-options side="left">
+                    <button ion-button color="primary" expandable (click)="onClickDetails(slidingItem, it, 4)">
+                        <ion-icon name="checkmark"></ion-icon>
+                        <div>Read</div>
+                        <ion-spinner id="archive-spinner"></ion-spinner>
+                    </button>
+                </ion-item-options>
 
-                    <ion-item-sliding #slidingItem class="background-list" *ngFor="let it of dynamicList?.items">
-                        <ion-item #item class="background-item">
-                            <ion-icon item-start *ngIf="!isMobile&&it.icon" name="{{it.icon}}" color="{{it.color}}"></ion-icon>
-                            <ion-avatar item-start *ngIf="!isMobile&&it.image">
-                                <img [src]="it.image">
-                            </ion-avatar>
+        </ion-item-sliding>
 
-                            <h1 *ngIf="it.h1">{{it.h1}}</h1>
-                            <h2 *ngIf="it.h2">{{it.h2}}</h2>
-                            <p text-wrap style="text-align: justify;" *ngIf="it.p">{{it.p}}</p>
-                            <ion-note text-wrap style="text-align: justify;" item-end *ngIf="it.note">{{it.note}}</ion-note>
-
-                            <button item-end *ngIf="!it.isSlidingItemOpen
-                                        &&!isMobile
-                                        &&it.options
-                                        &&it.options.length>0
-                                        &&it.options.length<=3"
-                                ion-button icon-only round color="secondary" (click)="openSwipeOptions(slidingItem, item, it)">
-                                <ion-icon name="arrow-dropleft-circle"></ion-icon>
-                            </button>
-
-                        </ion-item>
-
-                        <ion-item-options>
-                            <button ion-button *ngFor="let opt of it.options" color="{{opt.color}}" (click)="onClickDetails(slidingItem, opt, it)">
-                                <ion-icon name="{{opt.icon}}"></ion-icon>
-                                {{opt.name}}
-                            </button>
-                        </ion-item-options>
-
-                    </ion-item-sliding>
-
-                </ion-list>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+    </ion-list>
 </ion-content>
