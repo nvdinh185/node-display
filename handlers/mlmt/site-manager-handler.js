@@ -375,16 +375,43 @@ class Handler {
 
     }
 
-    getMaintenanceSites(req, res, next) {
+    async getMaintenanceSites(req, res, next) {
 
-        console.log('req.user', req.user);
+        //user la gi??=> user_id
+        //maintenance_cycle = ???
         //console.log('req.paramS', req.paramS);
         //console.log('req.json_data', req.json_data);
+        //lay ds dang bao duong
+        let user = await db.getRst("select id\
+                                   ,username\
+                                   ,email_username\
+                                   ,user_pass\
+                                   ,fullname\
+                                   ,nickname\
+                                   ,phone\
+                                   ,email\
+                                   ,image\
+                                   ,background\
+                                   ,organization_id\
+                                   ,center_code\
+                                   ,department_id\
+                                   ,team_id\
+                                   ,group_id\
+                                   ,user_limit\
+                                   ,role\
+                                   ,status\
+                                   from users\
+                                   where username = '"+req.user.username+"'\
+                                    ");
 
+        //console.log('user', user);
+        //danh sach dang, va da bao duong
         db.getRsts("SELECT a.id,\
                         a.site_id,\
                         a.name,\
                         a.address,\
+                        b.user_id,\
+                        b.user_fullname,\
                         b.id as maintenance_sheet_id,\
                         b.sites_id,\
                         b.year,\
@@ -399,7 +426,8 @@ class Handler {
                     ON b.id=c.maintenance_sheet_id\
                     where 1=1\
                     "+ (req.paramS.site_id ? "and a.site_id like '" + req.paramS.site_id + "%'" : "") + "\
-                    "+ (req.paramS.user ? "and b.user_id = '" + req.paramS.user + "'" : "") + "\
+                    "+ (req.paramS.maintenance_cycle ? "and b.maintenance_cycle = '" + req.paramS.maintenance_cycle + "'" : "") + "\
+                    and b.users_id ='"+user.id+"'\
                     order by a.site_id\
                     "+ (req.paramS.limit ? "LIMIT " + req.paramS.limit : "LIMIT 10") + "\
                     "+ (req.paramS.offset ? "OFFSET " + req.paramS.offset : "OFFSET 0") + "\
