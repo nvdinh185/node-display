@@ -9,9 +9,9 @@ import { ApiHttpPublicService } from '../../services/apiHttpPublicServices';
 })
 export class DynamicListPage {
 
-  dynamicList: any; 
+  dynamicList: any = {}; 
   dynamicListOrigin: any = {
-    title: "Mạng xã hội"
+    title: "Danh sách kiểu viber"
     , search_bar: {hint: "Tìm cái gì đó"} 
     , buttons: [
         {color:"primary", icon:"add", next:"ADD"}
@@ -25,32 +25,16 @@ export class DynamicListPage {
       ]
     , items: [
         {
-            //icon:"contact",
             image: "assets/imgs/img_forest.jpg"
-            ,h1:"H1 Tieu de"
-            ,h2:"H2 Chuong muc"
-            ,h3:"H3 Muc luc"
-            ,p:"Sau khi đánh cồng khai trương phiên giao dịch đầu xuân Kỷ Hợi 2019 tại Sở Giao dịch chứng khoán Hà Nội vào sáng 12-2, Thủ tướng Chính phủ Nguyễn Xuân Phúc khẳng định tầm quan trọng của thị trường chứng khoán Việt Nam."
-            ,note:"13/02/2019"
-            ,options:[
-                { name: "Xóa", color:"danger", icon:"trash", next:"EXIT"}
-              , { name: "Chỉnh sửa", color:"primary", icon:"create", next: "NEXT"}
-              , { name: "Xem chi tiết", color:"secondary", icon:"list", next: "CALLBACK"}
-            ]
+            ,title:"Là tiêu đề của đề mục"
+            ,content:"Sau khi đánh cồng khai trương phiên giao dịch đầu xuân Kỷ Hợi 2019 tại Sở Giao dịch chứng khoán Hà Nội vào sáng 12-2, Thủ tướng Chính phủ Nguyễn Xuân Phúc khẳng định tầm quan trọng của thị trường chứng khoán Việt Nam."
+            ,note: Date.now()
         }
         ,{
             icon:"contact"
-            //image: "assets/imgs/img_forest.jpg"
-            ,h1:"H1 Tieu de 2"
-            ,h2:"H2 Chuong muc 2"
-            ,h3:"H3 Muc luc 2"
-            ,p:"Trong những ngày đánh bắt đầu năm, 3 ngư dân Quảng Trị đã thu hoạch được mẻ cá bè gần 140 tấn; trong đó một ngư dân trúng mẻ cá siêu khủng nặng hơn 100 tấn."
-            ,note:"14/02/2019"
-            ,options:[
-                { name: "Xóa", color:"danger", icon:"trash", next:"EXIT"}
-              , { name: "Chỉnh sửa", color:"primary", icon:"create", next: "NEXT"}
-              , { name: "Xem chi tiết", color:"secondary", icon:"list", next: "CALLBACK"}
-            ]
+            ,title:"Là tiêu đề nội dung 2"
+            ,content:"Trong những ngày đánh bắt đầu năm, 3 ngư dân Quảng Trị đã thu hoạch được mẻ cá bè gần 140 tấn; trong đó một ngư dân trúng mẻ cá siêu khủng nặng hơn 100 tấn."
+            ,note: Date.now()
         }
     ]
   };
@@ -77,7 +61,7 @@ export class DynamicListPage {
 
   ngOnInit(){
     this.dynamicListOrigin = this.navParams.get("list") ? this.navParams.get("list") : this.dynamicListOrigin;
-    this.refresh();
+    this.resetForm();
     
     this.offset = this.navParams.get("offset")?this.navParams.get("offset"):250;
     this.callback = this.navParams.get("callback");
@@ -90,43 +74,30 @@ export class DynamicListPage {
     if (call_waiting_data){
       call_waiting_data(this.parent)
       .then(list=>{
-        this.refresh(list);
+        this.resetForm();
       })
     }
   }
 
-  refresh(newList?:any){
-    if (newList) this.dynamicListOrigin = newList;
-    this.isMobile = (this.platform.platforms()[0]==='mobile');
-    this.dynamicList = this.dynamicListOrigin;
+  resetForm(list?:any) {
+    if (list&&list.length>0){
+      this.dynamicList.items = list;
+    }else{
+      this.dynamicList = this.dynamicListOrigin;
+    }
   }
 
 // Su dung slide Pages
   //--------------------------
   /**
-   * Thay đổi kiểu bấm nút mở lệnh trên item sliding
-   * @param slidingItem 
-   * @param item 
-   */
-  openSwipeOptions(slidingItem: ItemSliding, item: Item, it:any ){
-    let _offset =  "translate3d(-"+this.offset+"px, 0px, 0px)"
-    it.isSlidingItemOpen=true;
-    slidingItem.setElementClass("active-sliding", true);
-    slidingItem.setElementClass("active-slide", true);
-    slidingItem.setElementClass("active-options-right", true);
-    item.setElementStyle("transform",_offset); 
-  }
-
-  /**
    * Thay đổi cách bấm nút đóng lệnh bằng nút trên item sliding
    * @param slidingItem 
    */
-  closeSwipeOptions(slidingItem: ItemSliding, it:any){
+  closeSwipeOptions(slidingItem: ItemSliding){
     slidingItem.close();
     slidingItem.setElementClass("active-sliding", false);
     slidingItem.setElementClass("active-slide", false);
     slidingItem.setElementClass("active-options-right", false);
-    it.isSlidingItemOpen=false;
   }
   //----------- end of sliding
 
@@ -145,54 +116,20 @@ export class DynamicListPage {
     console.log(this.searchString);
   }
 
-  onClick(btn){
-    //console.log(btn);
-    this.processCommand(btn); 
+  onClickHeader(btn){
+    console.log(btn);
+    this.processCommand(btn);
   }
 
-  onClickDetails(item: ItemSliding, btn: any, it: any){
-    this.closeSwipeOptions(item, it);
-    btn.item = it;
+  onClickDetails(item: ItemSliding, btn: any, func: any){
+    this.closeSwipeOptions(item);
+    btn.func = func;
     console.log(btn);
     this.processCommand(btn);
   }
 
   processCommand(btn){
-
-    if (btn.url){
-      if (btn.method==='GET'){
-        let loading = this.loadingCtrl.create({
-          content: 'Đang xử lý dữ liệu từ máy chủ ....'
-        });
-        loading.present();
-
-        let httpOptions;
-        if (btn.next === 'PDF') httpOptions = {'responseType'  : 'blob' as 'json'}
-        this.pubService.getDynamicForm(btn.url,httpOptions)
-        .then(data=>{
-          //console.log(data);
-          loading.dismiss();
-
-          btn.next_data = {
-            step: this.step,
-            data: data,
-            next: btn.next,
-            item: btn.item
-          }
-          this.next(btn);
-
-        })
-        .catch(err=>{
-          console.log('err getDynamicForm',err);
-          loading.dismiss();
-        })
-      } else {
-        this.next(btn);
-      }
-
-    } else {
-      this.next(btn);
-    }
+    this.next(btn)
   }
 
   next(btn) {
@@ -200,21 +137,25 @@ export class DynamicListPage {
     if (btn) {
       if (btn.next == 'EXIT') {
         this.platform.exitApp();
-      } else if (btn.next == 'REFRESH') {
-        this.refresh(btn.next_data);
+      } else if (btn.next == 'RESET') {
+        this.resetForm();
       } else if (btn.next == 'CLOSE') {
-        try { this.viewCtrl.dismiss(btn.next_data) } catch (e) { }
+        if (this.parent) this.viewCtrl.dismiss(btn.next_data)
+      } else if (btn.next == 'HOME') {
+        if (this.parent) this.navCtrl.popToRoot()
       } else if (btn.next == 'BACK') {
-        try { this.navCtrl.pop() } catch (e) { }
-      } else if (btn.next == 'ADD' || btn.next == 'EDIT' || btn.next == 'PDF' || btn.next == 'LIST' ) {
+        if (this.parent) this.navCtrl.pop()
+      } else if (btn.next == 'CALLBACK') {
         if (this.callback) {
-          this.callback(btn.next_data, this.parent)
+          this.callback(btn.next_data)
             .then(nextStep => this.next(nextStep));
+        } else {
+          if (this.parent) this.navCtrl.pop()
         }
       } else if (btn.next == 'NEXT' && btn.next_data && btn.next_data.data) {
         btn.next_data.callback = this.callback; //gan lai cac function object
         btn.next_data.parent = this.parent;     //gan lai cac function object
-        btn.next_data.list = btn.next_data.data; //gan du lieu tra ve tu server
+        btn.next_data.form = btn.next_data.data; //gan du lieu tra ve tu server
         this.navCtrl.push(DynamicListPage, btn.next_data);
       }
     }
