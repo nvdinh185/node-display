@@ -62,6 +62,7 @@
     "hoek": "^6.0.4",
     "http": "0.0.0",
     "ionic-angular": "3.9.2",
+    "ionic2-auto-complete": "^1.6.2-alpha",
     "ionicons": "3.0.0",
     "jimp": "^0.6.0",
     "jsonwebtoken": "^8.4.0",

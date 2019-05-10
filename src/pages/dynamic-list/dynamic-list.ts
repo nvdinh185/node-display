@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
-import { NavController, ItemSliding, Item, Platform, NavParams, ViewController, LoadingController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, ItemSliding, Platform, NavParams, ViewController, LoadingController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
 import { ApiHttpPublicService } from '../../services/apiHttpPublicServices';
+import { AutoCompleteComponent } from 'ionic2-auto-complete';
+import { ApiAutoCompleteService } from '../../services/apiAutoCompleteService';
 
 @Component({
   selector: 'page-dynamic-list',
   templateUrl: 'dynamic-list.html'
 })
 export class DynamicListPage {
+  
+  @ViewChild('searchbar') searchbar: AutoCompleteComponent;
 
   dynamicList: any = {}; 
   dynamicListOrigin: any = {
@@ -55,6 +59,7 @@ export class DynamicListPage {
               , private pubService: ApiHttpPublicService
               , private viewCtrl: ViewController
               , private navCtrl: NavController
+              , private apiAutoComplete: ApiAutoCompleteService
               , private loadingCtrl: LoadingController
               , private navParams: NavParams
              ) {}

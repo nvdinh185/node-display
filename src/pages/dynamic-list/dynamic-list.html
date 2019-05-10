@@ -13,10 +13,21 @@
             </button>
         </ion-buttons>
 
-        <ion-searchbar *ngIf="isSearch && dynamicList?.search_bar" placeholder="{{dynamicList?.search_bar.hint}}"
+        <!-- <ion-searchbar *ngIf="isSearch && dynamicList?.search_bar" placeholder="{{dynamicList?.search_bar.hint}}"
             [(ngModel)]="searchString" [showCancelButton]="shouldShowCancel" (ionInput)="onInput($event)" (keyup.enter)="searchEnter()"
             (keyup.esc)="searchEnter()" start>
-        </ion-searchbar>
+        </ion-searchbar> -->
+        <div *ngIf="isSearch && dynamicList?.search_bar"
+             style="width: 100%; z-index: 999;position: absolute;">
+                <ng-template #withFlags let-attrs="attrs">
+                  <span [innerHTML]="attrs.data.site_id +'- '+attrs.data.name | boldprefix:attrs.keyword"></span>
+                </ng-template>
+            <ion-auto-complete #searchbar 
+                            [template]="withFlags"
+                            [dataProvider]="apiAutoComplete"
+                            (itemSelected)="searchSelect($event)">
+            </ion-auto-complete >
+        </div>
 
         <ion-title *ngIf="!isSearch">{{dynamicList?.title}}</ion-title>
 
