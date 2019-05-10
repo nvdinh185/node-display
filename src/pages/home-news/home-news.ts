@@ -206,7 +206,8 @@ export class HomeNewsPage {
     ]
   };
 
-  server = "http://localhost:9238/site-manager/news"
+  server = ApiStorageService.newsServer;
+  //server = "http://localhost:9238/site-manager/news"
   userInfo: any;
   maxOnePage = 2;
   pageIndexPublic = 0;
