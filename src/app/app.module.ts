@@ -75,6 +75,7 @@ import { ReviewMaintenancePage } from '../pages/review-maintenance/review-mainte
 import { DocumentsPage } from '../pages/documents/documents';
 import { HomeNewsPage } from '../pages/home-news/home-news';
 import { PostNewsPage } from '../pages/post-news/post-news';
+import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list';
 
 
 @NgModule({
@@ -113,6 +114,7 @@ import { PostNewsPage } from '../pages/post-news/post-news';
     ChattingRoomPage,
     ReportPage,
     MaintenanecePage,
+    MaintenanceListPage,
     AddMaintenancePage,
     ReviewMaintenancePage,
     DocumentsPage,
@@ -159,6 +161,7 @@ import { PostNewsPage } from '../pages/post-news/post-news';
     ChattingRoomPage,
     ReportPage,
     MaintenanecePage,
+    MaintenanceListPage,
     AddMaintenancePage,
     ReviewMaintenancePage,
     DocumentsPage,

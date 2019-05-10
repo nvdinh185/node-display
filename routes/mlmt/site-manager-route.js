@@ -13,6 +13,13 @@ const proxyHandler = require('../../handlers/proxy-handler');
 const handlers = require('../../handlers/mlmt/site-manager-handler');
 
 ///mlmt/site-admin/get-menu
+router.get('/get-role'  //?function='create-cycle'
+    , tokenHandler.getTokenNext    //lay token xem
+    , proxyHandler.verifyProxyTokenNext //lay req.user tu req.token new co
+    , handlers.setFunctionFromParam //req.functionCode = create-cycle (chuoi tu ?function_string=)
+    , handlers.checkFunctionRoleReturn //kiem tra quyen cua user trong bang admin_roles
+);
+
 router.get('/get-menu'
     , tokenHandler.getTokenNext    //lay token xem
     , proxyHandler.verifyProxyTokenNext //lay req.user tu req.token new co

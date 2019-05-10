@@ -5,7 +5,7 @@
 const arrObj = require('../../utils/array-object');
 
 const SQLiteDAO = require('../../db/sqlite3/sqlite-dao');
-const dbFile = './db/database/mlmt-site-manager-v5.db';
+const dbFile = './db/database/mlmt-site-manager-v6.db';
 const db = new SQLiteDAO(dbFile);
 
 class Handler {
@@ -19,8 +19,14 @@ class Handler {
      * @param {*} next 
      */
     setFunctionFromPath(req, res, next) {
-        //lay duong dan phia sau
+        //lay duong dan phia sau ex:create-cycle
         req.functionCode = req.pathName.substring(req.pathName.lastIndexOf("/") + 1);
+        next();
+    }
+
+    setFunctionFromParam(req, res, next) {
+        //lay duong dan phia sau ex:create-cycle
+        req.functionCode = req.paramS.function_string;
         next();
     }
 
@@ -101,6 +107,50 @@ class Handler {
 
     }
 
+    async checkFunctionRoleReturn(req, res, next) {
+
+        if (req.functionCode) { //can kiem tra quyen cua user co khong
+            if (req.user && req.user.data) {
+                //console.log('userData:',req.user.data);
+                if (req.user.data.role === 99) {
+                    next() //quyen root
+                } else {
+                    try {
+                        let row = await db.getRst("select roles\
+                                                     from admin_roles\
+                                                     where username='"+ req.user.username + "'");
+                        let row2 = await db.getRst("select id\
+                                                         from admin_functions\
+                                                         where function_code ='"+ req.functionCode + "'");
+                        let roles = row && row.roles ? JSON.parse(row.roles) : undefined; //tra ve object
+                        let functionId = row2 ? row2.id : undefined; //tra ve id
+                        //console.log('rolesFunction', functionId, roles);
+                        let index = roles && functionId && roles.functions ? roles.functions.findIndex(x => x === functionId) : -1;
+
+                        if (index >= 0) {
+                            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                            res.end(JSON.stringify({ status:'OK', message: 'Bạn có quyền thực hiện chức năng ' + req.functionCode}));
+                        } else {
+                            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                            res.end(JSON.stringify({ message: 'Bạn KHÔNG ĐƯỢC PHÂN QUYỀN thực hiện chức năng này' }));
+                        }
+
+                    } catch (e) {
+                        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                        res.end(JSON.stringify({ message: 'Lỗi trong lúc kiểm tra quyền', error: e }));
+                    }
+                }
+            } else {
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ message: 'Bạn không có quyền thực hiện chức năng này' }));
+            }
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify({ status:'OK', message: 'Bạn có toàn quyền thực hiện hệ thống này' }));
+        }
+
+    }
+
     getUserMenu(req, res, next) {
 
         //console.log('user',req.user);
@@ -133,6 +183,7 @@ class Handler {
         db.getRsts("SELECT  id\
                            ,year\
                            ,quarter\
+                           ,name\
                            ,description\
                            ,signature\
                            ,count_site\
@@ -142,6 +193,7 @@ class Handler {
                            ,count_finish\
                            ,count_continue\
                            ,count_not_ok\
+                           ,create_time\
                            ,start_time\
                            ,end_time\
                            ,status\
@@ -180,9 +232,10 @@ class Handler {
                 id: req.json_data.id
                 , year: req.json_data.year
                 , quarter: req.json_data.quarter
+                , name: req.json_data.name
                 , description: req.json_data.description
                 , username: req.user.username
-                , end_time: Date.now() //milisecond
+                , create_time: Date.now() //milisecond
             }
     
     
@@ -194,6 +247,7 @@ class Handler {
                 db.getRst("SELECT  id\
                                ,year\
                                ,quarter\
+                               ,name\
                                ,description\
                                ,signature\
                                ,count_site\
@@ -203,6 +257,7 @@ class Handler {
                                ,count_finish\
                                ,count_continue\
                                ,count_not_ok\
+                               ,create_time\
                                ,start_time\
                                ,end_time\
                                ,status\
@@ -243,9 +298,10 @@ class Handler {
             let obj = {
                  year: req.json_data.year
                 , quarter: req.json_data.quarter
+                , name: req.json_data.name
                 , description: req.json_data.description
                 , username: req.user.username
-                , end_time: Date.now() //milisecond
+                , create_time: Date.now() //milisecond
             }
     
     
@@ -261,6 +317,7 @@ class Handler {
                 db.getRst("SELECT  id\
                                ,year\
                                ,quarter\
+                               ,name\
                                ,description\
                                ,signature\
                                ,count_site\
@@ -270,6 +327,7 @@ class Handler {
                                ,count_finish\
                                ,count_continue\
                                ,count_not_ok\
+                               ,create_time\
                                ,start_time\
                                ,end_time\
                                ,status\
@@ -320,8 +378,8 @@ class Handler {
     getMaintenanceSites(req, res, next) {
 
         console.log('req.user', req.user);
-        console.log('req.paramS', req.paramS);
-        console.log('req.json_data', req.json_data);
+        //console.log('req.paramS', req.paramS);
+        //console.log('req.json_data', req.json_data);
 
         db.getRsts("SELECT a.id,\
                         a.site_id,\
@@ -341,6 +399,7 @@ class Handler {
                     ON b.id=c.maintenance_sheet_id\
                     where 1=1\
                     "+ (req.paramS.site_id ? "and a.site_id like '" + req.paramS.site_id + "%'" : "") + "\
+                    "+ (req.paramS.user ? "and b.user_id = '" + req.paramS.user + "'" : "") + "\
                     order by a.site_id\
                     "+ (req.paramS.limit ? "LIMIT " + req.paramS.limit : "LIMIT 10") + "\
                     "+ (req.paramS.offset ? "OFFSET " + req.paramS.offset : "OFFSET 0") + "\

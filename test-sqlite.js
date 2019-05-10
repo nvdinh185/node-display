@@ -2,7 +2,7 @@
 
 const SQLiteDAO = require('./db/sqlite3/sqlite-dao');
 // const dbFile = './db/database/mlmt-site-manager-v3.db';
-const dbFile = './db/database/mlmt-site-manager-v4.db';
+const dbFile = './db/database/mlmt-site-manager-v6.db';
 const db = new SQLiteDAO(dbFile);
 
 
@@ -31,7 +31,7 @@ setTimeout(() => {
                                         ]
                                       }
                  ) */
-                 db.insert({
+                 /* db.insert({
                     name:'admin_functions',
                                       cols:[
                                           {
@@ -55,7 +55,9 @@ setTimeout(() => {
                                             }
                                         ]
                                       }
-                 )
+                 ) */
+
+    db.runSql("update maintenance_cycles set create_time="+Date.now())
     .then(data=>{
         console.log(data);
     });

@@ -6,6 +6,9 @@
   import { DynamicFormWebPage } from '../dynamic-form-web/dynamic-form-web';
   import { ApiHttpPublicService } from '../../services/apiHttpPublicServices';
   import { ApiAuthService } from '../../services/apiAuthService';
+import { DocumentsPage } from '../documents/documents';
+import { LoginPage } from '../login/login';
+import { MaintenanceListPage } from '../maintenance-list/maintenance-list';
 
 @Component({
   selector: 'page-maintenanece',
@@ -17,6 +20,11 @@ export class MaintenanecePage {
 
   maintenanceCycles:any=[];
   lastCycle: any = {};
+
+  userInfo: any;
+
+  roleCreate: boolean = false;
+  function_string: string = 'create-cycle';
 
   constructor(private navCtrl: NavController,
               private inAppBrowser: InAppBrowser,
@@ -31,6 +39,24 @@ export class MaintenanecePage {
   }
 
   ngOnInit(){
+
+
+    this.userInfo = this.apiAuth.getUserInfo();
+    if (!this.userInfo) {
+      this.alertCtrl.create({
+        title: 'Cảnh báo',
+        subTitle: 'Bạn chưa login',
+        buttons: ['Dismiss']
+      }).present();
+      this.navCtrl.push(LoginPage);
+      return;
+    }
+
+   this.apiAuth.getDynamicUrl(this.server + '/get-role?function_string='+this.function_string,true)
+   .then(objRole=>{
+      if (objRole.status==='OK') this.roleCreate = true;
+   })
+   .catch(e=>{})
     
    this.getmaintenanceCycles()
    .then(data=>{
@@ -190,17 +216,17 @@ export class MaintenanecePage {
         ]
       , items: [
         { type: "title",          name: "CHỌN VÀ NHẬP"}
-        , { type: "text", key: "id", disabled: true, name: "Mã chu kỳ", input_type: "text", icon: "mail"}
         , { type: "datetime", key: "year", name: "Năm", hint: "Hãy chọn năm bảo dưỡng", display:"YYYY", picker:"YYYY"}
         , { type: "select", key: "quarter", name: "Chọn quý", value: 1, options: [{ name: "Quý I", value: 1 }, { name: "Quý II", value: 2 }, { name: "Quý III", value: 3 }, { name: "Quý IV", value: 4 }] }
-        , { type: "text", key: "description", name: "Mô tả", hint: "Hãy nhập mô tả kỳ bảo dưỡng", input_type: "text", icon: "mail", validators: [{ required: true, min: 5, max: 50} ]}
+        , { type: "text", key: "name", name: "Tên chu kỳ", hint: "Hãy nhập tên chu kỳ", input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
+        , { type: "text", key: "description", name: "Mô tả", hint: "Hãy nhập mô tả kỳ bảo dưỡng", input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
         , 
         { 
             type: "button"
           , options: [
             { name: "Reset", next: "RESET" }
             , { name: "Bỏ qua", next: "CLOSE" }
-            , { name: "Xử lý", next: "CALLBACK", url: this.server + "/create-cycle", token: true }
+            , { name: "Xử lý", next: "CALLBACK", url: this.server + "/" + this.function_string, token: true }
           ]
         }
       ]
@@ -248,39 +274,11 @@ export class MaintenanecePage {
    * @param cycle 
    */
   async onClickItem(cycle){
-    console.log("Cycle: ",cycle);
 
-    let data:any = {
-        
-      title: "CHỈNH SỬA KỲ BẢO DƯỠNG"
-    , home_disable: false //nut home
-    , buttons: [
-        {color:"danger", icon:"close", next:"CLOSE"} 
-      ]
-    , items: [
-      { type: "title",          name: "CHỌN VÀ NHẬP"}
-      , { type: "text", key: "id", disabled: true, name: "Mã chu kỳ", input_type: "text", value: cycle.id, icon: "alarm"}
-      , { type: "datetime", key: "year", name: "Năm", hint: "Hãy chọn năm bảo dưỡng", value: cycle.year, display:"YYYY", picker:"YYYY"}
-      , { type: "select", key: "quarter", name: "Chọn quý", value: cycle.quarter, options: [{ name: "Quý I", value: 1 }, { name: "Quý II", value: 2 }, { name: "Quý III", value: 3 }, { name: "Quý IV", value: 4 }] }
-      , { type: "text", key: "description", name: "Mô tả", hint: "Hãy nhập mô tả kỳ bảo dưỡng", value: cycle.description, input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
-      , 
-      { 
-          type: "button"
-        , options: [
-          { name: "Reset", next: "RESET" }
-          , { name: "Bỏ qua", next: "CLOSE" }
-          , { name: "Xử lý", next: "CALLBACK", url: this.server + "/create-cycle", token: true }
-        ]
-      }
-    ]
-    };
-
-   
-    this.navCtrl.push(DynamicFormWebPage
+    this.navCtrl.push(MaintenanceListPage
       , {
         parent: this,
-        callback: this.callbackRebuild,
-        form: data
+        callback: this.callbackRebuild
       });
     
 }
@@ -318,8 +316,59 @@ export class MaintenanecePage {
       
     }
 
-    if (func==='PRINT-ONE'){
+    if (func==='MAINTAIN'){
+      this.navCtrl.push(MaintenanceListPage
+        , {
+          parent: this,
+          callback: this.callbackRebuild
+        });
+    }
+
+    if (func==='REPAIR'){
+      console.log("Cycle true??: ", this.roleCreate, cycle);
       
+      if (!this.roleCreate){
+        this.alertCtrl.create({
+          title: 'Cảnh báo',
+          subTitle: 'Bạn không có quyền thực hiện chức năng này',
+          buttons: ['Dismiss']
+        }).present();
+        return;
+      }
+
+      let data:any = {
+        
+        title: "CHỈNH SỬA KỲ BẢO DƯỠNG"
+      , home_disable: false //nut home
+      , buttons: [
+          {color:"danger", icon:"close", next:"CLOSE"} 
+        ]
+      , items: [
+        { type: "title",          name: "CHỌN VÀ NHẬP"}
+        , { type: "text", key: "id", disabled: true, name: "Mã chu kỳ", input_type: "text", value: cycle.id, icon: "alarm"}
+        , { type: "datetime", key: "year", name: "Năm", hint: "Hãy chọn năm bảo dưỡng", value: cycle.year, display:"YYYY", picker:"YYYY"}
+        , { type: "select", key: "quarter", name: "Chọn quý", value: cycle.quarter, options: [{ name: "Quý I", value: 1 }, { name: "Quý II", value: 2 }, { name: "Quý III", value: 3 }, { name: "Quý IV", value: 4 }] }
+        , { type: "text", key: "name", name: "Tên chu kỳ", hint: "Hãy nhập tên chu kỳ", value: cycle.description, input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
+        , { type: "text", key: "description", name: "Mô tả", hint: "Hãy nhập mô tả kỳ bảo dưỡng", value: cycle.description, input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
+        , 
+        { 
+            type: "button"
+          , options: [
+            { name: "Reset", next: "RESET" }
+            , { name: "Bỏ qua", next: "CLOSE" }
+            , { name: "Xử lý", next: "CALLBACK", url: this.server + "/"+this.function_string, token: true }
+          ]
+        }
+      ]
+      };
+  
+     
+      this.navCtrl.push(DynamicFormWebPage
+        , {
+          parent: this,
+          callback: this.callbackRebuild,
+          form: data
+        });
     }
 
     if (func==='RELOAD'){
