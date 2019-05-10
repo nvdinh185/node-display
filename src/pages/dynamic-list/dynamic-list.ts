@@ -49,8 +49,6 @@ export class DynamicListPage {
   offset:number; //dich chuyen option command
   
   isSearch: boolean = false;
-  searchString: string = '';
-  shouldShowCancel: boolean = true;
 
   isMobile: boolean = false;
 
@@ -117,8 +115,9 @@ export class DynamicListPage {
     this.isSearch = false;
   }
 
-  onInput(e){
-    console.log(this.searchString);
+  searchSelect(ev){
+    console.log('select item',ev)
+    this.isSearch = false;
   }
 
   onClickHeader(btn){

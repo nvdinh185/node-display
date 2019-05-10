@@ -9,12 +9,13 @@ export class ApiAutoCompleteService implements AutoCompleteService {
   constructor(private apiAuth: ApiAuthService) {}
 
   getResults(keyword:string) {
-    return this.apiAuth.getDynamicUrl("https://restcountries.eu/rest/v1/name/"+keyword)
-    .then(
+    return this.apiAuth.getDynamicUrl("https://restcountries.eu/rest/v2/name/"+keyword)
+      .then(
         result =>
-          {
-            return result.filter(item => item.name.toLowerCase().startsWith(keyword.toLowerCase()))
-          }
-    )
+        {
+          let rtn = result
+          .filter(item => item.name.toLowerCase().startsWith(keyword.toLowerCase()));
+          return  rtn
+        });
   }
 }
