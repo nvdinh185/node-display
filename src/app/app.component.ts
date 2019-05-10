@@ -49,9 +49,9 @@ export class MyApp {
     //se cho tat ca cac hotkey go duoc
   }
 
-  rootPage: any = HomeMenuPage;
+  rootPage: any = HomeNewsPage; //HomeMenuPage;
 
-  menuServer = "http://localhost:9238/site-manager" ;
+  menuServer = "http://localhost:9238/site-manager";
 
   treeMenu: any;
   callbackTreeMenu: any;

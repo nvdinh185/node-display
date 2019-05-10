@@ -221,20 +221,14 @@ export class HomeNewsPage {
   ) { }
 
   ngOnInit() {
-    let linkPublicNews = this.server + "/get-public-news?limit=" + this.maxOnePage + "&offset=" + this.pageIndexPublic;
-    this.getPublicNews(linkPublicNews);
-
+    this.getHomeNews(1);
     this.events.subscribe('event-main-login-checked'
       , (data => {
         this.userInfo = data.user;
         this.contacts = this.apiContact.getUniqueContacts();
 
-        //console.log('Contact for new',this.contacts, this.userInfo);
-        //them danh ba cua nguoi login vao
         if (this.userInfo) {
           if (!this.contacts[this.userInfo.username]) {
-            //console.log('userInfo_data: ', this.userInfo.data);
-
             Object.defineProperty(this.contacts, this.userInfo.username, {
               value: {
                 fullname: this.userInfo.data.fullname,
@@ -255,22 +249,14 @@ export class HomeNewsPage {
             if (this.userInfo.data && this.userInfo.data.avatar) this.contacts[this.userInfo.username].avatar = this.userInfo.data.avatar;
           }
         }
-        //console.log(this.auth.getUserInfo())
-        //console.log(this.apiStorageService.getToken());
-
-        console.log('Contact for new after: ', this.contacts);
-
-        let linkPrivateNews = this.server + "/get-news?limit=" + this.maxOnePage + "&offset=" + this.pageIndexPrivate;
-        this.getPrivateNews(linkPrivateNews);
+        this.getHomeNews(2);
       })
     )
     this.events.subscribe('postok', () => {
       this.pageIndexPublic = 0;
       this.pageIndexPrivate = 0;
-      let linkPublicNews = this.server + "/get-public-news?limit=" + this.maxOnePage + "&offset=" + this.pageIndexPublic;
-      this.getPublicNews(linkPublicNews, true);
-      let linkNews = this.server + "/get-news?limit=" + this.maxOnePage + "&offset=" + this.pageIndexPrivate;
-      this.getPrivateNews(linkNews, true);
+      this.getHomeNews(1, true);
+      this.getHomeNews(2, true);
     });
   }
 
@@ -282,56 +268,29 @@ export class HomeNewsPage {
     , items: []
   }
 
-  getPublicNews(linkNews, reNews?: boolean) {
-    this.dynamicCards.title = "Đây là trang tin của Public";
+  getHomeNews(status: number, reNews?: boolean) {
+    this.dynamicCards.title = "Đây là trang tin của " + (this.userInfo ? this.userInfo.username : "Public")
     let linkFile = this.server + "/get-file/"
 
-    this.auth.getDynamicUrl(linkNews)
+    let limit = this.maxOnePage;
+
+    let follows = [];
+    if (status != 1) {
+      for (let key in this.contacts) {
+        follows.push(key);
+      }
+    }
+    let json_data = {
+      limit: limit,
+      offset: status == 1 ? this.pageIndexPublic : this.pageIndexPrivate,
+      follows: follows
+    }
+
+    this.auth.postDynamicForm(this.server + "/get-news", json_data, true)
       .then(data => {
+        console.log(data)
         data.forEach(el => {
-          this.pageIndexPublic++;
-          let medias = [];
-          if (el.medias) {
-            el.medias.forEach(e => {
-              if (e.url.includes("upload_files")) {
-                e.image = linkFile + e.url;
-              } else {
-                e.image = e.url;
-              }
-              medias.push(e);
-            })
-          }
-
-          el.medias = medias;
-          el.actions = {
-            like: { name: "LIKE", color: "primary", icon: "thumbs-up", next: "LIKE" }
-            , comment: { name: "COMMENT", color: "primary", icon: "chatbubbles", next: "COMMENT" }
-            , share: { name: "SHARE", color: "primary", icon: "share-alt", next: "SHARE" }
-          }
-          el.short_detail = {
-            p: el.title
-            , note: el.time
-            , action: { color: "primary", icon: "more", next: "MORE" }
-          }
-
-          let index = this.dynamicCards.items
-            .findIndex(x => x.group_id === el.group_id);
-          if (index < 0) {
-            reNews ? this.dynamicCards.items.unshift(el) : this.dynamicCards.items.push(el);
-          }
-        });
-      })
-      .catch(err => console.log(err))
-  }
-
-  getPrivateNews(linkNews, reNews?: boolean) {
-    this.dynamicCards.title = "Đây là trang tin của " + (this.userInfo ? this.userInfo.username : "")
-    let linkFile = this.server + "/get-file/"
-
-    this.auth.getDynamicUrl(linkNews)
-      .then(data => {
-        data.forEach(el => {
-          this.pageIndexPrivate++;
+          status == 1 ? this.pageIndexPublic++ : this.pageIndexPrivate++;
           let medias = [];
           if (el.medias) {
             el.medias.forEach(e => {
@@ -361,16 +320,16 @@ export class HomeNewsPage {
             reNews ? this.dynamicCards.items.unshift(el) : this.dynamicCards.items.push(el);
           }
         });
+        //console.log("public: " + this.pageIndexPublic);
+        //console.log("private: " + this.pageIndexPrivate);
       })
       .catch(err => console.log(err))
   }
 
   doInfinite(ev) {
-    let linkPublicNews = this.server + "/get-public-news?limit=" + this.maxOnePage + "&offset=" + this.pageIndexPublic;
-    this.getPublicNews(linkPublicNews);
+    this.getHomeNews(1);
     if (this.userInfo) {
-      let linkPrivateNews = this.server + "/get-news?limit=" + this.maxOnePage + "&offset=" + this.pageIndexPrivate;
-      this.getPrivateNews(linkPrivateNews);
+      this.getHomeNews(2);
     }
     setTimeout(() => {
       ev.complete();
@@ -380,11 +339,9 @@ export class HomeNewsPage {
   doRefresh(ev) {
     this.pageIndexPublic = 0;
     this.pageIndexPrivate = 0;
-    let linkPublicNews = this.server + "/get-public-news?limit=" + this.maxOnePage + "&offset=" + this.pageIndexPublic;
-    this.getPublicNews(linkPublicNews, true);
+    this.getHomeNews(1, true);
     if (this.userInfo) {
-      let linkPrivateNews = this.server + "/get-news?limit=" + this.maxOnePage + "&offset=" + this.pageIndexPrivate;
-      this.getPrivateNews(linkPrivateNews, true);
+      this.getHomeNews(2, true);
     }
     setTimeout(() => {
       ev.complete();
@@ -397,44 +354,45 @@ export class HomeNewsPage {
       modal.present();
     }
   }
-
-  onClickShortDetails(a, b) {
-    console.log(a, b);
-  }
-
-  onClickMedia(number, it) {
-    //console.log(number);
-    //console.log(it);
-    let dynamicCardsOrigin: any = {
-      title: it.user
-      , buttons: [
-        { color: "danger", icon: "close", next: "CLOSE" }
-      ]
-      , items: [
-        {
-          short_detail: {
-            avatar: this.userInfo ? this.userInfo.data.image : ""
-            , h1: this.userInfo.data.fullname
-            , p: it.content
-            , note: it.time
-            , action: { color: "primary", icon: "more", next: "MORE" }
+  /*
+    onClickShortDetails(a, b) {
+      console.log(a, b);
+    }
+  
+    onClickMedia(number, it) {
+      //console.log(number);
+      //console.log(it);
+      let dynamicCardsOrigin: any = {
+        title: it.user
+        , buttons: [
+          { color: "danger", icon: "close", next: "CLOSE" }
+        ]
+        , items: [
+          {
+            short_detail: {
+              avatar: this.userInfo ? this.userInfo.data.image : ""
+              , h1: this.userInfo.data.fullname
+              , p: it.content
+              , note: it.time
+              , action: { color: "primary", icon: "more", next: "MORE" }
+            }
+            , content: {
+              title: it.title
+              , paragraphs: [
+                {
+                  //h2: "Chốn yên bình"
+                  //, p: "Là nơi bình yên nhất. Bạn có thể dạo bước trên con đường rợp bóng mát thanh bình đến lạ"
+                  medias: it.medias
+                }
+              ]
+              , note: "Nguyễn Văn Định 2019"
+            }
+            , actions: it.actions
           }
-          , content: {
-            title: it.title
-            , paragraphs: [
-              {
-                //h2: "Chốn yên bình"
-                //, p: "Là nơi bình yên nhất. Bạn có thể dạo bước trên con đường rợp bóng mát thanh bình đến lạ"
-                medias: it.medias
-              }
-            ]
-            , note: "Nguyễn Văn Định 2019"
-          }
-          , actions: it.actions
-        }
-      ]
-    };
-    let modal = this.modalCtrl.create(DynamicCardSocialPage, { form: dynamicCardsOrigin });
-    modal.present();
-  }
+        ]
+      };
+      let modal = this.modalCtrl.create(DynamicCardSocialPage, { form: dynamicCardsOrigin });
+      modal.present();
+    }
+    */
 }

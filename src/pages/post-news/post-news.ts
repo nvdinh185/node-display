@@ -20,7 +20,7 @@ export class PostNewsPage implements OnInit {
   }
 
   userInfo: any;
-  server = "http://localhost:9238/news"
+  server = "http://localhost:9238/site-manager/news"
 
   constructor(
     public navCtrl: NavController,

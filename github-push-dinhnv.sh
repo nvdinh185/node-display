@@ -7,5 +7,5 @@ git commit -m "dinhnv push by sh"
 #git remote remove github 
 #(thay chu origin = github de quan ly de hon)
 #git remote add github https://github.com/cuongdqpayment/cuongdq-ionic-speedtest.git
-git push -u github master #push lên kho chung
+#git push -u github master #push lên kho chung
 git push -u gitdinh master #push len git dinh

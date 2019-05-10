@@ -16,10 +16,9 @@ class ResourceHandler {
 
     getMediaFile(req, res) {
         let path = req.pathName
-        let params = path.substring('/news/get-file/'.length);
+        let params = path.substring('/site-manager/news/get-file/'.length);
         let fileRead = params.replace('/', systempath.sep);
         let contentType;
-        console.log(fileRead)
 
         if (mime.lookup(fileRead)) contentType = mime.lookup(fileRead);
 
@@ -34,14 +33,23 @@ class ResourceHandler {
         });
     }
 
-    getPrivateNewsList(req, res) {
+    getNewsList(req, res) {
+        //req.user,
+        //req.json_data.follows,
+        //req.json_data.limit
+        //req.json_data.offset
+        let users = "123456789";
+        if (req.json_data.follows.length > 0) {
+            users = req.user.username;
+        }
+        console.log("user: ", req.user.username)
+        console.log("length: ", req.json_data.follows.length)
         db.getRsts("select *\
                     from news\
-                    where user = '"+ (req.paramS && req.paramS.user ? req.paramS.user : req.user && req.user.username ? req.user.username : "766777123") + "'\
-                    and share_status != 1\
+                    where user in ("+ users + ")\
                     order by time desc\
-                    LIMIT "+ (req.paramS && req.paramS.limit ? req.paramS.limit : 10) + "\
-                    OFFSET "+ (req.paramS && req.paramS.offset ? req.paramS.offset : 0) + "\
+                    LIMIT "+ (req.json_data && req.json_data.limit ? req.json_data.limit : 6) + "\
+                    OFFSET "+ (req.json_data && req.json_data.offset ? req.json_data.offset : 0) + "\
                     ")
             .then(results => {
                 //lay file chi tiet tra cho nhom
@@ -81,73 +89,6 @@ class ResourceHandler {
                                     .catch(err => reject(err))
                             } else {
                                 //console.log("01")
-                                countDetails++;
-                                if (countDetails == results.length) {
-                                    resolve();
-                                };
-                            }
-                        }
-                    }
-                })
-                detailsPromise.then(data => {
-                    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                    res.end(JSON.stringify(results
-                        , (key, value) => {
-                            if (value === null) { return undefined; }
-                            return value
-                        }
-                    ));
-                })
-                    .catch(err => {
-                        res.writeHead(404, { 'Content-Type': 'text/html' });
-                        res.end(JSON.stringify(err));
-                    })
-            }).catch(err => {
-                res.writeHead(404, { 'Content-Type': 'text/html' });
-                res.end(JSON.stringify(err));
-            })
-    }
-
-    getPublicNewsList(req, res) {
-        db.getRsts("select * from news where share_status = 1\
-                    order by time desc\
-                    LIMIT "+ (req.paramS && req.paramS.limit ? req.paramS.limit : 10) + "\
-                    OFFSET "+ (req.paramS && req.paramS.offset ? req.paramS.offset : 0))
-            .then(results => {
-                //lay file chi tiet tra cho nhom
-                let detailsPromise = new Promise((resolve, reject) => {
-                    if (!results || results.length === 0) {
-                        resolve();
-                    } else {
-                        let countDetails = 0;
-                        for (let idx = 0; idx < results.length; idx++) {
-                            if (results[idx].news_type == 1) {
-                                db.getRsts("select *\
-                                from news_files\
-                                where group_id = '"+ results[idx].group_id + "'\
-                                ")
-                                    .then(files => {
-                                        countDetails++;
-                                        results[idx].medias = files;
-                                        if (countDetails == results.length) {
-                                            resolve();
-                                        };
-                                    })
-                                    .catch(err => reject(err))
-                            } else if (results[idx].news_type == 2) {
-                                db.getRsts("select *\
-                                from news_shares\
-                                where group_id = '"+ results[idx].group_id + "'\
-                                ")
-                                    .then(files => {
-                                        countDetails++;
-                                        results[idx].medias = files;
-                                        if (countDetails == results.length) {
-                                            resolve();
-                                        };
-                                    })
-                                    .catch(err => reject(err))
-                            } else {
                                 countDetails++;
                                 if (countDetails == results.length) {
                                     resolve();

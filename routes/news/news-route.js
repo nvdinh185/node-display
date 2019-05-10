@@ -15,13 +15,11 @@ router.post('/post-news'
     , postHandler.formProcess        //lay req.form_data
     , handlers.postNewsFiles        //luu csdl
 );
-router.get('/get-public-news'
-    , handlers.getPublicNewsList
-);
-router.get('/get-news'
-    , tokenHandler.getToken
+router.post('/get-news'
+    , postHandler.jsonProcess //lay du lieu req.json_data.friends/follows/publics/limit/offset
+    , tokenHandler.getTokenNext
     , proxyHandler.verifyProxyToken
-    , handlers.getPrivateNewsList
+    , handlers.getNewsList //lay tin tuc tu req.user?, publics, follows, friends,
 );
 router.get('/get-file/*'
     //, tokenHandler.getToken
