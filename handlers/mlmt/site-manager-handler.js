@@ -442,10 +442,29 @@ class Handler {
                 ));
             })
             .catch(err => {
-                res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8'});
                 res.end(JSON.stringify([]));
             });
         ;
+    }
+
+    getMaintenanceList(req, res, next) {
+        db.getRsts("select *\
+         from maintenance_list\
+         where type=1")
+        .then(results => {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify(results
+                , (key, value) => {
+                    if (value === null) { return undefined; }
+                    return value;
+                }
+            ));
+        })
+        .catch(err => {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify([]));
+        });
     }
 }
 
