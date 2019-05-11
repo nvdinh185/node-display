@@ -18,6 +18,7 @@ import { TimeAgoPipe} from 'time-ago-pipe';
 import { AutoCompleteModule } from 'ionic2-auto-complete';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { NgxBarcodeModule } from 'ngx-barcode';
+import { ChartsModule } from 'ng2-charts-x';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 
@@ -79,6 +80,7 @@ import { HomeNewsPage } from '../pages/home-news/home-news';
 import { PostNewsPage } from '../pages/post-news/post-news';
 import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list';
 import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
+import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
 
 
 @NgModule({
@@ -105,6 +107,7 @@ import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
     DynamicCardSocialPage,
     DynamicMediasPage,
     DynamicListOrderPage,
+    DynamicChartPage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
@@ -130,6 +133,7 @@ import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
     StorageServiceModule,
     NgxBarcodeModule,
     NgxQRCodeModule,
+    ChartsModule,
     AutoCompleteModule,
     IonicModule.forRoot(MyApp)
   ],
@@ -157,6 +161,7 @@ import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
     DynamicCardSocialPage,
     DynamicMediasPage,
     DynamicListOrderPage,
+    DynamicChartPage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,

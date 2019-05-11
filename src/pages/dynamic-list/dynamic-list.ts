@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, ItemSliding, Platform, NavParams, ViewController, LoadingController } from 'ionic-angular';
+import { NavController, ItemSliding, Platform, NavParams, ViewController, LoadingController, AlertController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
 import { ApiHttpPublicService } from '../../services/apiHttpPublicServices';
 import { AutoCompleteComponent } from 'ionic2-auto-complete';
@@ -56,6 +56,7 @@ export class DynamicListPage {
               , private authService: ApiAuthService
               , private pubService: ApiHttpPublicService
               , private viewCtrl: ViewController
+              , private alertCtrl: AlertController
               , private navCtrl: NavController
               , private apiAutoComplete: ApiAutoCompleteService
               , private loadingCtrl: LoadingController
@@ -116,8 +117,34 @@ export class DynamicListPage {
   }
 
   searchSelect(ev){
-    console.log('select item',ev)
-    this.isSearch = false;
+    console.log('select item',ev);
+    //hoi xem dong y chon dua vao ko?
+    this.alertCtrl.create({
+      title: 'Xác nhận',
+      message: 'Bạn muốn chọn ' + ev.name + ' này phải không?',
+      buttons: [
+        {
+          text: 'Bỏ qua',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+            this.isSearch = false;
+          }
+        },
+        {
+          text: 'Chọn',
+          handler: () => {
+            ev.image=  ev.flag;
+            ev.title = ev.nativeName;
+            ev.content = ev.subregion;
+            ev.note = Date.now();
+            this.dynamicList.items.unshift(ev);
+            this.isSearch = false;
+          }
+        }
+      ]
+    }).present();
+    
   }
 
   onClickHeader(btn){

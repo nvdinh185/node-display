@@ -64,8 +64,8 @@
                 </button>
             </ion-item-options>
 
-            <ion-item-options side="left">
-                <button ion-button color="primary" expandable (click)="onClickDetails(slidingItem, it, 4)">
+            <ion-item-options side="left" (ionSwipe)="onClickDetails(slidingItem, it, 4)">
+                <button ion-button color="primary" expandable>
                     <ion-icon name="checkmark"></ion-icon>
                     <div>Read</div>
                     <ion-spinner id="archive-spinner"></ion-spinner>
