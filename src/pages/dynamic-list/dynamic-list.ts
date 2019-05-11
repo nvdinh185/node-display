@@ -11,7 +11,7 @@ import { ApiAutoCompleteService } from '../../services/apiAutoCompleteService';
 })
 export class DynamicListPage {
   
-  @ViewChild('searchbar') searchbar: AutoCompleteComponent;
+  @ViewChild('searchBar') searchbar: AutoCompleteComponent;
 
   dynamicList: any = {}; 
   dynamicListOrigin: any = {
@@ -110,6 +110,8 @@ export class DynamicListPage {
   //---------------------
   goSearch(){
     this.isSearch = true;
+    /* console.log(this.searchbar);
+    this.searchbar.setFocus(); */
   }
 
   searchEnter(){
