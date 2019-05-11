@@ -1,7 +1,7 @@
 <ion-header>
     <ion-navbar>
 
-        <ion-buttons *ngIf="!isSearch && dynamicList?.search_bar" start>
+        <ion-buttons end *ngIf="!isSearch && dynamicList?.search_bar">
             <button ion-button icon-only color="royal" (click)="goSearch()">
                 <ion-icon name="search"></ion-icon>
             </button>
@@ -20,13 +20,22 @@
 
 <ion-content class="list-avatar-page">
 
-    <div *ngIf="isSearch && dynamicList?.search_bar" style="width: 100%; z-index: 999;position: absolute;">
+    <div *ngIf="isSearch && dynamicList?.search_bar" 
+    style="width: 100%; z-index: 999;position: absolute;">
         <ng-template #withFlags let-attrs="attrs">
-            <img src="{{attrs.data.flag}}" class="flag" /> 
+            <img src="{{attrs.data.flag}}" class="flag" />
             <span [innerHTML]="attrs.data.name | boldprefix:attrs.keyword"></span>
         </ng-template>
-        <ion-auto-complete #searchbar [template]="withFlags" [dataProvider]="apiAutoComplete"
-            (itemSelected)="searchSelect($event)">
+        <ion-auto-complete #searchbar 
+        (focusout)="searchEnter()"
+        [options]="searchOptions"
+        [(ngModel)]="searchString"
+        (keyup.enter)="searchEnter()"
+        (keyup.esc)="searchEnter()"
+        (ionBlur)="searchEnter()"
+        [template]="withFlags" 
+        [dataProvider]="apiAutoComplete"
+        (itemSelected)="searchSelect($event)">
         </ion-auto-complete>
     </div>
 

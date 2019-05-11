@@ -18,14 +18,11 @@ export class DynamicListPage {
     title: "Danh sách kiểu viber"
     , search_bar: {hint: "Tìm cái gì đó"} 
     , buttons: [
-        {color:"primary", icon:"add", next:"ADD"}
-        , {color:"primary", icon:"contacts", next:"FRIENDS"}
-        , {color:"primary", icon:"notifications", next:"NOTIFY"
+        {color:"primary", icon:"notifications", next:"NOTIFY"
           , alerts:[
               "cuong.dq"
               ]
-          }
-        , {color:"royal", icon:"cog", next:"SETTINGS"}
+        }
       ]
     , items: [
         {
@@ -49,6 +46,8 @@ export class DynamicListPage {
   offset:number; //dich chuyen option command
   
   isSearch: boolean = false;
+  searchString: string = '';
+  searchOptions = { placeholder : 'Tìm Quốc gia nào?' };
 
   isMobile: boolean = false;
 
@@ -81,6 +80,7 @@ export class DynamicListPage {
         this.resetForm();
       })
     }
+
   }
 
   resetForm(list?:any) {
@@ -114,6 +114,7 @@ export class DynamicListPage {
 
   searchEnter(){
     this.isSearch = false;
+    console.log('search string:',this.searchString);
   }
 
   searchSelect(ev){
@@ -144,6 +145,9 @@ export class DynamicListPage {
         }
       ]
     }).present();
+
+
+    this.searchString = "";
     
   }
 

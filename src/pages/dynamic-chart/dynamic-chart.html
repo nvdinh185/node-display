@@ -1,7 +1,7 @@
 <ion-header>
     <ion-navbar>
-
-        <ion-buttons *ngIf="!isSearch && dynamicList?.search_bar" start>
+        
+        <ion-buttons end *ngIf="!isSearch && dynamicList?.search_bar">
             <button ion-button icon-only color="royal" (click)="goSearch()">
                 <ion-icon name="search"></ion-icon>
             </button>
@@ -20,25 +20,40 @@
 
 <ion-content class="list-avatar-page">
     <div style="display: block">
-        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
-            (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+        <canvas baseChart 
+        [chartType]="doughnutChartType"
+        [data]="doughnutChartData" 
+        [labels]="doughnutChartLabels" 
+        [options]="doughnutChartOptions"
+        (chartHover)="chartHovered($event)" 
+        (chartClick)="chartClicked($event)"></canvas>
     </div>
 
     <div>
         <div style="display: block">
-            <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
-                [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
+            <canvas baseChart 
+            [chartType]="barChartType" 
+            [datasets]="barChartData" 
+            [labels]="barChartLabels" 
+            [options]="barChartOptions"
+            [legend]="barChartLegend" 
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
         </div>
         <button (click)="randomize()">Update</button>
     </div>
 
     <div>
         <div style="display: block;">
-            <canvas baseChart width="300" height="400" [datasets]="lineChartData" [labels]="lineChartLabels"
-                [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
-                [chartType]="lineChartType" (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
+            <canvas baseChart width="300" height="400" 
+            [chartType]="lineChartType" 
+            [datasets]="lineChartData" 
+            [labels]="lineChartLabels"
+            [options]="lineChartOptions" 
+            [colors]="lineChartColors" 
+            [legend]="lineChartLegend"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
         </div>
         <button (click)="randomizeLine()">Update</button>
     </div>

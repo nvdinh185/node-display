@@ -14,16 +14,12 @@ export class DynamicChartPage {
   dynamicListOrigin: any = {
     title: "Biểu đồ, đồ thị"
     , search_bar: { hint: "Tìm cái gì đó" }
-    , buttons: [
-      { color: "primary", icon: "add", next: "ADD" }
-      , { color: "primary", icon: "contacts", next: "FRIENDS" }
-      , {
+    , buttons: [{
         color: "primary", icon: "notifications", next: "NOTIFY"
         , alerts: [
           "cuong.dq"
         ]
       }
-      , { color: "royal", icon: "cog", next: "SETTINGS" }
     ]
     , items: [
       {
@@ -48,8 +44,6 @@ export class DynamicChartPage {
 
   isSearch: boolean = false;
 
-
-
   //define color
   chartColors = {
     red: 'rgb(255, 99, 132)',
@@ -65,6 +59,39 @@ export class DynamicChartPage {
   doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
   doughnutChartData: number[] = [350, 450, 100];
   doughnutChartType: string = 'doughnut';
+  doughnutChartOptions: any = 
+  {
+    tooltips: {
+        enabled: false //default true
+    },
+    plugins: {
+        datalabels: {
+            formatter: (value, ctx) => {
+                let sum = 0;
+                let dataArr = ctx.chart.data.datasets[0].data;
+                dataArr.map(data => {
+                    sum += data;
+                });
+                let percentage = (value*100 / sum).toFixed(0)+"%";
+                return percentage;
+            },
+            color: '#fff',
+        } 
+    }
+};
+  
+  
+  /* {
+
+    plugins: {
+            labels: {
+                // render 'label', 'value', 'percentage', 'image' or custom function, default is 'percentage'
+                render: 'label',
+                fontColor: ['green', 'white', 'red'],
+                precision: 2
+              }
+      }
+  } */
 
   //bar
   barChartOptions:any = {
@@ -135,17 +162,23 @@ export class DynamicChartPage {
 
     //Chart.defaults.global.plugins.datalabels.display = false;
 
-    Chart.defaults.global.plugins.labels = [
-      {
-        render: 'label',
-        position: 'outside'
-      },
-      {
-        render: 'value'
+    /* Chart.defaults.global.plugins.datalabels = {
+      labels: {
+        render: 'percentage',
+        fontColor: ['green', 'white', 'red'],
+        precision: 2
       }
-    ];
+    } */
 
-    /* {
+
+
+    /* 
+    per dataset: dataset.datalabels.*
+    per chart: options.plugins.datalabels.*
+    or globally: Chart.defaults.global.plugins.datalabels.*
+    
+    
+    {
       labels: {
         render: 'percentage',
         fontColor: ['green', 'white', 'red'],
