@@ -75,6 +75,7 @@ import { ReviewMaintenancePage } from '../pages/review-maintenance/review-mainte
 import { DocumentsPage } from '../pages/documents/documents';
 import { HomeNewsPage } from '../pages/home-news/home-news';
 import { PostNewsPage } from '../pages/post-news/post-news';
+import { TestPage } from '../pages/test/test';
 
 
 @NgModule({
@@ -117,7 +118,8 @@ import { PostNewsPage } from '../pages/post-news/post-news';
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
-    PostNewsPage
+    PostNewsPage,
+    TestPage
   ],
   imports: [
     BrowserModule,
@@ -163,7 +165,8 @@ import { PostNewsPage } from '../pages/post-news/post-news';
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
-    PostNewsPage
+    PostNewsPage,
+    TestPage
   ],
   providers: [
     StatusBar,

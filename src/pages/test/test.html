@@ -1,0 +1,19 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>test</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col class="background-card gradient grid-border">
+        <tree-view [treeData]="treeMenu" [callback]="callbackTreeMenu"></tree-view>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <button ion-button (click)="openBrowser()">Click me</button>
+</ion-content>

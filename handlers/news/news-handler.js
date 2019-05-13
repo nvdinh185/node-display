@@ -43,7 +43,6 @@ class ResourceHandler {
             users = req.user.username;
         }
         //console.log("user: ", users)
-        //console.log("length: ", req.json_data.follows.length)
         db.getRsts("select *\
                     from news\
                     where user in ("+ users + ")\

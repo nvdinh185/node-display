@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { Events, ModalController } from 'ionic-angular';
+import { Events, ModalController, Platform } from 'ionic-angular';
 import { PostNewsPage } from '../post-news/post-news';
 import { ApiAuthService } from '../../services/apiAuthService';
 import { ApiStorageService } from '../../services/apiStorageService';
 import { DynamicCardSocialPage } from '../dynamic-card-social/dynamic-card-social';
 import { ApiContactService } from '../../services/apiContactService';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { LinkPage } from '../link/link';
 
 @Component({
   selector: 'page-home-news',
@@ -216,12 +218,14 @@ export class HomeNewsPage {
   constructor(private events: Events
     , public modalCtrl: ModalController
     , private auth: ApiAuthService
+    , private platform: Platform
+    , private inAppBrowser: InAppBrowser
     , private apiContact: ApiContactService
     , private apiStorageService: ApiStorageService
   ) { }
 
   ngOnInit() {
-    this.getHomeNews(1);
+    this.refreshNews();
     this.events.subscribe('event-main-login-checked'
       , (data => {
         this.userInfo = data.user;
@@ -266,6 +270,10 @@ export class HomeNewsPage {
       { color: "primary", icon: "photos", next: "ADD" }
     ]
     , items: []
+  }
+
+  refreshNews() {
+    this.getHomeNews(1);
   }
 
   getHomeNews(status: number, reNews?: boolean) {
@@ -351,14 +359,23 @@ export class HomeNewsPage {
       modal.present();
     }
   }
-  /*
-    onClickShortDetails(a, b) {
-      console.log(a, b);
-    }
-  */
-    onClickMedia(number, it) {
-      //console.log(number);
-      //console.log(it);
+
+  onClickMedia(number, it) {
+    //console.log(number);
+    //console.log(it);
+    if (it.news_type == 2) {
+      if (this.platform.is('ios')) {
+        var target = "_blank";
+        var options = "hidden=no,toolbar=yes,location=yes,presentationstyle=fullscreen,clearcache=yes,clearsessioncache=yes";
+        this.inAppBrowser.create(it.content, target, options);
+      } else {
+        this.openModal(LinkPage
+          , {
+            parent: this,
+            link: it.content
+          });
+      }
+    } else {
       let dynamicCardsOrigin: any = {
         title: it.user
         , buttons: [
@@ -391,4 +408,10 @@ export class HomeNewsPage {
       let modal = this.modalCtrl.create(DynamicCardSocialPage, { form: dynamicCardsOrigin });
       modal.present();
     }
+  }
+
+  openModal(form, data?: any) {
+    let modal = this.modalCtrl.create(form, data);
+    modal.present();
+  }
 }

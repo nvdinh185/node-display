@@ -33,6 +33,7 @@ import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
 import { ReviewMaintenancePage } from '../pages/review-maintenance/review-maintenance';
 import { DocumentsPage } from '../pages/documents/documents';
 import { HomeNewsPage } from '../pages/home-news/home-news';
+import { TestPage } from '../pages/test/test';
 
 
 @Component({
