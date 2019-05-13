@@ -1,27 +1,28 @@
-import { Component } from '@angular/core';
-import { NavController, ItemSliding, Item, Platform, NavParams, ViewController, LoadingController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, ItemSliding, Platform, NavParams, ViewController, LoadingController, AlertController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
 import { ApiHttpPublicService } from '../../services/apiHttpPublicServices';
+import { AutoCompleteComponent } from 'ionic2-auto-complete';
+import { ApiAutoCompleteService } from '../../services/apiAutoCompleteService';
 
 @Component({
   selector: 'page-dynamic-list',
   templateUrl: 'dynamic-list.html'
 })
 export class DynamicListPage {
+  
+  @ViewChild('searchBar') searchbar: AutoCompleteComponent;
 
   dynamicList: any = {}; 
   dynamicListOrigin: any = {
     title: "Danh sách kiểu viber"
     , search_bar: {hint: "Tìm cái gì đó"} 
     , buttons: [
-        {color:"primary", icon:"add", next:"ADD"}
-        , {color:"primary", icon:"contacts", next:"FRIENDS"}
-        , {color:"primary", icon:"notifications", next:"NOTIFY"
+        {color:"primary", icon:"notifications", next:"NOTIFY"
           , alerts:[
               "cuong.dq"
               ]
-          }
-        , {color:"royal", icon:"cog", next:"SETTINGS"}
+        }
       ]
     , items: [
         {
@@ -46,7 +47,7 @@ export class DynamicListPage {
   
   isSearch: boolean = false;
   searchString: string = '';
-  shouldShowCancel: boolean = true;
+  searchOptions = { placeholder : 'Tìm Quốc gia nào?' };
 
   isMobile: boolean = false;
 
@@ -54,7 +55,9 @@ export class DynamicListPage {
               , private authService: ApiAuthService
               , private pubService: ApiHttpPublicService
               , private viewCtrl: ViewController
+              , private alertCtrl: AlertController
               , private navCtrl: NavController
+              , private apiAutoComplete: ApiAutoCompleteService
               , private loadingCtrl: LoadingController
               , private navParams: NavParams
              ) {}
@@ -77,6 +80,7 @@ export class DynamicListPage {
         this.resetForm();
       })
     }
+
   }
 
   resetForm(list?:any) {
@@ -106,14 +110,47 @@ export class DynamicListPage {
   //---------------------
   goSearch(){
     this.isSearch = true;
+    /* console.log(this.searchbar);
+    this.searchbar.setFocus(); */
   }
 
   searchEnter(){
     this.isSearch = false;
+    console.log('search string:',this.searchString);
   }
 
-  onInput(e){
-    console.log(this.searchString);
+  searchSelect(ev){
+    console.log('select item',ev);
+    //hoi xem dong y chon dua vao ko?
+    this.alertCtrl.create({
+      title: 'Xác nhận',
+      message: 'Bạn muốn chọn ' + ev.name + ' này phải không?',
+      buttons: [
+        {
+          text: 'Bỏ qua',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+            this.isSearch = false;
+          }
+        },
+        {
+          text: 'Chọn',
+          handler: () => {
+            ev.image=  ev.flag;
+            ev.title = ev.nativeName;
+            ev.content = ev.subregion;
+            ev.note = Date.now();
+            this.dynamicList.items.unshift(ev);
+            this.isSearch = false;
+          }
+        }
+      ]
+    }).present();
+
+
+    this.searchString = "";
+    
   }
 
   onClickHeader(btn){

@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -14,8 +15,10 @@ import { HomeSpeedtestPage } from '../pages/home-speedtest/home-speedtest';
 import { HomeMenuPage } from '../pages/home-menu/home-menu';
 import { TimeAgoPipe} from 'time-ago-pipe';
 
+import { AutoCompleteModule } from 'ionic2-auto-complete';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { NgxBarcodeModule } from 'ngx-barcode';
+import { ChartsModule } from 'ng2-charts-x';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 
@@ -76,8 +79,10 @@ import { DocumentsPage } from '../pages/documents/documents';
 import { HomeNewsPage } from '../pages/home-news/home-news';
 import { PostNewsPage } from '../pages/post-news/post-news';
 import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list';
-import { Ng2CompleterModule } from "ng2-completer";
+import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
+import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
 import { SearchSitePage } from '../pages/search-site/search-site';
+
 
 @NgModule({
   declarations: [
@@ -103,6 +108,7 @@ import { SearchSitePage } from '../pages/search-site/search-site';
     DynamicCardSocialPage,
     DynamicMediasPage,
     DynamicListOrderPage,
+    DynamicChartPage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
@@ -129,7 +135,8 @@ import { SearchSitePage } from '../pages/search-site/search-site';
     StorageServiceModule,
     NgxBarcodeModule,
     NgxQRCodeModule,
-    Ng2CompleterModule,
+    ChartsModule,
+    AutoCompleteModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -156,6 +163,7 @@ import { SearchSitePage } from '../pages/search-site/search-site';
     DynamicCardSocialPage,
     DynamicMediasPage,
     DynamicListOrderPage,
+    DynamicChartPage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
@@ -197,6 +205,7 @@ import { SearchSitePage } from '../pages/search-site/search-site';
     ApiContactService,
     ApiChatService,
     RequestInterceptor,
+    ApiAutoCompleteService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,

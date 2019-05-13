@@ -50,4 +50,10 @@ router.get('/maintenance-sites'
     , handlers.getMaintenanceSites             //lay menu theo user cua token neu co
 );
 
+router.get('/maintenance-list'
+    // , tokenHandler.getTokenNext    //req.token
+    // , proxyHandler.verifyProxyTokenNext //lay req.user tu req.token new co
+    , handlers.getMaintenanceList 
+);
+
 module.exports = router;

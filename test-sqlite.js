@@ -1,9 +1,10 @@
 "use strict"
 
 const SQLiteDAO = require('./db/sqlite3/sqlite-dao');
-// const dbFile = './db/database/mlmt-site-manager-v3.db';
 const dbFile = './db/database/mlmt-site-manager-v6.db';
 const db = new SQLiteDAO(dbFile);
+
+const arrObj = require('./utils/array-object');
 
 
 setTimeout(() => {
@@ -57,8 +58,12 @@ setTimeout(() => {
                                       }
                  ) */
 
-    db.runSql("update maintenance_cycles set create_time="+Date.now())
+    /* db.runSql("update maintenance_cycles set create_time="+Date.now()) */
+    db.getRsts("select *\
+         from maintenance_list\
+         where type=1")
     .then(data=>{
-        console.log(data);
+     let dataS  =  arrObj.createTree(data,'id','parent_id', null);
+        console.log(dataS);
     });
 }, 1000);

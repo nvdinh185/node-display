@@ -1,7 +1,7 @@
 <ion-header>
     <ion-navbar>
 
-        <ion-buttons *ngIf="!isSearch && dynamicList?.search_bar" start>
+        <ion-buttons end *ngIf="!isSearch && dynamicList?.search_bar">
             <button ion-button icon-only color="royal" (click)="goSearch()">
                 <ion-icon name="search"></ion-icon>
             </button>
@@ -13,58 +13,73 @@
             </button>
         </ion-buttons>
 
-        <ion-searchbar *ngIf="isSearch && dynamicList?.search_bar" placeholder="{{dynamicList?.search_bar.hint}}"
-            [(ngModel)]="searchString" [showCancelButton]="shouldShowCancel" (ionInput)="onInput($event)" (keyup.enter)="searchEnter()"
-            (keyup.esc)="searchEnter()" start>
-        </ion-searchbar>
-
         <ion-title *ngIf="!isSearch">{{dynamicList?.title}}</ion-title>
 
     </ion-navbar>
 </ion-header>
 
 <ion-content class="list-avatar-page">
+
+    <div *ngIf="isSearch && dynamicList?.search_bar" 
+    style="width: 100%; z-index: 999;position: absolute;">
+        <ng-template #withFlags let-attrs="attrs">
+            <img src="{{attrs.data.flag}}" class="flag" />
+            <span [innerHTML]="attrs.data.name | boldprefix:attrs.keyword"></span>
+        </ng-template>
+        <ion-auto-complete
+        (focusout)="searchEnter()"
+        [options]="searchOptions"
+        [(ngModel)]="searchString"
+        (keyup.enter)="searchEnter()"
+        (keyup.esc)="searchEnter()"
+        (ionBlur)="searchEnter()"
+        [template]="withFlags" 
+        [dataProvider]="apiAutoComplete"
+        (itemSelected)="searchSelect($event)" #searchBar>
+        </ion-auto-complete>
+    </div>
+
     <ion-list>
 
         <ion-item-sliding #slidingItem class="background-list" *ngFor="let it of dynamicList.items; let idx = index">
-            
-                <ion-item #item class="background-item" tappable (click)="onClickDetails(slidingItem,it,0)">
-                    <ion-icon item-start *ngIf="!it.image&&it.icon" name="{{it.icon}}" color="{{it.color}}"></ion-icon>
-                    <ion-avatar *ngIf="it.image" item-start>
-                        <img [src]="it.image">
-                    </ion-avatar>
-                    <ion-title >{{it.title}}</ion-title>
-                    <p text-wrap>{{it.content}}</p>
-                    <ion-note item-end>
-                        {{it.note | timeAgo}}
-                        <p style="text-align: right;" *ngIf="it.alert">
-                            <ion-badge color="danger">{{ it.alert?.length }}</ion-badge>
-                        </p>
-                    </ion-note>
-                </ion-item>
-    
-                <ion-item-options>
-                    <button ion-button color="bg-blue" (click)="onClickDetails(slidingItem, it, 1)">
-                        <ion-icon name="ios-arrow-dropup"></ion-icon>
-                        Pin
-                    </button>
-                    <button ion-button color="secondary" (click)="onClickDetails(slidingItem, it, 2)">
-                        <ion-icon name="volume-off"></ion-icon>
-                        Mute
-                    </button>
-                    <button ion-button color="danger" (click)="onClickDetails(slidingItem, it, 3)">
-                        <ion-icon name="trash"></ion-icon>
-                        Delete
-                    </button>
-                </ion-item-options>
-    
-                <ion-item-options side="left">
-                    <button ion-button color="primary" expandable (click)="onClickDetails(slidingItem, it, 4)">
-                        <ion-icon name="checkmark"></ion-icon>
-                        <div>Read</div>
-                        <ion-spinner id="archive-spinner"></ion-spinner>
-                    </button>
-                </ion-item-options>
+
+            <ion-item #item class="background-item" tappable (click)="onClickDetails(slidingItem,it,0)">
+                <ion-icon item-start *ngIf="!it.image&&it.icon" name="{{it.icon}}" color="{{it.color}}"></ion-icon>
+                <ion-avatar *ngIf="it.image" item-start>
+                    <img [src]="it.image">
+                </ion-avatar>
+                <ion-title>{{it.title}}</ion-title>
+                <p text-wrap>{{it.content}}</p>
+                <ion-note item-end>
+                    {{it.note | timeAgo}}
+                    <p style="text-align: right;" *ngIf="it.alert">
+                        <ion-badge color="danger">{{ it.alert?.length }}</ion-badge>
+                    </p>
+                </ion-note>
+            </ion-item>
+
+            <ion-item-options>
+                <button ion-button color="bg-blue" (click)="onClickDetails(slidingItem, it, 1)">
+                    <ion-icon name="ios-arrow-dropup"></ion-icon>
+                    Pin
+                </button>
+                <button ion-button color="secondary" (click)="onClickDetails(slidingItem, it, 2)">
+                    <ion-icon name="volume-off"></ion-icon>
+                    Mute
+                </button>
+                <button ion-button color="danger" (click)="onClickDetails(slidingItem, it, 3)">
+                    <ion-icon name="trash"></ion-icon>
+                    Delete
+                </button>
+            </ion-item-options>
+
+            <ion-item-options side="left" (ionSwipe)="onClickDetails(slidingItem, it, 4)">
+                <button ion-button color="primary" expandable>
+                    <ion-icon name="checkmark"></ion-icon>
+                    <div>Read</div>
+                    <ion-spinner id="archive-spinner"></ion-spinner>
+                </button>
+            </ion-item-options>
 
         </ion-item-sliding>
 

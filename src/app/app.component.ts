@@ -33,6 +33,7 @@ import { AddMaintenancePage } from '../pages/add-maintenance/add-maintenance';
 import { ReviewMaintenancePage } from '../pages/review-maintenance/review-maintenance';
 import { DocumentsPage } from '../pages/documents/documents';
 import { HomeNewsPage } from '../pages/home-news/home-news';
+import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
 
 
 @Component({
@@ -260,6 +261,13 @@ export class MyApp {
                 name: "3.2.1 Mẫu danh sách quẹt nút click",
                 click: true,
                 next: DynamicListPage,
+                icon: "paper"
+              }
+              ,
+              {
+                name: "3.2.1 Mẫu Chart",
+                click: true,
+                next: DynamicChartPage,
                 icon: "paper"
               }
               ,
