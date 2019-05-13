@@ -10,9 +10,9 @@
             </button>
         </ion-buttons>
 
-        <ion-searchbar start *ngIf="dynamicCards?.search_bar && dynamicList?.search_bar?.is_search" 
-        placeholder="{{dynamicCards.search_bar.placeholder}}" 
-        [(ngModel)]="dynamicCards.search_bar.search_string"
+        <ion-searchbar start *ngIf="dynamicList?.search_bar && dynamicList?.search_bar?.is_search" 
+        placeholder="{{dynamicList.search_bar.placeholder}}" 
+        [(ngModel)]="dynamicList.search_bar.search_string"
         (keyup.enter)="searchEnter('SEARCH')"
         (keyup.esc)="searchEnter('CANCEL')"
         (focusout)="searchEnter('CANCEL')">
