@@ -24,7 +24,7 @@
             </button>
         </ion-buttons>
 
-        <ion-title *ngIf="!isSearch">{{dynamicList?.title}}</ion-title>
+        <ion-title *ngIf="!dynamicList?.search_bar?.is_search">{{dynamicList?.title}}</ion-title>
 
     </ion-navbar>
 </ion-header>
