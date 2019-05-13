@@ -90,6 +90,64 @@ const verifyProxyToken = (req, res, next)=>{
         res.end(JSON.stringify({ message: 'proxy-handler: verifyProxyToken: no req.json_data'}));
     }
   }
+const verifyProxyTokenNext = (req, res, next)=>{
+    if (req.token){
+        new Promise((resolve, reject) => {
+
+            let aliveToken = tokenSession.find(x=>x.token===req.token)
+
+            //console.log('aliveToken',aliveToken)
+
+            if (aliveToken && verifyExpire(req)){
+                //console.log('user_info verifyExpire true: ',req.user_info);
+                aliveToken.last_time = new Date().getTime();
+                aliveToken.status = true;
+
+                resolve({
+                    status: true,
+                    user_info:aliveToken.user_info
+                });
+
+            }else{
+                //neu chua xac thuc server
+                proxy.post(authServer + '/ext-auth/authorize-token', { json: {token: req.token} } //du lieu parse tu postProcess
+                    , (error, res, body) => {
+                        if (error) {
+                            reject(error);
+                        }
+                        if (res.statusCode == 200&&body.status&&body.user_info) {
+                            //console.log('user_info',body); //tra ve user_info va trang thai =1
+                            //chuyen doi body --> luu lai
+                            tokenSession.push({
+                                create_time: new Date().getTime(),
+                                token: req.token,
+                                user_info: body.user_info
+                            })
+                            resolve(body);
+                        } else {
+                            reject(body);
+                        }
+                    })
+            }
+
+        }).then(tokenData => {
+            //console.log('tokenData.status', tokenData.status, tokenData.user_info);
+            if (tokenData.status){
+                req.user = tokenData.user_info;  
+                next();              
+            }else{
+                res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ message: 'proxy-handler: verifyProxyToken: server status false!', data: data}));
+            }
+        })
+        .catch(err => {
+            res.writeHead(403, { 'Content-Type': 'text/html; charset=utf-8' });
+            res.end(JSON.stringify({ message: 'proxy-handler: verifyProxyToken:  request to authentication server error!', error: err }));
+        })
+    }else{
+        next()
+    }
+  }
 
 const authorizeToken = (req, res, next) => {
     if (req.user){
@@ -104,5 +162,6 @@ const authorizeToken = (req, res, next) => {
 
 module.exports = {
     verifyProxyToken: verifyProxyToken,
+    verifyProxyTokenNext: verifyProxyTokenNext,
     authorizeToken: authorizeToken,
 };

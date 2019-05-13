@@ -275,7 +275,7 @@ export class HomeNewsPage {
     let limit = this.maxOnePage;
 
     let follows = [];
-    if (status != 1) {
+    if (status == 2) {
       for (let key in this.contacts) {
         follows.push(key);
       }
@@ -288,7 +288,6 @@ export class HomeNewsPage {
 
     this.auth.postDynamicForm(this.server + "/get-news", json_data, true)
       .then(data => {
-        console.log(data)
         data.forEach(el => {
           status == 1 ? this.pageIndexPublic++ : this.pageIndexPrivate++;
           let medias = [];
@@ -320,8 +319,6 @@ export class HomeNewsPage {
             reNews ? this.dynamicCards.items.unshift(el) : this.dynamicCards.items.push(el);
           }
         });
-        //console.log("public: " + this.pageIndexPublic);
-        //console.log("private: " + this.pageIndexPrivate);
       })
       .catch(err => console.log(err))
   }
@@ -358,7 +355,7 @@ export class HomeNewsPage {
     onClickShortDetails(a, b) {
       console.log(a, b);
     }
-  
+  */
     onClickMedia(number, it) {
       //console.log(number);
       //console.log(it);
@@ -394,5 +391,4 @@ export class HomeNewsPage {
       let modal = this.modalCtrl.create(DynamicCardSocialPage, { form: dynamicCardsOrigin });
       modal.present();
     }
-    */
 }

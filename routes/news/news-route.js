@@ -16,9 +16,9 @@ router.post('/post-news'
     , handlers.postNewsFiles        //luu csdl
 );
 router.post('/get-news'
-    , postHandler.jsonProcess //lay du lieu req.json_data.friends/follows/publics/limit/offset
     , tokenHandler.getTokenNext
-    , proxyHandler.verifyProxyToken
+    , proxyHandler.verifyProxyTokenNext
+    , postHandler.jsonProcess //lay du lieu req.json_data.friends/follows/publics/limit/offset
     , handlers.getNewsList //lay tin tuc tu req.user?, publics, follows, friends,
 );
 router.get('/get-file/*'

@@ -42,8 +42,8 @@ class ResourceHandler {
         if (req.json_data.follows.length > 0) {
             users = req.user.username;
         }
-        console.log("user: ", req.user.username)
-        console.log("length: ", req.json_data.follows.length)
+        //console.log("user: ", users)
+        //console.log("length: ", req.json_data.follows.length)
         db.getRsts("select *\
                     from news\
                     where user in ("+ users + ")\
