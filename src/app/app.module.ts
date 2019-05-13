@@ -82,6 +82,7 @@ import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list'
 import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
 import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
 import { SearchSitePage } from '../pages/search-site/search-site';
+import { ApiAutoSiteService } from '../services/mlmt/apiAutoSiteService';
 
 
 @NgModule({
@@ -206,6 +207,7 @@ import { SearchSitePage } from '../pages/search-site/search-site';
     ApiChatService,
     RequestInterceptor,
     ApiAutoCompleteService,
+    ApiAutoSiteService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Refresher, ItemSliding, ModalController } from 'ionic-angular';
+import { NavController, NavParams, Refresher, ItemSliding, ModalController, AlertController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
 import { SearchSitePage } from '../search-site/search-site';
+import { ApiAutoSiteService } from '../../services/mlmt/apiAutoSiteService';
+import { ApiAutoCompleteService } from '../../services/apiAutoCompleteService';
 
 @Component({
   selector: 'page-maintenance-list',
@@ -13,26 +15,29 @@ export class MaintenanceListPage {
 
   parent: any;
   cycle: any;
-  
+
   dynamicList: any;
   options: any = [
-                    { name: "Xóa", color:"danger", icon:"trash", next:"EXIT"}
-                  , { name: "Chỉnh sửa", color:"primary", icon:"create", next: "NEXT"}
-                  , { name: "Xem chi tiết", color:"secondary", icon:"list", next: "CALLBACK"}
-                ]
+    { name: "Xóa", color: "danger", icon: "trash", next: "EXIT" }
+    , { name: "Chỉnh sửa", color: "primary", icon: "create", next: "NEXT" }
+    , { name: "Xem chi tiết", color: "secondary", icon: "list", next: "CALLBACK" }
+  ]
 
   isSearch: boolean = false;
+  isSearchLocal: boolean = false;
   searchString: string = '';
-  shouldShowCancel: boolean = true;
+  searchOptions = { placeholder: 'Tìm Site nào để thêm vào Kế hoạch?' };
 
   isMobile: boolean = false;
 
   constructor(
-    private navCtrl: NavController, 
+    private navCtrl: NavController,
     private navParams: NavParams,
     private apiAuth: ApiAuthService,
-    private modalCtrl: ModalController
-    ) {
+    private modalCtrl: ModalController,
+    private alertCtrl: AlertController,
+    private apiAutoComplete: ApiAutoSiteService
+  ) {
   }
 
   ngOnInit() {
@@ -42,99 +47,134 @@ export class MaintenanceListPage {
   }
 
 
-  refresh(){
+  refresh() {
 
     this.dynamicList = {
       title: "Danh sách bảo dưỡng"
-      , search_bar: {hint: "Tìm theo site_id theo tiếp đầu ngữ"} 
+      , search_bar: { hint: "Tìm theo site_id theo tiếp đầu ngữ" }
       , buttons: [
-          {color:"primary", icon:"add", next:"ADD"}
-          , {color:"primary", icon:"contacts", next:"FRIENDS"}
-          , {color:"primary", icon:"notifications", next:"NOTIFY"
-            , alerts:[
-                "cuong.dq"
-                ]
-            }
-          , {color:"royal", icon:"cog", next:"SETTINGS"}
-        ]
+        { color: "primary", icon: "add", next: "ADD" }
+        , { color: "primary", icon: "contacts", next: "FRIENDS" }
+        , {
+          color: "primary", icon: "notifications", next: "NOTIFY"
+          , alerts: [
+            "cuong.dq"
+          ]
+        }
+        , { color: "royal", icon: "cog", next: "SETTINGS" }
+      ]
       , items: []
     };
 
-    this.apiAuth.getDynamicUrl(this.server+"/maintenance-sites?maintenance_cycle="+this.cycle.id+"&limit=20&offset=0",true)
-    .then(data=>{
-      data.forEach(el => {
-        this.dynamicList.items.push({
-          site_id: el.site_id
-          ,name: el.name
-          ,address: el.address
-          ,create_time: el.create_time
+    this.apiAuth.getDynamicUrl(this.server + "/maintenance-sites?maintenance_cycle=" + this.cycle.id + "&limit=20&offset=0", true)
+      .then(data => {
+        data.forEach(el => {
+          this.dynamicList.items.push({
+            site_id: el.site_id
+            , name: el.name
+            , address: el.address
+            , create_time: el.create_time
+          });
         });
-      });
-    })
-    .catch(err=>{
+      })
+      .catch(err => {
 
-    })
+      })
   }
 
 
-// Su dung slide Pages
+  // Su dung slide Pages
   /**
    * Thay đổi cách bấm nút đóng lệnh bằng nút trên item sliding
    * @param slidingItem 
    */
-  closeSwipeOptions(slidingItem: ItemSliding, it:any){
+  closeSwipeOptions(slidingItem: ItemSliding, it: any) {
     slidingItem.close();
     slidingItem.setElementClass("active-sliding", false);
     slidingItem.setElementClass("active-slide", false);
     slidingItem.setElementClass("active-options-right", false);
-    it.isSlidingItemOpen=false;
+    it.isSlidingItemOpen = false;
   }
   //----------- end of sliding
 
 
   //Su dung search
   //---------------------
-  goSearch(){
-    this.isSearch = true;
+  goSearch(type) {
+    if (type === 'REMOTE')
+      this.isSearch = true;
+    else if (type === 'LOCAL')
+      this.isSearchLocal = true;
+    /* console.log(this.searchbar);
+    this.searchbar.setFocus(); */
   }
 
-  searchEnter(){
-    this.isSearch = false;
+  searchEnter(type) {
+    if (type === 'REMOTE')
+      this.isSearch = false;
+    else if (type === 'LOCAL')
+      this.isSearchLocal = false;
+    console.log('search string:', this.searchString);
+  }
+
+  searchSelect(ev) {
+    console.log('select item', ev);
+    //hoi xem dong y chon dua vao ko?
+    this.alertCtrl.create({
+      title: 'Xác nhận',
+      message: 'Bạn muốn chọn site ' + ev.site_id + ' này phải không?',
+      buttons: [
+        {
+          text: 'Bỏ qua',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+            this.isSearch = false;
+          }
+        },
+        {
+          text: 'Chọn',
+          handler: () => {
+            // ev.image = ev.flag;
+            // ev.title = ev.nativeName;
+            // ev.content = ev.subregion;
+            // ev.note = Date.now();
+            this.dynamicList.items.unshift(ev);
+            this.isSearch = false;
+          }
+        }
+      ]
+    }).present();
+
+
+    this.searchString = "";
+
+  }
+
+  setFilteredItems() {
+    this.dynamicList.items = this.filterItems(this.searchString);
+  }
+
+  filterItems(searchTerm) {
+    return this.dynamicList.items.filter(item => {
+      return item.site_id.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+    });
+  }
+
+  onInput(e) {
     //console.log(this.searchString);
-    //tim kiem de lay tu server tra ve danh sach va inra
-    this.apiAuth.getDynamicUrl(this.server+"/maintenance-sites?site_id="+this.searchString+"&limit=20&offset=0",true)
-    .then(data=>{
-
-      this.dynamicList.items = [];
-
-      data.forEach(el => {
-        this.dynamicList.items.push({
-            h1:el.site_id
-            ,h3:el.site_name
-            ,p:el.address
-            ,note:"trang bd"
-        });
-      });
-    })
-    .catch(err=>{
-
-    })
   }
 
-  onInput(e){
-    //console.log(this.searchString);
-  }
-
-  onClick(btn){
+  onClick(btn) {
     //console.log(btn);
 
   }
 
-  onClickItem(it){
+  onClickItem(it) {
     console.log(it);
   }
 
-  onClickDetails(item: ItemSliding, btn: any, it: any){
+  onClickDetails(item: ItemSliding, btn: any, it: any) {
     this.closeSwipeOptions(item, it);
     btn.item = it;
     console.log(btn);
@@ -145,11 +185,11 @@ export class MaintenanceListPage {
    * tim kiem site
    * @param func 
    */
-  onClickHeaders(func){
+  onClickHeaders(func) {
 
     //console.log(cycle);
-    if (func==='SEARCH'){
-      
+    if (func === 'SEARCH') {
+
       /* let formObj: any =  {
         
         title: "TẠO MỚI KỲ BẢO DƯỠNG"
@@ -175,24 +215,24 @@ export class MaintenanceListPage {
       ]
       }; */
 
-        this.openModal(SearchSitePage,{
-            parent: this
-            // , callback: this.callbackRebuild
-            // , form: formObj
-          })
+      this.openModal(SearchSitePage, {
+        parent: this
+        // , callback: this.callbackRebuild
+        // , form: formObj
+      })
 
-      
-      
+
+
     }
   }
 
   openModal(form, data?: any) {
     let modal = this.modalCtrl.create(form, data);
-        modal.onDidDismiss(data=>{
-          //console.log('ket qua xu ly popup xong', data);
-          if (data){
-          }
-        })
+    modal.onDidDismiss(data => {
+      //console.log('ket qua xu ly popup xong', data);
+      if (data) {
+      }
+    })
     modal.present();
   }
 

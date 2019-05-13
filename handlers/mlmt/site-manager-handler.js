@@ -467,6 +467,27 @@ class Handler {
             res.end(JSON.stringify([]));
         });
     }
+
+    getSearchSites(req, res, next) {
+        db.getRsts("select *\
+         from sites a\
+         where 1=1\
+         "+ (req.paramS.keyword ? "and a.site_id like '" + req.paramS.keyword + "%'" : "") + "\
+         LIMIT 20 OFFSET 0")
+        .then(results => {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify(results
+                , (key, value) => {
+                    if (value === null) { return undefined; }
+                    return value;
+                }
+            ));
+        })
+        .catch(err => {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify([]));
+        });
+    }
 }
 
 module.exports = new Handler()

@@ -2,7 +2,7 @@
     <ion-navbar>
         <ion-title>CYCLES - CHU KỲ BẢO DƯỠNG</ion-title>
         <ion-buttons end color="primary" *ngIf="roleCreate">
-            <button ion-button (click)="onClickHeaders('BUILD')"><!-- Tạo mới -->
+            <button ion-button icon-only color="royal" (click)="onClickHeaders('BUILD')"><!-- Tạo mới -->
                 <ion-icon name="ios-add-circle-outline"></ion-icon>
             </button>
         </ion-buttons>
@@ -29,11 +29,11 @@
     
                 <ion-item-options>
                     <button ion-button color="danger" (click)="onClickDetails(slidingItem, cycle, 'LOCK')">
-                        <ion-icon name="ios-construct-outline"></ion-icon>
+                        <ion-icon name="ios-lock-outline"></ion-icon>
                         Khóa chu kỳ
                     </button>
                     <button ion-button color="secondary" (click)="onClickDetails(slidingItem, cycle, 'REPAIR')">
-                        <ion-icon name="print"></ion-icon>
+                        <ion-icon name="ios-create-outline"></ion-icon>
                         Chỉnh sửa chu kỳ
                     </button>
                     <button ion-button color="primary" (click)="onClickDetails(slidingItem, cycle, 'MAINTAIN')">

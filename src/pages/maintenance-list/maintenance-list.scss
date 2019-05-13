@@ -1,6 +1,18 @@
 page-maintenance-list {
-  .left {
+	.flag{
+        width: 30px;
+        height: 15px;
+    }
+
+  	.left {
 		text-align: left !important;
+	}
+
+	.background-item {
+		background-color: #f5f5f5;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+		border-radius: 0.1em;
+		padding: 2px;
 	}
 
 	input[type="file"]{
