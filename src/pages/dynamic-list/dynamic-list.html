@@ -15,6 +15,7 @@
         [(ngModel)]="dynamicList.search_bar.search_string"
         (keyup.enter)="searchEnter('SEARCH')"
         (keyup.esc)="searchEnter('CANCEL')"
+        (ionInput)="onInput($event)" 
         (focusout)="searchEnter('CANCEL')">
         </ion-searchbar>
 

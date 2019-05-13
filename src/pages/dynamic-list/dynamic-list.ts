@@ -121,6 +121,9 @@ export class DynamicListPage {
     if (func==='CORRECT'&&this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.is_search = false;
   }
 
+  onInput(ev){
+    //go tung chu, thi lay va tim kiem trong mang filter
+  }
 
   
   searchCorrectSelect(ev,what){
