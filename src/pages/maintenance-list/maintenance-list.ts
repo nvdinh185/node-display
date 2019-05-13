@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Refresher, ItemSliding } from 'ionic-angular';
+import { NavController, NavParams, Refresher, ItemSliding, ModalController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
+import { SearchSitePage } from '../search-site/search-site';
 
 @Component({
   selector: 'page-maintenance-list',
@@ -10,10 +11,10 @@ export class MaintenanceListPage {
 
   server = "http://localhost:9238/site-manager";
 
-  parent:any;
-
+  parent: any;
+  cycle: any;
   
-  dynamicList: any; 
+  dynamicList: any;
   options: any = [
                     { name: "Xóa", color:"danger", icon:"trash", next:"EXIT"}
                   , { name: "Chỉnh sửa", color:"primary", icon:"create", next: "NEXT"}
@@ -27,18 +28,16 @@ export class MaintenanceListPage {
   isMobile: boolean = false;
 
   constructor(
-    public navCtrl: NavController, 
-    public navParams: NavParams,
-    public apiAuth: ApiAuthService
+    private navCtrl: NavController, 
+    private navParams: NavParams,
+    private apiAuth: ApiAuthService,
+    private modalCtrl: ModalController
     ) {
   }
 
   ngOnInit() {
-
-
-
-
     this.parent = this.navParams.get("parent");
+    this.cycle = this.navParams.get("cycle");
     this.refresh();
   }
 
@@ -46,7 +45,7 @@ export class MaintenanceListPage {
   refresh(){
 
     this.dynamicList = {
-      title: "Mạng xã hội"
+      title: "Danh sách bảo dưỡng"
       , search_bar: {hint: "Tìm theo site_id theo tiếp đầu ngữ"} 
       , buttons: [
           {color:"primary", icon:"add", next:"ADD"}
@@ -61,15 +60,14 @@ export class MaintenanceListPage {
       , items: []
     };
 
-    this.apiAuth.getDynamicUrl(this.server+"/maintenance-sites?site_id=DN&limit=20&offset=0",true)
+    this.apiAuth.getDynamicUrl(this.server+"/maintenance-sites?maintenance_cycle="+this.cycle.id+"&limit=20&offset=0",true)
     .then(data=>{
-
       data.forEach(el => {
         this.dynamicList.items.push({
-          h1:el.site_id
-          ,h3:el.site_name
-          ,p:el.address
-          ,note:"Trang bảo dưỡng"
+          site_id: el.site_id
+          ,name: el.name
+          ,address: el.address
+          ,create_time: el.create_time
         });
       });
     })
@@ -141,6 +139,61 @@ export class MaintenanceListPage {
     btn.item = it;
     console.log(btn);
 
+  }
+
+  /**
+   * tim kiem site
+   * @param func 
+   */
+  onClickHeaders(func){
+
+    //console.log(cycle);
+    if (func==='SEARCH'){
+      
+      /* let formObj: any =  {
+        
+        title: "TẠO MỚI KỲ BẢO DƯỠNG"
+      , home_disable: false //nut home
+      , buttons: [
+          {color:"danger", icon:"close", next:"CLOSE"} 
+        ]
+      , items: [
+        { type: "title",          name: "CHỌN VÀ NHẬP"}
+        , { type: "datetime", key: "year", name: "Năm", hint: "Hãy chọn năm bảo dưỡng", display:"YYYY", picker:"YYYY"}
+        , { type: "select", key: "quarter", name: "Chọn quý", value: 1, options: [{ name: "Quý I", value: 1 }, { name: "Quý II", value: 2 }, { name: "Quý III", value: 3 }, { name: "Quý IV", value: 4 }] }
+        , { type: "text", key: "name", name: "Tên chu kỳ", hint: "Hãy nhập tên chu kỳ", input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
+        , { type: "text", key: "description", name: "Mô tả", hint: "Hãy nhập mô tả kỳ bảo dưỡng", input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
+        , 
+        { 
+            type: "button"
+          , options: [
+            { name: "Reset", next: "RESET" }
+            , { name: "Bỏ qua", next: "CLOSE" }
+            , { name: "Xử lý", next: "CALLBACK", url: this.server + "/" + this.function_string, token: true }
+          ]
+        }
+      ]
+      }; */
+
+        this.openModal(SearchSitePage,{
+            parent: this
+            // , callback: this.callbackRebuild
+            // , form: formObj
+          })
+
+      
+      
+    }
+  }
+
+  openModal(form, data?: any) {
+    let modal = this.modalCtrl.create(form, data);
+        modal.onDidDismiss(data=>{
+          //console.log('ket qua xu ly popup xong', data);
+          if (data){
+          }
+        })
+    modal.present();
   }
 
 }

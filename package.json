@@ -67,6 +67,7 @@
     "jsonwebtoken": "^8.4.0",
     "mime-types": "^2.1.21",
     "ng-socket-io": "^0.2.4",
+    "ng2-completer": "^2.0.8",
     "ngx-barcode": "^0.2.4",
     "ngx-qrcode2": "0.0.9",
     "node-cron": "^2.0.3",

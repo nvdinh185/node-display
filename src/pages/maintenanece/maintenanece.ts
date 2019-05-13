@@ -6,9 +6,9 @@
   import { DynamicFormWebPage } from '../dynamic-form-web/dynamic-form-web';
   import { ApiHttpPublicService } from '../../services/apiHttpPublicServices';
   import { ApiAuthService } from '../../services/apiAuthService';
-import { DocumentsPage } from '../documents/documents';
-import { LoginPage } from '../login/login';
-import { MaintenanceListPage } from '../maintenance-list/maintenance-list';
+  import { DocumentsPage } from '../documents/documents';
+  import { LoginPage } from '../login/login';
+  import { MaintenanceListPage } from '../maintenance-list/maintenance-list';
 
 @Component({
   selector: 'page-maintenanece',
@@ -278,10 +278,11 @@ export class MaintenanecePage {
     this.navCtrl.push(MaintenanceListPage
       , {
         parent: this,
-        callback: this.callbackRebuild
+        callback: this.callbackRebuild,
+        cycle: cycle
       });
     
-}
+  }
 
 
   onClickDetails(slidingItem: ItemSliding, cycle: any, func: string){
@@ -325,7 +326,7 @@ export class MaintenanecePage {
     }
 
     if (func==='REPAIR'){
-      console.log("Cycle true??: ", this.roleCreate, cycle);
+      //console.log("Cycle true??: ", this.roleCreate, cycle);
       
       if (!this.roleCreate){
         this.alertCtrl.create({

@@ -76,7 +76,8 @@ import { DocumentsPage } from '../pages/documents/documents';
 import { HomeNewsPage } from '../pages/home-news/home-news';
 import { PostNewsPage } from '../pages/post-news/post-news';
 import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list';
-
+import { Ng2CompleterModule } from "ng2-completer";
+import { SearchSitePage } from '../pages/search-site/search-site';
 
 @NgModule({
   declarations: [
@@ -116,6 +117,7 @@ import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list'
     MaintenanecePage,
     MaintenanceListPage,
     AddMaintenancePage,
+    SearchSitePage,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
@@ -127,6 +129,7 @@ import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list'
     StorageServiceModule,
     NgxBarcodeModule,
     NgxQRCodeModule,
+    Ng2CompleterModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -163,6 +166,7 @@ import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list'
     MaintenanecePage,
     MaintenanceListPage,
     AddMaintenancePage,
+    SearchSitePage,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
