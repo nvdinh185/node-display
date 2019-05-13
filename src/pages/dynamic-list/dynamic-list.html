@@ -26,16 +26,16 @@
             <img src="{{attrs.data.flag}}" class="flag" />
             <span [innerHTML]="attrs.data.name | boldprefix:attrs.keyword"></span>
         </ng-template>
-        <ion-auto-complete
-        (focusout)="searchEnter()"
+        <!-- (focusout)="searchEnter()"
         [options]="searchOptions"
         [(ngModel)]="searchString"
         (keyup.enter)="searchEnter()"
         (keyup.esc)="searchEnter()"
-        (ionBlur)="searchEnter()"
+        (ionBlur)="searchEnter()" -->
+        <ion-auto-complete style="width: 100%" 
         [template]="withFlags" 
-        [dataProvider]="apiAutoComplete"
-        (itemSelected)="searchSelect($event)" #searchBar>
+        [dataProvider]="apiAutoComplete" #searchBar
+        (itemSelected)="searchSelect($event)">
         </ion-auto-complete>
     </div>
 
