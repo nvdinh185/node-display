@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
-import { CompleterService, CompleterData } from 'ng2-completer';
 
 @Component({
   selector: 'page-search-site',
@@ -11,7 +10,7 @@ export class SearchSitePage {
   parent: any;
   server = "http://localhost:9238/site-manager";
   dynamicList: any;
-  dataService: CompleterData;
+  // dataService: CompleterData;
   searchData = [];
   isSearch: boolean = false;
   searchString: string = '';
@@ -19,8 +18,7 @@ export class SearchSitePage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public apiAuth: ApiAuthService,
-    public completerService: CompleterService
+    public apiAuth: ApiAuthService
   ) {
   }
 
@@ -43,7 +41,6 @@ export class SearchSitePage {
       .catch(err => {
 
       }) */
-    this.dataService = this.completerService.remote(this.server + "/get-site?site_id=&limit=20&offset=0", 'color', 'color');
   }
 
 
