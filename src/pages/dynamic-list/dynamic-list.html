@@ -14,9 +14,9 @@
         placeholder="{{dynamicList.search_bar.placeholder}}" 
         [(ngModel)]="dynamicList.search_bar.search_string"
         (keyup.enter)="searchEnter('SEARCH')"
-        (keyup.esc)="searchEnter('CANCEL')"
+        (keyup.esc)="searchEnter('SEARCH')"
         (ionInput)="onInput($event)" 
-        (focusout)="searchEnter('CANCEL')">
+        (focusout)="searchEnter('SEARCH')">
         </ion-searchbar>
 
         <ion-buttons end *ngFor="let btn of dynamicList?.buttons">
