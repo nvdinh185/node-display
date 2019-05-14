@@ -36,5 +36,12 @@ export class ApiChatService {
         );
     }
 
+    getListMaintenance(){
+       this.apiAuth.getDynamicUrl('',true)
+        .then(data=>{
+            this.curSiteList = data;
+        })
+    }
+
 
 }

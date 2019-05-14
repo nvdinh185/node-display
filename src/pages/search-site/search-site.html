@@ -1,12 +1,26 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>CYCLES - CHU KỲ BẢO DƯỠNG</ion-title>
-        <ion-buttons end color="primary" *ngIf="roleCreate">
-            <button ion-button icon-only color="royal" (click)="onClickHeaders('BUILD')"><!-- Tạo mới -->
-                <ion-icon name="ios-add-circle-outline"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title>TÌM KIẾM SITE</ion-title>
+    <ion-buttons *ngIf="!isSearch && dynamicList?.search_bar" start>
+      <button ion-button icon-only color="royal" (click)="goSearch()">
+          <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <!-- <ion-buttons end *ngFor="let btn of dynamicList?.buttons">
+        <button ion-button icon-only color="{{btn.color}}" (click)="onClick(btn)">
+            <ion-icon name="{{btn.icon}}"></ion-icon>
+        </button>
+    </ion-buttons> -->
+
+    <ion-searchbar *ngIf="isSearch && dynamicList?.search_bar" placeholder="{{dynamicList?.search_bar.hint}}"
+        [(ngModel)]="searchString" [showCancelButton]="shouldShowCancel" (ionInput)="onInput($event)" (keyup.enter)="searchEnter()"
+        (keyup.esc)="searchEnter()" start>
+    </ion-searchbar>
+    <!-- <ng2-completer [(ngModel)]="searchStr" [datasource]="dataService" [minSearchLength]="0"></ng2-completer> -->
+
+    <!-- <ion-title *ngIf="!isSearch">{{dynamicList?.title}} ({{cycle?.name}})</ion-title> -->
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
@@ -14,26 +28,24 @@
         <!-- <ion-item>
             <ion-title>test</ion-title>
         </ion-item> -->
-        <ion-item-sliding #slidingItem class="background-list" *ngFor="let cycle of maintenanceCycles">
+        <ion-item-sliding #slidingItem class="background-list" *ngFor="let site of dynamicList?.items">
             
                 <ion-item #item class="background-item" tappable (click)="onClickItem(cycle)">
                     <!-- <ion-avatar item-start *ngIf="cycle.image">
                         <img [src]="cycle.image">
                     </ion-avatar> -->
-                    <ion-title>{{cycle.name}}({{cycle.id}})</ion-title>
-                    <h2>Số trạm: {{cycle.count_site}} </h2>
-                    <h3>Lên kế hoạch: {{cycle.count_maintenance}} </h3>
-                    <p text-wrap>Hoàn thành: {{cycle.count_finish}}</p>
-                    <ion-note item-end>{{cycle.create_time | date: 'dd/MM/yyyy'}}</ion-note>
+                    <ion-title>{{site.site_id}}({{site.name}})</ion-title>
+                    <h3>{{site.address}}</h3>
+                    <ion-note item-end>{{site.create_time | date: 'dd/MM/yyyy'}}</ion-note>
                 </ion-item>
     
                 <ion-item-options>
                     <button ion-button color="danger" (click)="onClickDetails(slidingItem, cycle, 'LOCK')">
-                        <ion-icon name="ios-lock-outline"></ion-icon>
+                        <ion-icon name="ios-construct-outline"></ion-icon>
                         Khóa chu kỳ
                     </button>
                     <button ion-button color="secondary" (click)="onClickDetails(slidingItem, cycle, 'REPAIR')">
-                        <ion-icon name="ios-create-outline"></ion-icon>
+                        <ion-icon name="print"></ion-icon>
                         Chỉnh sửa chu kỳ
                     </button>
                     <button ion-button color="primary" (click)="onClickDetails(slidingItem, cycle, 'MAINTAIN')">

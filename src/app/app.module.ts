@@ -81,6 +81,8 @@ import { PostNewsPage } from '../pages/post-news/post-news';
 import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list';
 import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
 import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
+import { SearchSitePage } from '../pages/search-site/search-site';
+import { ApiAutoSiteService } from '../services/mlmt/apiAutoSiteService';
 
 
 @NgModule({
@@ -122,6 +124,7 @@ import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
     MaintenanecePage,
     MaintenanceListPage,
     AddMaintenancePage,
+    SearchSitePage,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
@@ -172,6 +175,7 @@ import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
     MaintenanecePage,
     MaintenanceListPage,
     AddMaintenancePage,
+    SearchSitePage,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
@@ -203,6 +207,7 @@ import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
     ApiChatService,
     RequestInterceptor,
     ApiAutoCompleteService,
+    ApiAutoSiteService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,

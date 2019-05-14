@@ -406,16 +406,19 @@ class Handler {
 
         //console.log('user', user);
         //danh sach dang, va da bao duong
+        /* "+ (req.paramS.maintenance_cycle ? "and b.maintenance_cycle = '" + req.paramS.maintenance_cycle + "'" : "") + "\
+        and b.users_id ='"+user.id+"'\ */
         db.getRsts("SELECT a.id,\
                         a.site_id,\
                         a.name,\
                         a.address,\
-                        b.user_id,\
+                        b.users_id,\
                         b.user_fullname,\
                         b.id as maintenance_sheet_id,\
                         b.sites_id,\
                         b.year,\
                         b.quarter,\
+                        b.create_time,\
                         c.employee_status,\
                         c.total_mark,\
                         c.status as maintenance_status\
@@ -426,19 +429,17 @@ class Handler {
                     ON b.id=c.maintenance_sheet_id\
                     where 1=1\
                     "+ (req.paramS.site_id ? "and a.site_id like '" + req.paramS.site_id + "%'" : "") + "\
-                    "+ (req.paramS.maintenance_cycle ? "and b.maintenance_cycle = '" + req.paramS.maintenance_cycle + "'" : "") + "\
-                    and b.users_id ='"+user.id+"'\
                     order by a.site_id\
                     "+ (req.paramS.limit ? "LIMIT " + req.paramS.limit : "LIMIT 10") + "\
                     "+ (req.paramS.offset ? "OFFSET " + req.paramS.offset : "OFFSET 0") + "\
-                 ")
-            .then(results => {
-                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify(results
-                    , (key, value) => {
-                        if (value === null) { return undefined; }
-                        return value;
-                    }
+                    ")
+                    .then(results => {
+                        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                        res.end(JSON.stringify(results
+                            , (key, value) => {
+                                if (value === null) { return undefined; }
+                                return value;
+                            }
                 ));
             })
             .catch(err => {
@@ -452,6 +453,27 @@ class Handler {
         db.getRsts("select *\
          from maintenance_list\
          where type=1")
+        .then(results => {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify(results
+                , (key, value) => {
+                    if (value === null) { return undefined; }
+                    return value;
+                }
+            ));
+        })
+        .catch(err => {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify([]));
+        });
+    }
+
+    getSearchSites(req, res, next) {
+        db.getRsts("select *\
+         from sites a\
+         where 1=1\
+         "+ (req.paramS.keyword ? "and a.site_id like '" + req.paramS.keyword + "%'" : "") + "\
+         LIMIT 20 OFFSET 0")
         .then(results => {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(JSON.stringify(results
