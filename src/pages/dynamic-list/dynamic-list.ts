@@ -24,9 +24,7 @@ export class DynamicListPage {
                    , search_string:"" } 
     , buttons: [
         {color:"primary", icon:"notifications", next:"NOTIFY"
-          , alerts:[
-              "cuong.dq"
-              ]
+          , alerts:{length:0}
         }
       ]
     , items: [
@@ -49,13 +47,15 @@ export class DynamicListPage {
   callback: any; 
   
   
-  isSearch: boolean = false;
-  searchString: string = ""; //gan gia tri ban dau
+  isLoaded: boolean = true;
+  maxPages = 0;
+  maxOnePage = 20;
+  curPageIndex = 0;
+  lastPageIndex = 0;
 
 
   constructor(  private platform: Platform
-              , private authService: ApiAuthService
-              , private pubService: ApiHttpPublicService
+              , private apiAuth: ApiAuthService
               , private viewCtrl: ViewController
               , private alertCtrl: AlertController
               , private navCtrl: NavController
@@ -75,17 +75,54 @@ export class DynamicListPage {
     if (call_waiting_data){
       call_waiting_data(this.parent)
       .then(list=>{
-        this.resetForm();
+        this.resetForm(list);
       })
     }
 
   }
 
   resetForm(list?:any) {
+
+    //khoi tao dynamicList
+    this.dynamicList.title = this.dynamicListOrigin.title;
+    this.dynamicList.search_bar = this.dynamicListOrigin.search_bar;
+    this.dynamicList.correct_bar = this.dynamicListOrigin.correct_bar;
+    this.dynamicList.buttons = this.dynamicListOrigin.buttons;
+    this.dynamicList.items = [];
+
     if (list&&list.length>0){
       this.dynamicList.items = list;
     }else{
-      this.dynamicList = this.dynamicListOrigin;
+
+      this.apiAuth.getDynamicUrl("assets/data/countries.json")
+      .then(countries=>{
+        //vi du lay list danh sach cua cac quoc gia
+        this.maxPages = Math.floor(countries.length/this.maxOnePage);
+        //Lấy danh sách các quốc gia, cờ, dân số, diện tích, độc lập hay chưa?
+        //tiền tệ, 
+        this.dynamicListOrigin.items = [];
+
+        countries.forEach(el => {
+          el.title = el.name;
+          el.image = el.flag;
+          el.content = (el.altSpellings&&el.altSpellings.length>0?"Tên đầy đủ :" + el.altSpellings[el.altSpellings.length-1] + "\n":"")
+                      +"Thủ đô :" + el.capital + ";\n"
+                      +"Diện tích :" + el.area + "km2;\n"
+                      +"Dân số :" + el.population + "người;\n"
+                      + (el.languages&&el.languages.length>0?"Ngôn ngữ :" + el.languages[0].nativeName +";\n":"")
+                      +"Mã số điện thoại :" + el.callingCodes + ";\n"
+                      +"Múi giờ :" + el.timezones + ";\n"
+          
+          el.note = Date.now();
+          this.dynamicListOrigin.items.push(el);
+        });
+
+        this.getMorePage(false);
+
+      })
+      .catch(err=>console.log(err))
+      //cho hien thi 12 dòng đầu thôi, các dòng tiếp theo sẽ cuộn lên để đọc theo trang
+      //this.dynamicList = this.dynamicListOrigin;
     }
   }
 
@@ -123,11 +160,18 @@ export class DynamicListPage {
 
   onInput(ev){
     //go tung chu, thi lay va tim kiem trong mang filter
+    console.log('search?',ev.target.value);
+    if (ev.target.value){
+      this.dynamicList.items = this.dynamicListOrigin.items.filter(x=>x.name.toLowerCase().startsWith(ev.target.value.toLowerCase()));
+    } else {
+      this.getMorePage(true);
+    }
+
   }
 
   
   searchCorrectSelect(ev,what){
-    //console.log('select item',what,ev);
+    console.log('select item',what,ev);
     //hoi xem dong y chon dua vao ko?
     if (what==='SELECTED'){
       this.alertCtrl.create({
@@ -145,9 +189,16 @@ export class DynamicListPage {
           {
             text: 'Chọn',
             handler: () => {
-              ev.image=  ev.flag;
-              ev.title = ev.nativeName;
-              ev.content = ev.subregion;
+              ev.title = ev.name;
+              ev.image = ev.flag;
+              ev.content = (ev.altSpellings&&ev.altSpellings.length>0?"Tên đầy đủ :" + ev.altSpellings[ev.altSpellings.length-1] + "\n":"")
+                          +"Thủ đô :" + ev.capital + ";\n"
+                          +"Diện tích :" + ev.area + "km2;\n"
+                          +"Dân số :" + ev.population + "người;\n"
+                          + (ev.languages&&ev.languages.length>0?"Ngôn ngữ :" + ev.languages[0].nativeName +";\n":"")
+                          +"Mã số điện thoại :" + ev.callingCodes + ";\n"
+                          +"Múi giờ :" + ev.timezones + ";\n"
+              
               ev.note = Date.now();
               this.dynamicList.items.unshift(ev);
               if (this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.is_search = false;
@@ -178,6 +229,53 @@ export class DynamicListPage {
   processCommand(btn){
     this.next(btn)
   }
+
+
+  /**
+   * Page process
+   */
+
+  getMorePage(isRenew?: boolean){
+    
+    if (isRenew) {
+      this.curPageIndex--;
+    }else{
+      if (this.curPageIndex<=this.maxPages) this.curPageIndex++;
+    }
+
+    let offset = this.curPageIndex * this.maxOnePage;
+    let limit = this.maxOnePage;
+
+    if (offset < this.dynamicListOrigin.items.length) this.dynamicList.items = this.dynamicList.items.concat(this.dynamicListOrigin.items.slice(offset, offset + limit));
+    
+    //thong bao so trang con lai trong mang
+    let notify = this.dynamicList.buttons.find(x=>x.next==='NOTIFY');
+    if (notify) notify.alerts.length = this.maxPages  - this.curPageIndex;
+    
+    console.log('page',this.maxPages,this.curPageIndex);
+
+  }
+
+  doInfinite(infiniteScroll, direction) {
+    if (direction === 'UP') {
+      console.log('UP', this.curPageIndex, this.lastPageIndex);
+      if (!this.isLoaded) {
+        this.getMorePage(true);
+      }
+      setTimeout(() => {
+        this.isLoaded = true;
+        infiniteScroll.complete();
+      }, 1000);
+    } else {
+      console.log('DOWN', this.curPageIndex, this.lastPageIndex);
+      this.getMorePage(false);
+      this.isLoaded = false; //khi keo xuong duoi thi o tren moi cho phep
+      setTimeout(() => {
+        infiniteScroll.complete();
+      }, 1000);
+    }
+  }
+
 
   next(btn) {
 

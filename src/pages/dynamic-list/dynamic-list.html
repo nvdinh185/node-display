@@ -20,8 +20,9 @@
         </ion-searchbar>
 
         <ion-buttons end *ngFor="let btn of dynamicList?.buttons">
-            <button ion-button icon-only color="{{btn.color}}" (click)="onClickHeader(btn)">
+            <button class="badge-background" ion-button icon-only color="{{btn.color}}" (click)="onClickHeader(btn)">
                 <ion-icon name="{{btn.icon}}"></ion-icon>
+                <ion-badge class="badge-alert" color="danger" *ngIf="btn.alerts?.length>0">{{ (btn.alerts?.length>99?'99+':btn.alerts?.length) }}</ion-badge>
             </button>
         </ion-buttons>
 
@@ -31,6 +32,15 @@
 </ion-header>
 
 <ion-content class="list-avatar-page">
+
+    <ion-refresher (ionRefresh)="doInfinite($event,'UP')">
+        <ion-refresher-content 
+            pullingIcon="arrow-dropdown" 
+            pullingText="Load dữ liệu mới hơn..." 
+            refreshingSpinner="circles"
+            refreshingText="Đang tải...">
+        </ion-refresher-content>
+    </ion-refresher>
 
     <div *ngIf="dynamicList?.correct_bar && dynamicList?.correct_bar?.is_search" 
     style="width: 100%; z-index: 999;position: absolute;">
@@ -60,7 +70,7 @@
                     <img [src]="it.image">
                 </ion-avatar>
                 <ion-title>{{it.title}}</ion-title>
-                <p text-wrap>{{it.content}}</p>
+                <p text-wrap [innerHtml]="it.content | newline"></p>
                 <ion-note item-end>
                     {{it.note | timeAgo}}
                     <p style="text-align: right;" *ngIf="it.alert">
@@ -95,4 +105,13 @@
         </ion-item-sliding>
 
     </ion-list>
+
+
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event,'DOWN')">
+        <ion-infinite-scroll-content 
+        loadingSpinner="bubbles" 
+        loadingText="Load dữ liệu cũ hơn...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
 </ion-content>
