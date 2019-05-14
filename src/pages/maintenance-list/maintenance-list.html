@@ -20,7 +20,8 @@
         <ion-title *ngIf="!isSearch">{{dynamicList?.title}} ({{cycle?.name}})</ion-title>
         <ion-searchbar *ngIf="isSearchLocal && dynamicList?.search_bar" placeholder="{{dynamicList?.search_bar.hint}}"
             [(ngModel)]="searchString" [showCancelButton]="shouldShowCancel" (ionInput)="onInput($event)"
-            (keyup.enter)="searchEnter()" (keyup.esc)="searchEnter('LOCAL')" (ionChange)="setFilteredItems()" start>
+            (keyup.enter)="searchEnter('LOCAL')" (keyup.esc)="searchEnter('LOCAL')" (ionChange)="setFilteredItems()"
+            start>
         </ion-searchbar>
     </ion-navbar>
 </ion-header>
@@ -39,6 +40,7 @@
             (ionBlur)="searchEnter()" -->
         <ion-auto-complete style="width: 100%" [template]="withSites" [dataProvider]="apiAutoComplete" #searchBar
             [(ngModel)]="searchString" (keyup.esc)="searchEnter('REMOTE')" [options]="searchOptions"
+            
             (itemSelected)="searchSelect($event)">
         </ion-auto-complete>
     </div>
