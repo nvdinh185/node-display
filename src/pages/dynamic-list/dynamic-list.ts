@@ -112,6 +112,7 @@ export class DynamicListPage {
                       + (el.languages&&el.languages.length>0?"Ngôn ngữ :" + el.languages[0].nativeName +";\n":"")
                       +"Mã số điện thoại :" + el.callingCodes + ";\n"
                       +"Múi giờ :" + el.timezones + ";\n"
+                      +"link https://c3.mobifone.vn ;\n"
           
           el.note = Date.now();
           this.dynamicListOrigin.items.push(el);
@@ -124,6 +125,11 @@ export class DynamicListPage {
       //cho hien thi 12 dòng đầu thôi, các dòng tiếp theo sẽ cuộn lên để đọc theo trang
       //this.dynamicList = this.dynamicListOrigin;
     }
+  }
+
+
+  onClickUrl(url){
+    console.log('click?',url);
   }
 
 // Su dung slide Pages

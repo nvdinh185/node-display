@@ -63,14 +63,14 @@
     <ion-list>
 
         <ion-item-sliding #slidingItem class="background-list" *ngFor="let it of dynamicList.items; let idx = index">
-
-            <ion-item #item class="background-item" tappable (click)="onClickDetails(slidingItem,it,0)">
+                <!-- tappable (click)="onClickDetails(slidingItem,it,0)" -->
+            <ion-item #item class="background-item">
                 <ion-icon item-start *ngIf="!it.image&&it.icon" name="{{it.icon}}" color="{{it.color}}"></ion-icon>
                 <ion-avatar *ngIf="it.image" item-start>
                     <img [src]="it.image">
                 </ion-avatar>
                 <ion-title>{{it.title}}</ion-title>
-                <p text-wrap [innerHtml]="it.content | newline"></p>
+                <p text-wrap [innerHtml]="it.content | newline | linkify"></p>
                 <ion-note item-end>
                     {{it.note | timeAgo}}
                     <p style="text-align: right;" *ngIf="it.alert">
