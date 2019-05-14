@@ -16,7 +16,12 @@ export class DynamicListPage {
   dynamicList: any = {}; 
   dynamicListOrigin: any = {
     title: "Danh sách kiểu viber"
-    , search_bar: {hint: "Tìm cái gì đó"} 
+    , search_bar: {placeholder: "Tìm cái gì đó từ list items này?"
+                  , is_search:false
+                  , search_string:""} 
+    , correct_bar:{ options: { placeholder: "Tìm từ API auto-complete?"}
+                   , is_search:false
+                   , search_string:"" } 
     , buttons: [
         {color:"primary", icon:"notifications", next:"NOTIFY"
           , alerts:[
@@ -40,16 +45,13 @@ export class DynamicListPage {
     ]
   };
   
-  callback: any; 
-  step: any;  
   parent:any;
-  offset:number; //dich chuyen option command
+  callback: any; 
+  
   
   isSearch: boolean = false;
-  searchString: string = '';
-  searchOptions = { placeholder : 'Tìm Quốc gia nào?' };
+  searchString: string = ""; //gan gia tri ban dau
 
-  isMobile: boolean = false;
 
   constructor(  private platform: Platform
               , private authService: ApiAuthService
@@ -63,15 +65,11 @@ export class DynamicListPage {
              ) {}
 
   ngOnInit(){
-    this.dynamicListOrigin = this.navParams.get("list") ? this.navParams.get("list") : this.dynamicListOrigin;
+    this.dynamicListOrigin = this.navParams.get("form") ? this.navParams.get("form") : this.dynamicListOrigin;
     this.resetForm();
     
-    this.offset = this.navParams.get("offset")?this.navParams.get("offset"):250;
-    this.callback = this.navParams.get("callback");
-    this.step = this.navParams.get("step");
-    
     this.parent = this.navParams.get("parent");
-
+    this.callback = this.navParams.get("callback");
     let call_waiting_data = this.navParams.get("call_waiting_data");
     
     if (call_waiting_data){
@@ -108,49 +106,61 @@ export class DynamicListPage {
 
   //Su dung search
   //---------------------
-  goSearch(){
-    this.isSearch = true;
+  goSearch(func){
     /* console.log(this.searchbar);
     this.searchbar.setFocus(); */
+    if (func==='SEARCH'&&this.dynamicList&&this.dynamicList.search_bar) this.dynamicList.search_bar.is_search = true;
+    if (func==='CORRECT'&&this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.is_search = true;
   }
 
-  searchEnter(){
-    this.isSearch = false;
-    console.log('search string:',this.searchString);
+  searchEnter(func){
+    if (func==='SEARCH'&&this.dynamicList&&this.dynamicList.search_bar) {
+      this.dynamicList.search_bar.is_search = false;
+      console.log('string?:',this.dynamicList.search_bar.search_string);
+    }
+    if (func==='CORRECT'&&this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.is_search = false;
   }
 
-  searchSelect(ev){
-    console.log('select item',ev);
+  onInput(ev){
+    //go tung chu, thi lay va tim kiem trong mang filter
+  }
+
+  
+  searchCorrectSelect(ev,what){
+    //console.log('select item',what,ev);
     //hoi xem dong y chon dua vao ko?
-    this.alertCtrl.create({
-      title: 'Xác nhận',
-      message: 'Bạn muốn chọn ' + ev.name + ' này phải không?',
-      buttons: [
-        {
-          text: 'Bỏ qua',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-            this.isSearch = false;
+    if (what==='SELECTED'){
+      this.alertCtrl.create({
+        title: 'Xác nhận',
+        message: 'Bạn muốn chọn ' + ev.name + ' này phải không?',
+        buttons: [
+          {
+            text: 'Bỏ qua',
+            role: 'cancel',
+            handler: () => {
+              //console.log('Cancel clicked');
+              if (this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.is_search = false;
+            }
+          },
+          {
+            text: 'Chọn',
+            handler: () => {
+              ev.image=  ev.flag;
+              ev.title = ev.nativeName;
+              ev.content = ev.subregion;
+              ev.note = Date.now();
+              this.dynamicList.items.unshift(ev);
+              if (this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.is_search = false;
+            }
           }
-        },
-        {
-          text: 'Chọn',
-          handler: () => {
-            ev.image=  ev.flag;
-            ev.title = ev.nativeName;
-            ev.content = ev.subregion;
-            ev.note = Date.now();
-            this.dynamicList.items.unshift(ev);
-            this.isSearch = false;
-          }
-        }
-      ]
-    }).present();
-
-
-    this.searchString = "";
-    
+        ]
+      }).present();
+      if (this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.search_string = "";
+    }else{
+      if (this.dynamicList&&this.dynamicList.correct_bar && this.dynamicList.correct_bar.search_string !== null) {
+        this.dynamicList.correct_bar.is_search = false;
+      }
+    }
   }
 
   onClickHeader(btn){

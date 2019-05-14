@@ -1,11 +1,23 @@
 <ion-header>
     <ion-navbar>
 
-        <ion-buttons end *ngIf="!isSearch && dynamicList?.search_bar">
-            <button ion-button icon-only color="royal" (click)="goSearch()">
+        <ion-buttons end *ngIf="dynamicList?.search_bar || dynamicList?.correct_bar">
+            <button *ngIf="dynamicList?.search_bar && !dynamicList?.search_bar?.is_search" ion-button icon-only color="royal" (click)="goSearch('SEARCH')">
                 <ion-icon name="search"></ion-icon>
             </button>
+            <button *ngIf="dynamicList?.correct_bar && !dynamicList?.correct_bar?.is_search" ion-button icon-only color="royal" (click)="goSearch('CORRECT')">
+                <ion-icon name="ios-cloud-download-outline"></ion-icon>
+            </button>
         </ion-buttons>
+
+        <ion-searchbar start *ngIf="dynamicList?.search_bar && dynamicList?.search_bar?.is_search" 
+        placeholder="{{dynamicList.search_bar.placeholder}}" 
+        [(ngModel)]="dynamicList.search_bar.search_string"
+        (keyup.enter)="searchEnter('SEARCH')"
+        (keyup.esc)="searchEnter('CANCEL')"
+        (ionInput)="onInput($event)" 
+        (focusout)="searchEnter('CANCEL')">
+        </ion-searchbar>
 
         <ion-buttons end *ngFor="let btn of dynamicList?.buttons">
             <button ion-button icon-only color="{{btn.color}}" (click)="onClickHeader(btn)">
@@ -13,29 +25,28 @@
             </button>
         </ion-buttons>
 
-        <ion-title *ngIf="!isSearch">{{dynamicList?.title}}</ion-title>
+        <ion-title *ngIf="!dynamicList?.search_bar?.is_search">{{dynamicList?.title}}</ion-title>
 
     </ion-navbar>
 </ion-header>
 
 <ion-content class="list-avatar-page">
 
-    <div *ngIf="isSearch && dynamicList?.search_bar" 
+    <div *ngIf="dynamicList?.correct_bar && dynamicList?.correct_bar?.is_search" 
     style="width: 100%; z-index: 999;position: absolute;">
         <ng-template #withFlags let-attrs="attrs">
             <img src="{{attrs.data.flag}}" class="flag" />
             <span [innerHTML]="attrs.data.name | boldprefix:attrs.keyword"></span>
         </ng-template>
-        <!-- (focusout)="searchEnter()"
-        [options]="searchOptions"
-        [(ngModel)]="searchString"
-        (keyup.enter)="searchEnter()"
-        (keyup.esc)="searchEnter()"
-        (ionBlur)="searchEnter()" -->
         <ion-auto-complete style="width: 100%" 
+        [(ngModel)]="dynamicList.correct_bar.search_string"
+        [options]="dynamicList.correct_bar.options"
         [template]="withFlags" 
-        [dataProvider]="apiAutoComplete" #searchBar
-        (itemSelected)="searchSelect($event)">
+        (itemSelected)="searchCorrectSelect($event,'SELECTED')"
+        (focusout)="searchCorrectSelect($event,'OUT')"
+        (keyup.enter)="searchEnter('CORRECT')"
+        (keyup.esc)="searchEnter('CORRECT')"
+        [dataProvider]="apiAutoComplete" #searchBar>
         </ion-auto-complete>
     </div>
 
