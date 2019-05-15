@@ -1,28 +1,56 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { ApiAuthService } from '../services/apiAuthService';
+import { ApiStorageService } from '../services/apiStorageService';
 /*
  * Converts linkify into html domain/http/ftp/email/phone
 */
 @Pipe({ name: 'linkify' })
 export class LinkifyPipe implements PipeTransform {
-    transform(value: string, args: string[]): any {
+    constructor( private apiAuth: ApiAuthService) {}
+    transform(value: string, isUrl: string ): any {
 
-        //URLs starting with http://, https://, or ftp://    
-        value = value.replace(/(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim
-            , "<a href='$1' target='_blank'>$1</a>");
+        let valueLinkify = value;
+        let links = [];
+    
+            //URLs starting with http://, https://, or ftp://    
+            valueLinkify = valueLinkify.replace(/(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim
+                , function (url) {
+                    links.push(url);
+                    return "<a href='"+url+"' target='_blank'>" + url + "</a>";
+                }
+            );
+    
+            //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+            valueLinkify = valueLinkify.replace(/([ ])([\w-]+\.[\S]+(\b|$))/gim
+                , function (url) {
+                    links.push('http://'+url.trim());
+                    return " <a href='http://"+url.trim()+"' target='_blank'>" + url.trim() + "</a>";
+                }
+            );
+    
+            //Change email addresses to mailto:: links.
+            valueLinkify = valueLinkify.replace(/(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim
+                ,
+                function (url) {
+                    links.push('mailto:'+url);
+                    return "<a href='mailto:"+url+"' target='_blank'>" + url + "</a>";
+                }
+                );
 
-        //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
-        value = value.replace(/(^|[^\/])(www\.[\S]+(\b|$))/gim
-            , "$1<a href='http://$2' target='_blank'>$2</a>");
+        if (isUrl==='links') return links; //array off urls
 
-        /* //domain xxx.yyy /(?:[\w-]+\.)+[\w-]+/
-        value = value.replace(/(^|[^\/])([\w-]+\.[\S]+(\b|$))/gim
-            , "$1<a href='http://$2' target='_blank'>$2</a>");
- */
-        //Change email addresses to mailto:: links.
-        value = value.replace(/(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim
-            , "<a href='mailto:$1'>$1</a>");
+        if (isUrl==='urlInfos') {
+            let urlInfos = [];
+            links.forEach(async el=>{
+                try{
+                    let urlInfo = await this.apiAuth.getDynamicUrl(ApiStorageService.authServer + "/ext-public/shot-info-url?url="+el);
+                    urlInfos.push(urlInfo);
+                }catch{}
+            })
+            return urlInfos;
+        }
 
-        return value;
+        return valueLinkify;
 
     }
 }

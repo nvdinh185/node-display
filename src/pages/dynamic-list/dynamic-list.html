@@ -71,12 +71,29 @@
                 </ion-avatar>
                 <ion-title>{{it.title}}</ion-title>
                 <p text-wrap [innerHtml]="it.content | newline | linkify"></p>
+
+                <div *ngIf="(it.content | linkify:'urlInfos')?.length>0">
+                    <div *ngFor="let urlInfo of it.content | linkify:'urlInfos'; let idx = index;">
+                        <p text-wrap [innerHtml]="urlInfo.content | newline"></p>
+                    </div>
+                </div>
+
                 <ion-note item-end>
                     {{it.note | timeAgo}}
                     <p style="text-align: right;" *ngIf="it.alert">
                         <ion-badge color="danger">{{ it.alert?.length }}</ion-badge>
                     </p>
+
+                    <div *ngIf="(it.content | linkify:'links')?.length>0">
+                        <ion-buttons *ngFor="let url of it.content | linkify:'links'; let idx = index;">
+                            <button ion-button round outline (click)="onClickHeader(url)">
+                                Link {{(idx + 1)}}
+                            </button>
+                        </ion-buttons>
+                    </div>
+
                 </ion-note>
+
             </ion-item>
 
             <ion-item-options>

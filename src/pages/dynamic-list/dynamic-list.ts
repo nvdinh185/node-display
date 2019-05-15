@@ -112,13 +112,14 @@ export class DynamicListPage {
                       + (el.languages&&el.languages.length>0?"Ngôn ngữ :" + el.languages[0].nativeName +";\n":"")
                       +"Mã số điện thoại :" + el.callingCodes + ";\n"
                       +"Múi giờ :" + el.timezones + ";\n"
-                      +"link https://c3.mobifone.vn ;\n"
+                      +(el.homePages?"homePages : " + el.homePages + " ;":"")
+                      
           
           el.note = Date.now();
           this.dynamicListOrigin.items.push(el);
         });
 
-        this.getMorePage(false);
+        this.getMorePage(true);
 
       })
       .catch(err=>console.log(err))
@@ -244,7 +245,7 @@ export class DynamicListPage {
   getMorePage(isRenew?: boolean){
     
     if (isRenew) {
-      this.curPageIndex--;
+      if (this.curPageIndex>0) this.curPageIndex--;
     }else{
       if (this.curPageIndex<=this.maxPages) this.curPageIndex++;
     }

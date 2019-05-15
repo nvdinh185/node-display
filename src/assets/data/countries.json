@@ -1,6 +1,7 @@
 [
     {
         "name": "Afghanistan",
+        "homePages": "https://www.mfa.gov.af/",
         "topLevelDomain": [
             ".af"
         ],
@@ -19077,6 +19078,7 @@
     },
     {
         "name": "Viet Nam",
+        "homePages":["http://chinhphu.vn/portal/page/portal/chinhphu/trangchu","https://visa.mofa.gov.vn/Homepage.aspx"],
         "topLevelDomain": [
             ".vn"
         ],
