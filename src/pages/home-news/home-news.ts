@@ -231,11 +231,28 @@ export class HomeNewsPage {
     this.events.subscribe('event-main-login-checked'
       , (data => {
         this.userInfo = data.user;
+        this.contacts = this.apiContact.getUniqueContacts();
+
         if (this.userInfo) {
-          //let user = this.userInfo.username
-          //this.contacts = { 766777123: { username: "admin" } };
+          if (!this.contacts[this.userInfo.username]) {
+            Object.defineProperty(this.contacts, this.userInfo.username, {
+              value: {
+                fullname: this.userInfo.data.fullname,
+                nickname: this.userInfo.data.nickname,
+                image: this.userInfo.data.image ? this.userInfo.data.image : undefined,
+                avatar: this.userInfo.data.avatar ? this.userInfo.data.avatar : this.userInfo.data.image,
+                relationship: ['private']
+              },
+              writable: true, enumerable: true, configurable: true
+            });
+          } else {
+            if (this.userInfo.data.image){
+              this.contacts[this.userInfo.username].image = this.userInfo.data.image;
+              this.contacts[this.userInfo.username].avatar = this.userInfo.data.avatar ? this.userInfo.data.avatar : this.userInfo.data.image;
+            } 
+          }
         }
-        //console.log("contacts: ", this.contacts)
+        console.log("contacts: ", this.contacts)
         this.getHomeNews(2);
       })
     )
@@ -255,14 +272,15 @@ export class HomeNewsPage {
     , items: []
   }
 
-  refreshNews() {
-    //this.contacts = await this.isObjectEmpty(this.apiContact.getUniqueContacts()) ? { 123456789: { username: "nvdinh" } } : this.apiContact.getUniqueContacts()
-    console.log("123", this.contacts)
+  async refreshNews() {
+    //KHOI TAO CAC USER PUBLIC
+    await this.apiContact.getPublicUsers(true);
+
     this.getHomeNews(1);
   }
 
   getHomeNews(status: number, reNews?: boolean) {
-    this.contacts = status == 1 ? { 123456789: { username: "nvdinh" } } : { 766777123: { username: "admin" } }
+    if(status == 1) this.contacts = { 123456789: { username: "nvdinh" } } // { 766777123: { username: "admin" } }
     console.log("456", status, this.contacts)
     this.dynamicCards.title = "Đây là trang tin của " + (this.userInfo ? this.userInfo.username : "Public")
 
