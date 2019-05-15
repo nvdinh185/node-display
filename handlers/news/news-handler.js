@@ -38,11 +38,13 @@ class ResourceHandler {
         //req.json_data.follows,
         //req.json_data.limit
         //req.json_data.offset
-        let users = "123456789";
+        let users = "";
         if (req.json_data.follows.length > 0) {
-            users = req.user.username;
+            req.json_data.follows.forEach(el => {
+                users += (users===""?"":",") + "'"+el+"'";
+            });
         }
-        //console.log("user: ", users)
+        console.log("users: ", users)
         db.getRsts("select *\
                     from news\
                     where user in ("+ users + ")\

@@ -223,36 +223,19 @@ export class HomeNewsPage {
     , private apiContact: ApiContactService
     , private apiStorageService: ApiStorageService
   ) { }
-
+  isObjectEmpty = (obj) => {
+    return Object.getOwnPropertyNames(obj).length < 1
+  }
   ngOnInit() {
     this.refreshNews();
     this.events.subscribe('event-main-login-checked'
       , (data => {
         this.userInfo = data.user;
-        this.contacts = this.apiContact.getUniqueContacts();
-
         if (this.userInfo) {
-          if (!this.contacts[this.userInfo.username]) {
-            Object.defineProperty(this.contacts, this.userInfo.username, {
-              value: {
-                fullname: this.userInfo.data.fullname,
-                nickname: this.userInfo.data.nickname,
-                image: this.userInfo.data.image,
-                avatar: this.userInfo.data.image,
-                relationship: ['private']
-              },
-              writable: true, enumerable: true, configurable: true
-            });
-          } else {
-            if (this.userInfo.data) {
-              this.contacts[this.userInfo.username].image = this.userInfo.data.image;
-              this.contacts[this.userInfo.username].avatar = this.userInfo.data.image;
-              this.contacts[this.userInfo.username].fullname = this.userInfo.data.fullname;
-              this.contacts[this.userInfo.username].nickname = this.userInfo.data.nickname;
-            }
-            if (this.userInfo.data && this.userInfo.data.avatar) this.contacts[this.userInfo.username].avatar = this.userInfo.data.avatar;
-          }
+          //let user = this.userInfo.username
+          //this.contacts = { 766777123: { username: "admin" } };
         }
+        //console.log("contacts: ", this.contacts)
         this.getHomeNews(2);
       })
     )
@@ -273,29 +256,62 @@ export class HomeNewsPage {
   }
 
   refreshNews() {
+    //this.contacts = await this.isObjectEmpty(this.apiContact.getUniqueContacts()) ? { 123456789: { username: "nvdinh" } } : this.apiContact.getUniqueContacts()
+    console.log("123", this.contacts)
     this.getHomeNews(1);
   }
 
   getHomeNews(status: number, reNews?: boolean) {
+    this.contacts = status == 1 ? { 123456789: { username: "nvdinh" } } : { 766777123: { username: "admin" } }
+    console.log("456", status, this.contacts)
     this.dynamicCards.title = "Đây là trang tin của " + (this.userInfo ? this.userInfo.username : "Public")
+
+    this.getJsonPostNews(status)
+      .then(data => {
+        if (reNews) {
+          let isHaveNew = false;
+          data.reverse().forEach((el, idx) => {
+            let index = this.dynamicCards.items
+              .findIndex(x => x.group_id === el.group_id);
+            if (index < 0) {
+              this.dynamicCards.items.unshift(el);
+              isHaveNew = true;
+            }
+          })
+          //if (isHaveNew && this.lastPageIndex > 0) this.lastPageIndex--;
+        } else {
+          //this.curPageIndex = this.curPageIndex < this.lastPageIndex ? this.lastPageIndex : this.curPageIndex;
+          data.forEach((el, idx) => {
+            let index = this.dynamicCards.items
+              .findIndex(x => x.group_id === el.group_id);
+            if (index < 0) {
+              this.dynamicCards.items.push(el);
+            }
+          })
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  getJsonPostNews(status) {
     let linkFile = this.server + "/get-file/"
-
+    let offset = status == 1 ? this.pageIndexPublic : this.pageIndexPrivate;
     let limit = this.maxOnePage;
-
     let follows = [];
-    if (status == 2) {
-      for (let key in this.contacts) {
-        follows.push(key);
-      }
+    for (let key in this.contacts) {
+      follows.push(key);
     }
+
     let json_data = {
       limit: limit,
-      offset: status == 1 ? this.pageIndexPublic : this.pageIndexPrivate,
+      offset: offset,
       follows: follows
     }
-
-    this.auth.postDynamicForm(this.server + "/get-news", json_data, true)
+    console.log("json_data", json_data)
+    return this.auth.postDynamicForm(this.server + "/get-news", json_data, true)
       .then(data => {
+        console.log("789", status, data)
+        let items = [];
         data.forEach(el => {
           status == 1 ? this.pageIndexPublic++ : this.pageIndexPrivate++;
           let medias = [];
@@ -321,14 +337,11 @@ export class HomeNewsPage {
             , note: el.time
             , action: { color: "primary", icon: "more", next: "MORE" }
           }
-          let index = this.dynamicCards.items
-            .findIndex(x => x.group_id === el.group_id);
-          if (index < 0) {
-            reNews ? this.dynamicCards.items.unshift(el) : this.dynamicCards.items.push(el);
-          }
+          items.push(el);
         });
+        return items;
       })
-      .catch(err => console.log(err))
+      .catch(err => { return [] })
   }
 
   doInfinite(ev) {
@@ -337,6 +350,7 @@ export class HomeNewsPage {
       this.getHomeNews(2);
     }
     setTimeout(() => {
+      //ev.enable(true)
       ev.complete();
     }, 500);
   }
