@@ -86,6 +86,7 @@ import { ApiAutoSiteService } from '../services/mlmt/apiAutoSiteService';
 import { NewlinePipe } from '../pipes/new-line';
 import { UrlClickPipe } from '../pipes/url-click';
 import { LinkifyPipe } from '../pipes/linkify';
+import { StringsConv } from '../pipes/pipe-strings';
 
 
 @NgModule({
@@ -134,7 +135,8 @@ import { LinkifyPipe } from '../pipes/linkify';
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
-    PostNewsPage
+    PostNewsPage,
+    StringsConv
   ],
   imports: [
     BrowserModule,
@@ -214,6 +216,7 @@ import { LinkifyPipe } from '../pipes/linkify';
     RequestInterceptor,
     ApiAutoCompleteService,
     ApiAutoSiteService,
+    StringsConv,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,

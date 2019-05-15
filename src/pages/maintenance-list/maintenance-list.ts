@@ -1,19 +1,16 @@
-import { Component, ViewChild, Pipe, PipeTransform } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NavController, NavParams, Refresher, ItemSliding, ModalController, AlertController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
-import { SearchSitePage } from '../search-site/search-site';
 import { ApiAutoSiteService } from '../../services/mlmt/apiAutoSiteService';
 import { ApiAutoCompleteService } from '../../services/apiAutoCompleteService';
 import { AutoCompleteComponent } from 'ionic2-auto-complete';
+import { StringsConv } from '../../pipes/pipe-strings';
 
 @Component({
   selector: 'page-maintenance-list',
   templateUrl: 'maintenance-list.html',
 })
-@Pipe({
-  name: 'pipeConvert'
- })
-export class MaintenanceListPage implements PipeTransform {
+export class MaintenanceListPage {
 
   @ViewChild('searchBar') searchbar: AutoCompleteComponent;
 
@@ -40,7 +37,8 @@ export class MaintenanceListPage implements PipeTransform {
     private apiAuth: ApiAuthService,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private apiAutoComplete: ApiAutoSiteService
+    private apiAutoSiteService: ApiAutoSiteService,
+    private stringsConv: StringsConv
   ) {
   }
 
@@ -56,11 +54,11 @@ export class MaintenanceListPage implements PipeTransform {
     this.dynamicList = {
       title: "Danh sách bảo dưỡng"
       , search_bar: {placeholder: "Tìm site_id từ list items này?"
-                  , is_search:false
-                  , search_string:""} 
+                  , is_search: false
+                  , search_string: ""} 
       , correct_bar:{ options: { placeholder: "Tìm site từ API auto-complete thêm vào Kế hoạch?"}
-                    , is_search:false
-                    , search_string:"" } 
+                    , is_search: false
+                    , search_string: "" } 
       , buttons: [
           {color:"primary", icon:"notifications", next:"NOTIFY"
             , alerts:[
@@ -120,7 +118,6 @@ export class MaintenanceListPage implements PipeTransform {
       this.dynamicList.correct_bar.is_search = false;
     else if (type === 'LOCAL')
       this.dynamicList.search_bar.is_search = false;
-    console.log('search string:', this.searchString);
   }
 
   searchSelect(ev,what) {
@@ -177,7 +174,8 @@ export class MaintenanceListPage implements PipeTransform {
   }
 
   setFilteredItems() {
-    this.dynamicList.items = this.filterItems(this.searchString);
+    console.log('search local');
+    this.dynamicList.items = this.filterItems(this.dynamicList.search_bar.search_string);
   }
 
   filterItems(searchTerm) {
@@ -220,31 +218,9 @@ export class MaintenanceListPage implements PipeTransform {
     let alert = this.alertCtrl.create({
       title: title,
       subTitle: content,
-      buttons: ['Dismiss']
+      buttons: ['OK']
     });
     alert.present();
-  }
-
-  /* transform(value) {
-    if (value === '') {
-      return 'Chưa bảo dưỡng';
-    } else if (value === '1') {
-      return 'Đang bảo dưỡng';
-    }
-  } */
-
-  /* transform(input): string { //string type
-    //return input + 'px';
-    if (input === '') {
-      return 'Chưa bảo dưỡng';
-    } else if (input === '1') {
-      return 'Đang bảo dưỡng';
-    }
-  } */
-
-  transform(value: number, exponent: string): number {
-    let exp = parseFloat(exponent);
-    return Math.pow(value, isNaN(exp) ? 1 : exp);
   }
 
 }

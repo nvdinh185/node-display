@@ -34,7 +34,8 @@
             (keyup.enter)="searchEnter('LOCAL')"
             (keyup.esc)="searchEnter('LOCAL')"
             (ionInput)="onInput($event)" 
-            (focusout)="searchEnter('LOCAL')">
+            (focusout)="searchEnter('LOCAL')"
+            (ionChange)="setFilteredItems()">
             <!-- [showCancelButton]="shouldShowCancel"
             (ionInput)="onInput($event)"
             (keyup.enter)="searchEnter('LOCAL')"
@@ -59,7 +60,7 @@
             (ionBlur)="searchEnter()" -->
         <ion-auto-complete style="width: 100%"
             [template]="withSites"
-            [dataProvider]="apiAutoComplete" #searchBar
+            [dataProvider]="apiAutoSiteService" #searchBar
             [(ngModel)]="dynamicList.correct_bar.search_string"
             [options]="dynamicList.correct_bar.options"
             (focusout)="searchSelect($event,'OUT')"
@@ -78,10 +79,10 @@
                 <!-- <ion-avatar item-start *ngIf="cycle.image">
                         <img [src]="cycle.image">
                     </ion-avatar> -->
-                <ion-title>{{site.site_id}}({{site.name}})</ion-title>
+                <ion-title>{{site.site_id}} ({{site.name}})</ion-title>
                 <h3>{{site.address}}</h3>
-                <ion-note item-end>{{site.create_time | date: 'dd/MM/yyyy'}}</ion-note>
-                <!-- <ion-note item-end>{{ 2 | pipeConvert:10 }}</ion-note> -->
+                <!-- <ion-note item-end>{{site.create_time | date: 'dd/MM/yyyy'}}</ion-note> -->
+                <ion-note item-end>{{ site.maintenance_status | strings: 'STATUS' }}</ion-note>
             </ion-item>
 
             <ion-item-options>
