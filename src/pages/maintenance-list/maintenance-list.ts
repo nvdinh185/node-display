@@ -1,15 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, Pipe, PipeTransform } from '@angular/core';
 import { NavController, NavParams, Refresher, ItemSliding, ModalController, AlertController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
 import { SearchSitePage } from '../search-site/search-site';
 import { ApiAutoSiteService } from '../../services/mlmt/apiAutoSiteService';
 import { ApiAutoCompleteService } from '../../services/apiAutoCompleteService';
+import { AutoCompleteComponent } from 'ionic2-auto-complete';
 
 @Component({
   selector: 'page-maintenance-list',
   templateUrl: 'maintenance-list.html',
 })
-export class MaintenanceListPage {
+@Pipe({
+  name: 'pipeConvert'
+ })
+export class MaintenanceListPage implements PipeTransform {
+
+  @ViewChild('searchBar') searchbar: AutoCompleteComponent;
 
   server = "http://localhost:9238/site-manager";
 
@@ -27,8 +33,6 @@ export class MaintenanceListPage {
   isSearchLocal: boolean = false;
   searchString: string = '';
   searchOptions = { placeholder: 'Tìm Site nào để thêm vào Kế hoạch?' };
-
-  isMobile: boolean = false;
 
   constructor(
     private navCtrl: NavController,
@@ -51,18 +55,19 @@ export class MaintenanceListPage {
 
     this.dynamicList = {
       title: "Danh sách bảo dưỡng"
-      , search_bar: { hint: "Tìm theo site_id theo tiếp đầu ngữ" }
+      , search_bar: {placeholder: "Tìm site_id từ list items này?"
+                  , is_search:false
+                  , search_string:""} 
+      , correct_bar:{ options: { placeholder: "Tìm site từ API auto-complete thêm vào Kế hoạch?"}
+                    , is_search:false
+                    , search_string:"" } 
       , buttons: [
-        { color: "primary", icon: "add", next: "ADD" }
-        , { color: "primary", icon: "contacts", next: "FRIENDS" }
-        , {
-          color: "primary", icon: "notifications", next: "NOTIFY"
-          , alerts: [
-            "cuong.dq"
-          ]
-        }
-        , { color: "royal", icon: "cog", next: "SETTINGS" }
-      ]
+          {color:"primary", icon:"notifications", next:"NOTIFY"
+            , alerts:[
+                "cuong.dq"
+                ]
+          }
+        ]
       , items: []
     };
 
@@ -73,6 +78,7 @@ export class MaintenanceListPage {
             site_id: el.site_id
             , name: el.name
             , address: el.address
+            , status: el.maintenance_status
             , create_time: el.create_time
           });
         });
@@ -102,52 +108,71 @@ export class MaintenanceListPage {
   //---------------------
   goSearch(type) {
     if (type === 'REMOTE')
-      this.isSearch = true;
+      this.dynamicList.correct_bar.is_search = true;
     else if (type === 'LOCAL')
-      this.isSearchLocal = true;
+      this.dynamicList.search_bar.is_search = true;
     /* console.log(this.searchbar);
     this.searchbar.setFocus(); */
   }
 
   searchEnter(type) {
     if (type === 'REMOTE')
-      this.isSearch = false;
+      this.dynamicList.correct_bar.is_search = false;
     else if (type === 'LOCAL')
-      this.isSearchLocal = false;
+      this.dynamicList.search_bar.is_search = false;
     console.log('search string:', this.searchString);
   }
 
-  searchSelect(ev) {
+  searchSelect(ev,what) {
     console.log('select item', ev);
     //hoi xem dong y chon dua vao ko?
-    this.alertCtrl.create({
-      title: 'Xác nhận',
-      message: 'Bạn muốn chọn site ' + ev.site_id + ' này phải không?',
-      buttons: [
-        {
-          text: 'Bỏ qua',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-            this.isSearch = false;
+    if (what==='SELECTED'){
+      this.alertCtrl.create({
+        title: 'Xác nhận',
+        message: 'Bạn muốn chọn site ' + ev.site_id + ' này phải không?',
+        buttons: [
+          {
+            text: 'Bỏ qua',
+            role: 'cancel',
+            handler: () => {
+              //console.log('Cancel clicked');
+              if (this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.is_search = false;
+            }
+          },
+          {
+            text: 'Chọn',
+            handler: () => {
+              // ev.image=  ev.flag;
+              // ev.title = ev.nativeName;
+              // ev.content = ev.subregion;
+              // ev.note = Date.now();
+              ev.sites_id = ev.id;
+              ev.cycle = this.cycle;
+              // console.log("item xu ly: ", ev);
+              this.apiAuth.postDynamicForm(this.server + "/add-site-plan", ev, true)
+              .then(result => {
+                console.log(result.status);
+                if (result.status === 'NOK') {
+                  this.presentAlert('Thông báo', result.message);
+                } else if (result.status === 'OK') {
+                  this.dynamicList.items.unshift(ev);
+                }
+              })
+              .catch(err => {
+                console.log("loi post",err);
+              });
+              
+              if (this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.is_search = false;
+            }
           }
-        },
-        {
-          text: 'Chọn',
-          handler: () => {
-            // ev.image = ev.flag;
-            // ev.title = ev.nativeName;
-            // ev.content = ev.subregion;
-            // ev.note = Date.now();
-            this.dynamicList.items.unshift(ev);
-            this.isSearch = false;
-          }
-        }
-      ]
-    }).present();
-
-
-    this.searchString = "";
+        ]
+      }).present();
+      if (this.dynamicList&&this.dynamicList.correct_bar) this.dynamicList.correct_bar.search_string = "";
+    } else {
+      if (this.dynamicList&&this.dynamicList.correct_bar && this.dynamicList.correct_bar.search_string !== null) {
+        this.dynamicList.correct_bar.is_search = false;
+      }
+    }
 
   }
 
@@ -181,51 +206,6 @@ export class MaintenanceListPage {
 
   }
 
-  /**
-   * tim kiem site
-   * @param func 
-   */
-  onClickHeaders(func) {
-
-    //console.log(cycle);
-    if (func === 'SEARCH') {
-
-      /* let formObj: any =  {
-        
-        title: "TẠO MỚI KỲ BẢO DƯỠNG"
-      , home_disable: false //nut home
-      , buttons: [
-          {color:"danger", icon:"close", next:"CLOSE"} 
-        ]
-      , items: [
-        { type: "title",          name: "CHỌN VÀ NHẬP"}
-        , { type: "datetime", key: "year", name: "Năm", hint: "Hãy chọn năm bảo dưỡng", display:"YYYY", picker:"YYYY"}
-        , { type: "select", key: "quarter", name: "Chọn quý", value: 1, options: [{ name: "Quý I", value: 1 }, { name: "Quý II", value: 2 }, { name: "Quý III", value: 3 }, { name: "Quý IV", value: 4 }] }
-        , { type: "text", key: "name", name: "Tên chu kỳ", hint: "Hãy nhập tên chu kỳ", input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
-        , { type: "text", key: "description", name: "Mô tả", hint: "Hãy nhập mô tả kỳ bảo dưỡng", input_type: "text", icon: "ios-create-outline", validators: [{ required: true, min: 5, max: 50} ]}
-        , 
-        { 
-            type: "button"
-          , options: [
-            { name: "Reset", next: "RESET" }
-            , { name: "Bỏ qua", next: "CLOSE" }
-            , { name: "Xử lý", next: "CALLBACK", url: this.server + "/" + this.function_string, token: true }
-          ]
-        }
-      ]
-      }; */
-
-      this.openModal(SearchSitePage, {
-        parent: this
-        // , callback: this.callbackRebuild
-        // , form: formObj
-      })
-
-
-
-    }
-  }
-
   openModal(form, data?: any) {
     let modal = this.modalCtrl.create(form, data);
     modal.onDidDismiss(data => {
@@ -234,6 +214,37 @@ export class MaintenanceListPage {
       }
     })
     modal.present();
+  }
+
+  presentAlert(title, content) {
+    let alert = this.alertCtrl.create({
+      title: title,
+      subTitle: content,
+      buttons: ['Dismiss']
+    });
+    alert.present();
+  }
+
+  /* transform(value) {
+    if (value === '') {
+      return 'Chưa bảo dưỡng';
+    } else if (value === '1') {
+      return 'Đang bảo dưỡng';
+    }
+  } */
+
+  /* transform(input): string { //string type
+    //return input + 'px';
+    if (input === '') {
+      return 'Chưa bảo dưỡng';
+    } else if (input === '1') {
+      return 'Đang bảo dưỡng';
+    }
+  } */
+
+  transform(value: number, exponent: string): number {
+    let exp = parseFloat(exponent);
+    return Math.pow(value, isNaN(exp) ? 1 : exp);
   }
 
 }

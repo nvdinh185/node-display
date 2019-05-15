@@ -131,7 +131,7 @@ export class MaintenanecePage {
    * Ham callback cua form dynamic
    */
   callbackRebuild = function (res) {
-    console.log('phat hanh', res);
+    // console.log('Cap nhat', res);
     return new Promise((resolve, reject) => {
 
       if (res.data) {

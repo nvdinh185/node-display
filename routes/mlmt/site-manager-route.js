@@ -56,6 +56,14 @@ router.get('/search-sites'
     , handlers.getSearchSites             //tim kiem site theo keyword
 );
 
+//post site ke hoach bao duong
+router.post('/add-site-plan'
+    , tokenHandler.getToken    //req.token
+    , proxyHandler.verifyProxyToken //lay req.user tu req.token new co   
+    , postHandler.jsonProcess // kqua tra ve la req.json_data
+    , handlers.postSiteToPlan       //lay Site
+);
+
 router.get('/maintenance-list'
     // , tokenHandler.getTokenNext    //req.token
     // , proxyHandler.verifyProxyTokenNext //lay req.user tu req.token new co

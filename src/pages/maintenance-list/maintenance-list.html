@@ -1,7 +1,7 @@
 <ion-header>
     <ion-navbar>
         <ion-title>BẢO DƯỠNG SITES</ion-title>
-        <ion-buttons *ngIf="!isSearch && dynamicList?.search_bar" start>
+        <!-- <ion-buttons *ngIf="!isSearch && dynamicList?.search_bar" start>
             <button ion-button icon-only color="royal" (click)="goSearch('REMOTE')">
                 Thêm Kế hoạch
             </button>
@@ -10,24 +10,43 @@
             <button ion-button icon-only color="royal" (click)="goSearch('LOCAL')">
                 <ion-icon name="search"></ion-icon>
             </button>
-        </ion-buttons>
-        <!-- <ion-buttons end *ngFor="let btn of dynamicList?.buttons">
-        <button ion-button icon-only color="{{btn.color}}" (click)="onClick(btn)">
-            <ion-icon name="{{btn.icon}}"></ion-icon>
-        </button>
-    </ion-buttons> -->
+        </ion-buttons> -->
 
-        <ion-title *ngIf="!isSearch">{{dynamicList?.title}} ({{cycle?.name}})</ion-title>
-        <ion-searchbar *ngIf="isSearchLocal && dynamicList?.search_bar" placeholder="{{dynamicList?.search_bar.hint}}"
-            [(ngModel)]="searchString" [showCancelButton]="shouldShowCancel" (ionInput)="onInput($event)"
-            (keyup.enter)="searchEnter('LOCAL')" (keyup.esc)="searchEnter('LOCAL')" (ionChange)="setFilteredItems()"
-            start>
+        <ion-buttons end *ngIf="dynamicList?.search_bar || dynamicList?.correct_bar">
+            <button *ngIf="dynamicList?.correct_bar && !dynamicList?.correct_bar?.is_search" ion-button icon-only color="royal" (click)="goSearch('REMOTE')">
+                <!-- <ion-icon name="ios-cloud-download-outline"></ion-icon> -->
+                Thêm Kế hoạch
+            </button>
+            <button *ngIf="dynamicList?.search_bar && !dynamicList?.search_bar?.is_search" ion-button icon-only color="royal" (click)="goSearch('LOCAL')">
+                <ion-icon name="search"></ion-icon>
+            </button>
+        </ion-buttons>
+        
+        <!-- <ion-buttons end *ngFor="let btn of dynamicList?.buttons">
+            <button ion-button icon-only color="{{btn.color}}" (click)="onClickHeader(btn)">
+                <ion-icon name="{{btn.icon}}"></ion-icon>
+            </button>
+        </ion-buttons> -->
+
+        <ion-searchbar start *ngIf="dynamicList?.search_bar && dynamicList?.search_bar?.is_search" 
+            placeholder="{{dynamicList.search_bar.placeholder}}" 
+            [(ngModel)]="dynamicList.search_bar.search_string"
+            (keyup.enter)="searchEnter('LOCAL')"
+            (keyup.esc)="searchEnter('LOCAL')"
+            (ionInput)="onInput($event)" 
+            (focusout)="searchEnter('LOCAL')">
+            <!-- [showCancelButton]="shouldShowCancel"
+            (ionInput)="onInput($event)"
+            (keyup.enter)="searchEnter('LOCAL')"
+            (keyup.esc)="searchEnter('LOCAL')"
+            (ionChange)="setFilteredItems()"> -->
         </ion-searchbar>
+        <ion-title *ngIf="!dynamicList?.search_bar?.is_search">{{dynamicList?.title}} ({{cycle?.name}})</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <div *ngIf="isSearch && dynamicList?.search_bar" style="width: 100%; z-index: 999;position: absolute;">
+    <div *ngIf="dynamicList?.correct_bar && dynamicList?.correct_bar?.is_search" style="width: 100%; z-index: 999;position: absolute;">
         <ng-template #withSites let-attrs="attrs">
             <!-- <img src="{{attrs.data.flag}}" class="flag" /> -->
             <span [innerHTML]="attrs.data.site_id + '<br />' + attrs.data.address | boldprefix:attrs.keyword"></span>
@@ -38,10 +57,15 @@
             (keyup.enter)="searchEnter()"
             (keyup.esc)="searchEnter()"
             (ionBlur)="searchEnter()" -->
-        <ion-auto-complete style="width: 100%" [template]="withSites" [dataProvider]="apiAutoComplete" #searchBar
-            [(ngModel)]="searchString" (keyup.esc)="searchEnter('REMOTE')" [options]="searchOptions"
-            
-            (itemSelected)="searchSelect($event)">
+        <ion-auto-complete style="width: 100%"
+            [template]="withSites"
+            [dataProvider]="apiAutoComplete" #searchBar
+            [(ngModel)]="dynamicList.correct_bar.search_string"
+            [options]="dynamicList.correct_bar.options"
+            (focusout)="searchSelect($event,'OUT')"
+            (keyup.enter)="searchEnter('REMOTE')"
+            (keyup.esc)="searchEnter('REMOTE')"
+            (itemSelected)="searchSelect($event,'SELECTED')">
         </ion-auto-complete>
     </div>
     <ion-list>
@@ -57,12 +81,13 @@
                 <ion-title>{{site.site_id}}({{site.name}})</ion-title>
                 <h3>{{site.address}}</h3>
                 <ion-note item-end>{{site.create_time | date: 'dd/MM/yyyy'}}</ion-note>
+                <!-- <ion-note item-end>{{ 2 | pipeConvert:10 }}</ion-note> -->
             </ion-item>
 
             <ion-item-options>
                 <button ion-button color="secondary" (click)="onClickDetails(slidingItem, cycle, 'REPAIR')">
-                    <ion-icon name="ios-remove-circle-outline"></ion-icon>
-                    Ẩn Kế hoạch
+                    <ion-icon name="ios-redo-outline"></ion-icon>
+                    Chuyển Kế hoạch
                 </button>
                 <button ion-button color="primary" (click)="onClickDetails(slidingItem, cycle, 'MAINTAIN')">
                     <ion-icon name="ios-clipboard-outline"></ion-icon>

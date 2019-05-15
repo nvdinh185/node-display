@@ -5,7 +5,7 @@
 const arrObj = require('../../utils/array-object');
 
 const SQLiteDAO = require('../../db/sqlite3/sqlite-dao');
-const dbFile = './db/database/mlmt-site-manager-v6.db';
+const dbFile = './db/database/mlmt-site-manager-v7.db';
 const db = new SQLiteDAO(dbFile);
 
 class Handler {
@@ -226,7 +226,6 @@ class Handler {
         //console.log('req.user', req.user);
         //console.log('req.json_data', req.json_data);
 
-
         if (req.json_data.id){
             let obj = {
                 id: req.json_data.id
@@ -368,11 +367,6 @@ class Handler {
             })
 
         }
-
-
-
-
-
     }
 
     async getMaintenanceSites(req, res, next) {
@@ -402,36 +396,37 @@ class Handler {
                                    ,status\
                                    from users\
                                    where username = '"+req.user.username+"'\
-                                    ");
-
-        //console.log('user', user);
+                                   ");
+                                   
+        // "+ (req.paramS.site_id ? "and a.site_id like '" + req.paramS.site_id + "%'" : "") + "\
+        // console.log('cycle', req.paramS.maintenance_cycle);
+        // console.log('user', user.id);
         //danh sach dang, va da bao duong
-        /* "+ (req.paramS.maintenance_cycle ? "and b.maintenance_cycle = '" + req.paramS.maintenance_cycle + "'" : "") + "\
-        and b.users_id ='"+user.id+"'\ */
         db.getRsts("SELECT a.id,\
-                        a.site_id,\
-                        a.name,\
-                        a.address,\
-                        b.users_id,\
-                        b.user_fullname,\
-                        b.id as maintenance_sheet_id,\
-                        b.sites_id,\
-                        b.year,\
-                        b.quarter,\
-                        b.create_time,\
-                        c.employee_status,\
-                        c.total_mark,\
-                        c.status as maintenance_status\
-                    FROM sites a \
-                    LEFT JOIN maintenance_sheet b\
-                    ON a.id=b.sites_id\
-                    LEFT JOIN maintenance_sheet_report c\
-                    ON b.id=c.maintenance_sheet_id\
-                    where 1=1\
-                    "+ (req.paramS.site_id ? "and a.site_id like '" + req.paramS.site_id + "%'" : "") + "\
-                    order by a.site_id\
-                    "+ (req.paramS.limit ? "LIMIT " + req.paramS.limit : "LIMIT 10") + "\
-                    "+ (req.paramS.offset ? "OFFSET " + req.paramS.offset : "OFFSET 0") + "\
+                           a.site_id,\
+                           a.name,\
+                           a.address,\
+                           b.users_id,\
+                           b.user_fullname,\
+                           b.id as maintenance_sheet_id,\
+                           b.sites_id,\
+                           b.year,\
+                           b.quarter,\
+                           b.create_time,\
+                           c.employee_status,\
+                           c.total_mark,\
+                           c.status as maintenance_status\
+                           FROM sites a \
+                           LEFT JOIN maintenance_sheet b\
+                           ON a.id=b.sites_id\
+                           LEFT JOIN maintenance_sheet_report c\
+                           ON b.id=c.maintenance_sheet_id\
+                           where 1=1\
+                           "+ (req.paramS.maintenance_cycle ? "and b.maintenance_cycles_id = '" + req.paramS.maintenance_cycle + "'" : "") + "\
+                           and b.users_id ='"+user.id+"'\
+                           order by a.site_id\
+                           "+ (req.paramS.limit ? "LIMIT " + req.paramS.limit : "LIMIT 10") + "\
+                           "+ (req.paramS.offset ? "OFFSET " + req.paramS.offset : "OFFSET 0") + "\
                     ")
                     .then(results => {
                         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -440,13 +435,12 @@ class Handler {
                                 if (value === null) { return undefined; }
                                 return value;
                             }
-                ));
-            })
-            .catch(err => {
-                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8'});
-                res.end(JSON.stringify([]));
-            });
-        ;
+                        ));
+                    })
+                    .catch(err => {
+                        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8'});
+                        res.end(JSON.stringify([]));
+                    });
     }
 
     getMaintenanceList(req, res, next) {
@@ -487,6 +481,80 @@ class Handler {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(JSON.stringify([]));
         });
+    }
+
+    async postSiteToPlan(req, res, next) {
+        //console.log('req.user', req.user);
+        console.log('req.json_data', req.json_data);
+
+        let rec = await db.getRst("select id\
+                                          ,user_fullname\
+                                   from maintenance_sheet\
+                                   where sites_id = '"+req.json_data.id+"'\
+                                     and maintenance_cycles_id = '"+req.json_data.cycle.id+"'\
+                                   ");
+        // console.log(req.json_data.cycle.id);
+        // console.log("Rst: ",rec);
+        if (typeof rec !== 'undefined') {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify({ status:'NOK', message: 'Site này đã được bảo dưỡng bởi ' + rec.user_fullname }));
+        } else {
+            let user = await db.getRst("select id\
+                                   ,username\
+                                   ,email_username\
+                                   ,user_pass\
+                                   ,fullname\
+                                   ,nickname\
+                                   ,phone\
+                                   ,email\
+                                   ,image\
+                                   ,background\
+                                   ,organization_id\
+                                   ,center_code\
+                                   ,department_id\
+                                   ,team_id\
+                                   ,group_id\
+                                   ,user_limit\
+                                   ,role\
+                                   ,status\
+                                   from users\
+                                   where username = '"+req.user.username+"'\
+                                   ");
+
+            let obj = {
+                users_id: user.id
+                , user_fullname: user.fullname
+                , sites_id: req.json_data.id
+                , site_id: req.json_data.site_id
+                , maintenance_cycles_id: req.json_data.cycle.id
+                , year: req.json_data.cycle.year
+                , quarter: req.json_data.cycle.quarter
+                , create_time: Date.now() //milisecond
+            }
+    
+            let sql = arrObj.convertSqlFromJson("maintenance_sheet", obj, []);
+    
+            //console.log('insert', sql);
+
+            db.insert(sql)
+            .then(x=>{
+                
+                //console.log('insert', x, sql);
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ status: 'OK', message: 'Thành công' }));
+
+            })
+            .catch(err=>{
+                res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({status: 'ERR', message:"Lỗi thêm mới Kế hoạch"}
+                    , (key, value) => {
+                        if (value === null) { return undefined; }
+                        return value;
+                    }
+                ));
+            });
+        }
+
     }
 }
 
