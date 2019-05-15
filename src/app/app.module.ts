@@ -83,6 +83,9 @@ import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
 import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
 import { SearchSitePage } from '../pages/search-site/search-site';
 import { ApiAutoSiteService } from '../services/mlmt/apiAutoSiteService';
+import { NewlinePipe } from '../pipes/new-line';
+import { UrlClickPipe } from '../pipes/url-click';
+import { LinkifyPipe } from '../pipes/linkify';
 
 
 @NgModule({
@@ -116,6 +119,9 @@ import { ApiAutoSiteService } from '../services/mlmt/apiAutoSiteService';
     TimeAgoPipe,
     SafePipe,
     ReversePipe,
+    NewlinePipe,
+    UrlClickPipe,
+    LinkifyPipe,
     Autosize,
     FriendsPage,
     ChattingPrivatePage,
