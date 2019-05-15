@@ -19078,7 +19078,7 @@
     },
     {
         "name": "Viet Nam",
-        "homePages":["http://chinhphu.vn/portal/page/portal/chinhphu/trangchu","https://visa.mofa.gov.vn/Homepage.aspx"],
+        "homePages":"Chính phủ http://chinhphu.vn/portal/page/portal/chinhphu/trangchu\n Bộ ngoại giao https://visa.mofa.gov.vn/Homepage.aspx",
         "topLevelDomain": [
             ".vn"
         ],
