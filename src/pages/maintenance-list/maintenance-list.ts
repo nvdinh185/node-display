@@ -5,6 +5,7 @@ import { ApiAutoSiteService } from '../../services/mlmt/apiAutoSiteService';
 import { ApiAutoCompleteService } from '../../services/apiAutoCompleteService';
 import { AutoCompleteComponent } from 'ionic2-auto-complete';
 import { StringsConv } from '../../pipes/pipe-strings';
+import { DynamicFormWebPage } from '../dynamic-form-web/dynamic-form-web';
 
 @Component({
   selector: 'page-maintenance-list',
@@ -29,7 +30,7 @@ export class MaintenanceListPage {
   isSearch: boolean = false;
   isSearchLocal: boolean = false;
   searchString: string = '';
-  searchOptions = { placeholder: 'Tìm Site nào để thêm vào Kế hoạch?' };
+  quarter_name: string = '';
 
   constructor(
     private navCtrl: NavController,
@@ -73,7 +74,8 @@ export class MaintenanceListPage {
       .then(data => {
         data.forEach(el => {
           this.dynamicList.items.push({
-            site_id: el.site_id
+            maintenance_sheet_id: el.maintenance_sheet_id
+            , site_id: el.site_id
             , name: el.name
             , address: el.address
             , status: el.maintenance_status
@@ -101,6 +103,36 @@ export class MaintenanceListPage {
   }
   //----------- end of sliding
 
+  /**
+   * Ham callback cua form dynamic
+   */
+  callbackRebuild = function (res) {
+    // console.log('Cap nhat', res);
+    return new Promise((resolve, reject) => {
+      // ktra va gan du lieu vao obj
+      if (res.data) {
+        let index = this.dynamicList.items.findIndex(x => x.maintenance_sheet_id === res.data.id);
+        // console.log('index update:', index);
+        //ktra co index thi remove khoi danh sach
+        if (index > -1) {
+          this.dynamicList.items.splice(index, 1);
+        }
+
+        resolve({
+          next: "CLOSE"
+        });
+        return;
+      }
+
+      if (res.error) {
+        //alert loi
+      }
+
+      resolve();
+
+    })
+
+  }.bind(this);
 
   //Su dung search
   //---------------------
@@ -120,10 +152,10 @@ export class MaintenanceListPage {
       this.dynamicList.search_bar.is_search = false;
   }
 
-  searchSelect(ev,what) {
+  searchSelect(ev, what) {
     console.log('select item', ev);
     //hoi xem dong y chon dua vao ko?
-    if (what==='SELECTED'){
+    if (what==='SELECTED') {
       this.alertCtrl.create({
         title: 'Xác nhận',
         message: 'Bạn muốn chọn site ' + ev.site_id + ' này phải không?',
@@ -146,7 +178,7 @@ export class MaintenanceListPage {
               ev.sites_id = ev.id;
               ev.cycle = this.cycle;
               // console.log("item xu ly: ", ev);
-              this.apiAuth.postDynamicForm(this.server + "/add-site-plan", ev, true)
+              this.apiAuth.postDynamicForm(this.server + "/site-plan", ev, true)
               .then(result => {
                 console.log(result.status);
                 if (result.status === 'NOK') {
@@ -174,7 +206,6 @@ export class MaintenanceListPage {
   }
 
   setFilteredItems() {
-    console.log('search local');
     this.dynamicList.items = this.filterItems(this.dynamicList.search_bar.search_string);
   }
 
@@ -197,10 +228,53 @@ export class MaintenanceListPage {
     console.log(it);
   }
 
-  onClickDetails(item: ItemSliding, btn: any, it: any) {
-    this.closeSwipeOptions(item, it);
-    btn.item = it;
-    console.log(btn);
+  async onClickDetails(item: ItemSliding, it: any, other_it: any, func: string) {
+    /* this.closeSwipeOptions(item, it);
+    btn.item = it; */
+    
+    if (func === 'MOVE') {
+      // console.log('item',it);
+      
+      this.options = [];
+      await this.apiAuth.getDynamicUrl(this.server + '/get-users', true)
+      .then(results => {
+        this.options = results;
+      })
+      .catch(e => { });
+
+      this.quarter_name =  "Quý " + other_it.quarter + "/" + other_it.year;
+      let data: any = {
+
+        title: "CHUYỂN GIAO BẢO DƯỠNG"
+        , home_disable: false //nut home
+        , buttons: [
+          { color: "danger", icon: "close", next: "CLOSE" }
+        ]
+        , items: [
+          { type: "title", name: "CHỌN USER" }
+          , { type: "text", key: "id", disabled: true, name: "Mã phiếu bảo dưỡng", input_type: "text", value: "Mã phiếu: " + it.maintenance_sheet_id, icon: "alarm" }
+          , { type: "text", key: "cycle", disabled: true, name: "Quý bảo dưỡng", input_type: "text", value: this.quarter_name, icon: "ios-bookmark-outline" }
+          , { type: "text", key: "site_id", disabled: true, name: "Site", input_type: "text", value: it.site_id, icon: "ios-color-wand-outline" }
+          , { type: "select", key: "users", name: "Chọn User chuyển", value: "1", options: this.options }
+          ,
+          {
+            type: "button"
+            , options: [
+              { name: "Reset", next: "RESET" }
+              , { name: "Bỏ qua", next: "CLOSE" }
+              , { name: "Xử lý", next: "CALLBACK", url: this.server + "/site-plan", token: true }
+            ]
+          }
+        ]
+      };
+
+
+      this.openModal(DynamicFormWebPage, {
+        parent: this
+        , callback: this.callbackRebuild
+        , form: data
+      });
+    }
 
   }
 

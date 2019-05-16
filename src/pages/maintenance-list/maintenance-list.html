@@ -73,24 +73,24 @@
         <!-- <ion-item>
             <ion-title>test</ion-title>
         </ion-item> -->
-        <ion-item-sliding #slidingItem class="background-list" *ngFor="let site of dynamicList?.items">
+        <ion-item-sliding #slidingItem class="background-list" *ngFor="let sheet of dynamicList?.items">
 
             <ion-item #item class="background-item" tappable (click)="onClickItem(cycle)">
                 <!-- <ion-avatar item-start *ngIf="cycle.image">
                         <img [src]="cycle.image">
                     </ion-avatar> -->
-                <ion-title>{{site.site_id}} ({{site.name}})</ion-title>
-                <h3>{{site.address}}</h3>
+                <ion-title>{{sheet.site_id}} ({{sheet.name}})</ion-title>
+                <h3>{{sheet.address}}</h3>
                 <!-- <ion-note item-end>{{site.create_time | date: 'dd/MM/yyyy'}}</ion-note> -->
-                <ion-note item-end>{{ site.maintenance_status | strings: 'STATUS' }}</ion-note>
+                <ion-note item-end>{{ sheet.maintenance_status | strings: 'STATUS' }}</ion-note>
             </ion-item>
 
             <ion-item-options>
-                <button ion-button color="secondary" (click)="onClickDetails(slidingItem, cycle, 'REPAIR')">
+                <button ion-button color="secondary" (click)="onClickDetails(slidingItem, sheet, cycle, 'MOVE')">
                     <ion-icon name="ios-redo-outline"></ion-icon>
                     Chuyển Kế hoạch
                 </button>
-                <button ion-button color="primary" (click)="onClickDetails(slidingItem, cycle, 'MAINTAIN')">
+                <button ion-button color="primary" (click)="onClickDetails(slidingItem, sheet, cycle, 'MAINTAIN')">
                     <ion-icon name="ios-clipboard-outline"></ion-icon>
                     Phiếu Bảo dưỡng
                 </button>

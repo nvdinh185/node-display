@@ -57,7 +57,7 @@ router.get('/search-sites'
 );
 
 //post site ke hoach bao duong
-router.post('/add-site-plan'
+router.post('/site-plan'
     , tokenHandler.getToken    //req.token
     , proxyHandler.verifyProxyToken //lay req.user tu req.token new co   
     , postHandler.jsonProcess // kqua tra ve la req.json_data
@@ -68,6 +68,13 @@ router.get('/maintenance-list'
     // , tokenHandler.getTokenNext    //req.token
     // , proxyHandler.verifyProxyTokenNext //lay req.user tu req.token new co
     , handlers.getMaintenanceList 
+);
+
+//lay thong tin user cho select box
+router.get('/get-users'
+    , tokenHandler.getTokenNext    //req.token
+    , proxyHandler.verifyProxyTokenNext //lay req.user tu req.token new co
+    , handlers.getUsers       //lay thong tin user
 );
 
 module.exports = router;
