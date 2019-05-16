@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -14,8 +15,10 @@ import { HomeSpeedtestPage } from '../pages/home-speedtest/home-speedtest';
 import { HomeMenuPage } from '../pages/home-menu/home-menu';
 import { TimeAgoPipe} from 'time-ago-pipe';
 
+import { AutoCompleteModule } from 'ionic2-auto-complete';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { NgxBarcodeModule } from 'ngx-barcode';
+import { ChartsModule } from 'ng2-charts-x';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 
@@ -75,7 +78,15 @@ import { ReviewMaintenancePage } from '../pages/review-maintenance/review-mainte
 import { DocumentsPage } from '../pages/documents/documents';
 import { HomeNewsPage } from '../pages/home-news/home-news';
 import { PostNewsPage } from '../pages/post-news/post-news';
-import { TestPage } from '../pages/test/test';
+import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list';
+import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
+import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
+import { SearchSitePage } from '../pages/search-site/search-site';
+import { ApiAutoSiteService } from '../services/mlmt/apiAutoSiteService';
+import { NewlinePipe } from '../pipes/new-line';
+import { UrlClickPipe } from '../pipes/url-click';
+import { LinkifyPipe } from '../pipes/linkify';
+import { StringsConv } from '../pipes/pipe-strings';
 
 
 @NgModule({
@@ -102,24 +113,30 @@ import { TestPage } from '../pages/test/test';
     DynamicCardSocialPage,
     DynamicMediasPage,
     DynamicListOrderPage,
+    DynamicChartPage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
     TimeAgoPipe,
     SafePipe,
     ReversePipe,
+    NewlinePipe,
+    UrlClickPipe,
+    LinkifyPipe,
     Autosize,
     FriendsPage,
     ChattingPrivatePage,
     ChattingRoomPage,
     ReportPage,
     MaintenanecePage,
+    MaintenanceListPage,
     AddMaintenancePage,
+    SearchSitePage,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
     PostNewsPage,
-    TestPage
+    StringsConv
   ],
   imports: [
     BrowserModule,
@@ -127,6 +144,8 @@ import { TestPage } from '../pages/test/test';
     StorageServiceModule,
     NgxBarcodeModule,
     NgxQRCodeModule,
+    ChartsModule,
+    AutoCompleteModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -153,6 +172,7 @@ import { TestPage } from '../pages/test/test';
     DynamicCardSocialPage,
     DynamicMediasPage,
     DynamicListOrderPage,
+    DynamicChartPage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
@@ -161,12 +181,13 @@ import { TestPage } from '../pages/test/test';
     ChattingRoomPage,
     ReportPage,
     MaintenanecePage,
+    MaintenanceListPage,
     AddMaintenancePage,
+    SearchSitePage,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
-    PostNewsPage,
-    TestPage
+    PostNewsPage
   ],
   providers: [
     StatusBar,
@@ -193,6 +214,9 @@ import { TestPage } from '../pages/test/test';
     ApiContactService,
     ApiChatService,
     RequestInterceptor,
+    ApiAutoCompleteService,
+    ApiAutoSiteService,
+    StringsConv,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,

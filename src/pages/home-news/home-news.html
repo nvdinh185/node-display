@@ -130,23 +130,15 @@
                         </ion-col>
                     </ion-row>
 
-                    <ion-card-content *ngIf="it.content">
-                        <ion-card-title *ngIf="it.content.title">
-                            {{it.content.title}}
-                        </ion-card-title>
-                        <div *ngFor="let ph of it.content.paragraphs">
-                            <h1 *ngIf="ph.h1">{{ph.h1}}</h1>
-                            <div *ngFor="let md of ph.medias" class="card-background-page-top">
-                                <img class="one-image" [src]="md.image" />
-                                <div *ngIf="md.title" class="card-title-top">{{md.title}}</div>
-                                <div *ngIf="md.subtitle" class="card-subtitle-top">{{md.subtitle}}</div>
-                            </div>
-                            <h2 *ngIf="ph.h2">{{ph.h2}}</h2>
-                            <h3 *ngIf="ph.h3">{{ph.h3}}</h3>
-                            <p *ngIf="ph.p" style="text-align: justify;">{{ph.p}}</p>
+                    <!-- <div *ngIf="it.content">
+                        <p text-wrap [innerHtml]="it.content | newline | linkify"></p>
+                        <div *ngIf="(it.content | linkify:'urlInfos')?.length>0">
+                                <div *ngFor="let urlInfo of it.content | linkify:'urlInfos'; let idx = index;">
+                                    <p text-wrap [innerHtml]="urlInfo.content | newline"></p>
+                                    <img src="{{urlInfo.image}}" />
+                                </div>
                         </div>
-                        <ion-note *ngIf="it.content.note">{{it.content.note}}</ion-note>
-                    </ion-card-content>
+                    </div> -->
 
                     <ion-row no-padding *ngIf="it.results">
                         <ion-col align-self-center text-center>
@@ -178,6 +170,7 @@
                                 {{(it.results.shares.length)}} Shares</ion-note>
                         </ion-col>
                     </ion-row>
+
                     <ion-row no-padding *ngIf="it.actions">
                         <ion-col text-center>
                             <button *ngIf="it.actions.like" ion-button clear small color="{{it.actions.like.color}}"

@@ -15,6 +15,9 @@ export class ApiStorageService {
     public static resourceServer = 'https://c3.mobifone.vn/qld'; 
     public static authServer = 'https://c3.mobifone.vn/api';
 
+    public static siteServer = 'https://c3.mobifone.vn/site-manager';
+    public static newsServer = 'https://c3.mobifone.vn/site-manager/news';
+
     constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) {
     }
  

@@ -208,11 +208,12 @@ export class HomeNewsPage {
     ]
   };
 
+  //server = ApiStorageService.newsServer;
   server = "http://localhost:9238/site-manager/news"
   userInfo: any;
+  curPageIndex = 0;
+  lastPageIndex = 0;
   maxOnePage = 2;
-  pageIndexPublic = 0;
-  pageIndexPrivate = 0;
   contacts = {}
 
   constructor(private events: Events
@@ -226,13 +227,13 @@ export class HomeNewsPage {
   isObjectEmpty = (obj) => {
     return Object.getOwnPropertyNames(obj).length < 1
   }
-  ngOnInit() {
+  ngOnInit() {    
     this.refreshNews();
     this.events.subscribe('event-main-login-checked'
       , (data => {
         this.userInfo = data.user;
         this.contacts = this.apiContact.getUniqueContacts();
-
+        console.log("this.userInfo: ", this.userInfo)
         if (this.userInfo) {
           if (!this.contacts[this.userInfo.username]) {
             Object.defineProperty(this.contacts, this.userInfo.username, {
@@ -246,21 +247,20 @@ export class HomeNewsPage {
               writable: true, enumerable: true, configurable: true
             });
           } else {
-            if (this.userInfo.data.image){
+            if (this.userInfo.data.image) {
               this.contacts[this.userInfo.username].image = this.userInfo.data.image;
               this.contacts[this.userInfo.username].avatar = this.userInfo.data.avatar ? this.userInfo.data.avatar : this.userInfo.data.image;
-            } 
+            }
           }
         }
-        console.log("contacts: ", this.contacts)
-        this.getHomeNews(2);
+        //setTimeout(() => {
+          console.log("contacts: ", this.contacts)
+          this.getHomeNews(true);
+        //}, 3000);
       })
     )
     this.events.subscribe('postok', () => {
-      this.pageIndexPublic = 0;
-      this.pageIndexPrivate = 0;
-      this.getHomeNews(1, true);
-      this.getHomeNews(2, true);
+      this.getHomeNews(true);
     });
   }
 
@@ -273,19 +273,40 @@ export class HomeNewsPage {
   }
 
   async refreshNews() {
-    //KHOI TAO CAC USER PUBLIC
+    //chay ham nay de KHOI TAO CAC USER PUBLIC
     await this.apiContact.getPublicUsers(true);
+    //lay cac danh ba public
+    this.contacts = this.apiContact.getUniqueContacts();
+    //lay cac tin cua user public
+    if(!this.userInfo)  this.getHomeNews(true);
 
-    this.getHomeNews(1);
+    /* this.dynamicCards = {
+      title: "Đây là trang của " + (this.userInfo && this.userInfo.data ? this.userInfo.data.fullname : (this.userInfo ? this.userInfo.username : ""))
+      , buttons: [
+        { color: "primary", icon: "photos", next: "ADD" }
+      ]
+      , items: [
+        {
+          user: '903500888',
+          short_detail: { p: "VFF bị phạt gần 40 nghìn USD vì pháo sáng ở vòng loại U23 châu Á" },
+          content: "Chia sẻ thông tin của trang web dân trí là bảng tin VFF bị phạt gần 40 nghìn USD vì pháo sáng ở vòng loại U23 châu Á.\n https://dantri.com.vn/the-thao/vff-bi-phat-gan-40-nghin-usd-vi-phao-sang-o-vong-loai-u-23-chau-a-20190515140626400.htm "
+        },
+        {
+          user: '766777123',
+          short_detail: { p: "Thông tin của Định" },
+          medias: []
+        },
+      ]
+    } */
   }
 
-  getHomeNews(status: number, reNews?: boolean) {
-    if(status == 1) this.contacts = { 123456789: { username: "nvdinh" } } // { 766777123: { username: "admin" } }
-    console.log("456", status, this.contacts)
+  getHomeNews(reNews?: boolean) {
+    console.log("456", this.contacts)
     this.dynamicCards.title = "Đây là trang tin của " + (this.userInfo ? this.userInfo.username : "Public")
 
-    this.getJsonPostNews(status)
+    this.getJsonPostNews()
       .then(data => {
+        console.log(data)
         if (reNews) {
           let isHaveNew = false;
           data.reverse().forEach((el, idx) => {
@@ -311,9 +332,9 @@ export class HomeNewsPage {
       .catch(err => console.log(err))
   }
 
-  getJsonPostNews(status) {
+  getJsonPostNews() {
     let linkFile = this.server + "/get-file/"
-    let offset = status == 1 ? this.pageIndexPublic : this.pageIndexPrivate;
+    let offset = this.curPageIndex;
     let limit = this.maxOnePage;
     let follows = [];
     for (let key in this.contacts) {
@@ -328,10 +349,10 @@ export class HomeNewsPage {
     console.log("json_data", json_data)
     return this.auth.postDynamicForm(this.server + "/get-news", json_data, true)
       .then(data => {
-        console.log("789", status, data)
+        console.log("789", data)
         let items = [];
         data.forEach(el => {
-          status == 1 ? this.pageIndexPublic++ : this.pageIndexPrivate++;
+          this.curPageIndex++;
           let medias = [];
           if (el.medias) {
             el.medias.forEach(e => {
@@ -363,23 +384,14 @@ export class HomeNewsPage {
   }
 
   doInfinite(ev) {
-    this.getHomeNews(1);
-    if (this.userInfo) {
-      this.getHomeNews(2);
-    }
+    this.getHomeNews();
     setTimeout(() => {
-      //ev.enable(true)
       ev.complete();
     }, 500);
   }
 
   doRefresh(ev) {
-    this.pageIndexPublic = 0;
-    this.pageIndexPrivate = 0;
-    this.getHomeNews(1, true);
-    if (this.userInfo) {
-      this.getHomeNews(2, true);
-    }
+    this.getHomeNews(true);
     setTimeout(() => {
       ev.complete();
     }, 500);

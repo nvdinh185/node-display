@@ -1,35 +1,76 @@
 "use strict"
 
 const SQLiteDAO = require('./db/sqlite3/sqlite-dao');
-<<<<<<< HEAD
-const dbFile = './db/database/mlmt-site-manager-v3.db';
-=======
-const dbFile = './db/database/mlmt-site-manager-v4.db';
->>>>>>> d4aed73366d4a1c7b291be2adf8af803aac5622d
+const dbFile = './db/database/mlmt-site-manager-v7.db';
 const db = new SQLiteDAO(dbFile);
+
+const arrObj = require('./utils/array-object');
 
 
 setTimeout(() => {
-    db.getRsts("SELECT a.id,\
-                        a.site_id,\
-                        a.name,\
-                        a.address,\
-                        b.id as maintenance_sheet_id,\
-                        b.sites_id,\
-                        b.year,\
-                        b.quarter,\
-                        c.employee_status,\
-                        c.total_mark,\
-                        c.status as maintenance_status\
-                    FROM sites a \
-                    LEFT JOIN maintenance_sheet b\
-                    ON a.id=b.sites_id\
-                    LEFT JOIN maintenance_sheet_report c\
-                    ON b.id=c.maintenance_sheet_id\
-                    where a.site_id like 'DNTK01%'\
-                 ")
+   /*  db.getRsts("SELECT *\
+                    FROM admin_roles a\
+                 ") */
+/* 
+                 db.insert({
+                    name:'admin_roles',
+                                      cols:[
+                                          {
+                                            name:'username',
+                                            value:'901952666'
+                                            }
+                                        ,
+                                          {
+                                            name:'roles',
+                                            value:'{"menu":[1,2,3,4,5,6],"functions":[1,2,3,4,5,6,7,8,9]}'
+                                            }
+                                        ,
+                                          {
+                                            name:'status',
+                                            value:1
+                                            }
+                                        ]
+                                      }
+                 ) */
+                 /* db.insert({
+                    name:'admin_functions',
+                                      cols:[
+                                          {
+                                            name:'id',
+                                            value:'9'
+                                            }
+                                        ,
+                                          {
+                                            name:'function_code',
+                                            value:'create-cycle'
+                                            }
+                                        ,
+                                          {
+                                            name:'name',
+                                            value:'Tạo kỳ bảo dưỡng'
+                                            }
+                                        ,
+                                          {
+                                            name:'status',
+                                            value:1
+                                            }
+                                        ]
+                                      }
+                 ) */
 
+    /* db.runSql("update maintenance_cycles set create_time="+Date.now()) */
+    /* db.getRsts("select *\
+         from maintenance_list\
+         where type=1")
     .then(data=>{
+     let dataS  =  arrObj.createTree(data,'id','parent_id', null);
+        console.log(dataS);
+    }); */
+    db.getRsts("select *\
+         from maintenance_sheet\
+         ")
+    .then(data=>{
+     //let dataS  =  arrObj.createTree(data,'id','parent_id', null);
         console.log(data);
     });
 }, 1000);
