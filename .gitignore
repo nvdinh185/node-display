@@ -30,6 +30,11 @@ db/oracle/
 
 gmap-test/
 
+
+#ignore log file service
+logs/*.log
+service.pid
+
 create-oracle-from-excel.js
 test-oracle-private.js
 test-oracle.js
