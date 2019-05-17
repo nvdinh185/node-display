@@ -19,8 +19,8 @@ export class PostNewsPage implements OnInit {
     "4": "only me",
   }
 
-  userInfo: any;
   server = "http://localhost:9238/site-manager/news"
+  userInfo: any;
 
   constructor(
     public navCtrl: NavController,
@@ -125,57 +125,32 @@ export class PostNewsPage implements OnInit {
   content;
 
   onShare() {
+    let form_data: FormData = new FormData();
+    form_data.append("count_image", this.fileImages ? this.fileImages.length : 0);
+    form_data.append("share_status", this.owner);
+    form_data.append("title", this.content);  //nhap lieu tu text-area
+    form_data.append("content", this.content);  //nhap lieu tu text-area
 
-    //neu this.content.indexOf(".") neu tim thay domain trong chuoi thi 
-    // goi ham this.apiAuth.getDynamicUrl("https://c3.mobifone.vn/api/ext-public/shot-info-url?url="+link)
-
-
-    let url = ApiStorageService.authServer + "/ext-public/shot-info-url?url=" + this.content;
-    this.apiAuth.getDynamicUrl(url)
+    if (this.fileImages) {
+      this.fileImages.forEach((el, idx) => {
+        if (el.file && el.filename) {
+          let key = "image" + idx;
+          form_data.append(key, el.file, el.filename);
+          form_data.append("origin_date_" + key, el.last_modified);
+        }
+      });
+    }
+    this.apiAuth.postDynamicFormData(this.server + "/post-news", form_data, true)
       .then(data => {
-        let form_data: FormData = new FormData();
-        form_data.append("share_status", this.owner);
-        form_data.append("content", this.content);  //nhap lieu tu text-area
-        form_data.append("title", data.title);
-        form_data.append("image", data.image);
-        this.apiAuth.postDynamicFormData(this.server + "/post-news", form_data, true)
-          .then(data => {
-            console.log('receive form data:', data);
-            this.events.publish('postok');
-            this.navCtrl.pop();
-          })
-          .catch(err => {
-            alert("Post không thành công!");
-          })
+        console.log('receive form data:', data);
+        this.events.publish('postok');
+        this.navCtrl.pop();
       })
       .catch(err => {
-        let form_data: FormData = new FormData();
-        form_data.append("count_image", this.fileImages ? this.fileImages.length : 0);
-        form_data.append("share_status", this.owner);
-        form_data.append("title", this.content);  //nhap lieu tu text-area
-        form_data.append("content", this.content);  //nhap lieu tu text-area
-
-        if (this.fileImages) {
-          this.fileImages.forEach((el, idx) => {
-            if (el.file && el.filename) {
-              let key = "image" + idx;
-              form_data.append(key, el.file, el.filename);
-              form_data.append("origin_date_" + key, el.last_modified);
-            }
-          });
-        }
-        this.apiAuth.postDynamicFormData(this.server + "/post-news", form_data, true)
-          .then(data => {
-            console.log('receive form data:', data);
-            this.events.publish('postok');
-            this.navCtrl.pop();
-          })
-          .catch(err => {
-            alert("Post không thành công!");
-          })
+        alert("Post không thành công!");
       })
   }
-  cancel(){
+  cancel() {
     this.navCtrl.pop();
   }
 }

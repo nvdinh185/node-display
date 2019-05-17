@@ -9,7 +9,7 @@
         <ion-title *ngIf="!isSearch">{{dynamicCards?.title}}</ion-title>
 
         <ion-buttons end *ngFor="let btn of dynamicCards?.buttons">
-            <button *ngIf="!isSearch" class="badge-background" ion-button icon-only color="{{btn.color}}"
+            <button *ngIf="!isSearch && this.userInfo" class="badge-background" ion-button icon-only color="{{btn.color}}"
                 (click)="onClickHeader(btn)">
                 <ion-icon name="{{btn.icon}}"></ion-icon>
                 <ion-badge class="badge-alert" color="danger" *ngIf="btn.alerts">
@@ -22,8 +22,8 @@
 
 <ion-content no-padding class="background-page gradient">
     <ion-refresher (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Load dữ liệu mới hơn..." refreshingSpinner="circles"
-            refreshingText="Đang tải...">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Load dữ liệu mới hơn..."
+            refreshingSpinner="circles" refreshingText="Đang tải...">
         </ion-refresher-content>
     </ion-refresher>
     <ion-grid no-padding>
@@ -36,10 +36,13 @@
                     <ion-item class="background-card gradient grid-border" *ngIf="it.short_detail">
                         <ion-avatar item-start>
                             <img *ngIf="userInfo?.username==it.user" [src]="userInfo?.data?.image">
-                            <img *ngIf="userInfo?.username!=it.user&&contacts[it.user]&&contacts[it.user].avatar" [src]="contacts[it.user].avatar">
-                            <img *ngIf="userInfo?.username!=it.user&&!(contacts[it.user]&&contacts[it.user].avatar)" src="assets/imgs/no-image-go.jpg">
+                            <img *ngIf="userInfo?.username!=it.user&&contacts[it.user]&&contacts[it.user].avatar"
+                                [src]="contacts[it.user].avatar">
+                            <img *ngIf="userInfo?.username!=it.user&&!(contacts[it.user]&&contacts[it.user].avatar)"
+                                src="assets/imgs/no-image-go.jpg">
                         </ion-avatar>
-                        <ion-title>{{contacts[it.user]&&contacts[it.user].fullname?contacts[it.user].fullname:it.user}}</ion-title>
+                        <ion-title>{{contacts[it.user]&&contacts[it.user].fullname?contacts[it.user].fullname:it.user}}
+                        </ion-title>
                         <p *ngIf="it.short_detail?.p" text-wrap>{{it.short_detail?.p}}</p>
                         <ion-note item-end *ngIf="it.short_detail?.note">{{it.short_detail?.note | timeAgo}}</ion-note>
                         <button item-end icon-only ion-button clear small *ngIf="it.short_detail?.action"
@@ -130,15 +133,16 @@
                         </ion-col>
                     </ion-row>
 
-                    <!-- <div *ngIf="it.content">
+                    <div *ngIf="it.content">
                         <p text-wrap [innerHtml]="it.content | newline | linkify"></p>
-                        <div *ngIf="(it.content | linkify:'urlInfos')?.length>0">
-                                <div *ngFor="let urlInfo of it.content | linkify:'urlInfos'; let idx = index;">
-                                    <p text-wrap [innerHtml]="urlInfo.content | newline"></p>
-                                    <img src="{{urlInfo.image}}" />
-                                </div>
+                        <button ion-button (click)="isCheck = !isCheck">Xem chi tiết</button>
+                        <div *ngIf="(it.content | linkify:'urlInfos')?.length>0 && isCheck">
+                            <div *ngFor="let urlInfo of it.content | linkify:'urlInfos'; let idx = index;">
+                                <p text-wrap [innerHtml]="urlInfo.content | newline"></p>
+                                <img src="{{urlInfo.image}}" />
+                            </div>
                         </div>
-                    </div> -->
+                    </div>
 
                     <ion-row no-padding *ngIf="it.results">
                         <ion-col align-self-center text-center>
@@ -197,9 +201,7 @@
                     </ion-row>
                 </ion-card>
             </ion-col>
-
         </ion-row>
-
     </ion-grid>
     <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
         <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Load dữ liệu cũ hơn...">

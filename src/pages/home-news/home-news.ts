@@ -215,6 +215,7 @@ export class HomeNewsPage {
   lastPageIndex = 0;
   maxOnePage = 2;
   contacts = {}
+  isCheck = false;
 
   constructor(private events: Events
     , public modalCtrl: ModalController
@@ -224,16 +225,14 @@ export class HomeNewsPage {
     , private apiContact: ApiContactService
     , private apiStorageService: ApiStorageService
   ) { }
-  isObjectEmpty = (obj) => {
-    return Object.getOwnPropertyNames(obj).length < 1
-  }
-  ngOnInit() {    
+
+  ngOnInit() {
     this.refreshNews();
     this.events.subscribe('event-main-login-checked'
       , (data => {
         this.userInfo = data.user;
         this.contacts = this.apiContact.getUniqueContacts();
-        console.log("this.userInfo: ", this.userInfo)
+        //console.log("this.userInfo: ", this.userInfo)
         if (this.userInfo) {
           if (!this.contacts[this.userInfo.username]) {
             Object.defineProperty(this.contacts, this.userInfo.username, {
@@ -254,8 +253,8 @@ export class HomeNewsPage {
           }
         }
         //setTimeout(() => {
-          console.log("contacts: ", this.contacts)
-          this.getHomeNews(true);
+        //console.log("contacts: ", this.contacts)
+        this.getHomeNews(true);
         //}, 3000);
       })
     )
@@ -278,35 +277,16 @@ export class HomeNewsPage {
     //lay cac danh ba public
     this.contacts = this.apiContact.getUniqueContacts();
     //lay cac tin cua user public
-    if(!this.userInfo)  this.getHomeNews(true);
-
-    /* this.dynamicCards = {
-      title: "Đây là trang của " + (this.userInfo && this.userInfo.data ? this.userInfo.data.fullname : (this.userInfo ? this.userInfo.username : ""))
-      , buttons: [
-        { color: "primary", icon: "photos", next: "ADD" }
-      ]
-      , items: [
-        {
-          user: '903500888',
-          short_detail: { p: "VFF bị phạt gần 40 nghìn USD vì pháo sáng ở vòng loại U23 châu Á" },
-          content: "Chia sẻ thông tin của trang web dân trí là bảng tin VFF bị phạt gần 40 nghìn USD vì pháo sáng ở vòng loại U23 châu Á.\n https://dantri.com.vn/the-thao/vff-bi-phat-gan-40-nghin-usd-vi-phao-sang-o-vong-loai-u-23-chau-a-20190515140626400.htm "
-        },
-        {
-          user: '766777123',
-          short_detail: { p: "Thông tin của Định" },
-          medias: []
-        },
-      ]
-    } */
+    if (!this.userInfo) this.getHomeNews(true);
   }
 
   getHomeNews(reNews?: boolean) {
-    console.log("456", this.contacts)
+    //console.log("456", this.contacts)
     this.dynamicCards.title = "Đây là trang tin của " + (this.userInfo ? this.userInfo.username : "Public")
 
     this.getJsonPostNews()
       .then(data => {
-        console.log(data)
+        //console.log(data)
         if (reNews) {
           let isHaveNew = false;
           data.reverse().forEach((el, idx) => {
@@ -346,10 +326,10 @@ export class HomeNewsPage {
       offset: offset,
       follows: follows
     }
-    console.log("json_data", json_data)
+    //console.log("json_data", json_data)
     return this.auth.postDynamicForm(this.server + "/get-news", json_data, true)
       .then(data => {
-        console.log("789", data)
+        //console.log("789", data)
         let items = [];
         data.forEach(el => {
           this.curPageIndex++;
@@ -429,7 +409,7 @@ export class HomeNewsPage {
           {
             short_detail: {
               avatar: this.userInfo ? this.userInfo.data.image : ""
-              , h1: this.userInfo.data.fullname
+              , h1: this.userInfo ? this.userInfo.data.fullname : ""
               , p: it.content
               , note: it.time
               , action: { color: "primary", icon: "more", next: "MORE" }

@@ -41,10 +41,10 @@ class ResourceHandler {
         let users = "";
         if (req.json_data.follows.length > 0) {
             req.json_data.follows.forEach(el => {
-                users += (users===""?"":",") + "'"+el+"'";
+                users += (users === "" ? "" : ",") + "'" + el + "'";
             });
         }
-        console.log("users: ", users)
+        //console.log("users: ", users)
         db.getRsts("select *\
                     from news\
                     where user in ("+ users + ")\
@@ -60,41 +60,18 @@ class ResourceHandler {
                     } else {
                         let countDetails = 0;
                         for (let idx = 0; idx < results.length; idx++) {
-                            if (results[idx].news_type == 1) {
-                                //console.log("11")
-                                db.getRsts("select *\
+                            db.getRsts("select *\
                                 from news_files\
                                 where group_id = '"+ results[idx].group_id + "'\
                                 ")
-                                    .then(files => {
-                                        countDetails++;
-                                        results[idx].medias = files;
-                                        if (countDetails == results.length) {
-                                            resolve();
-                                        };
-                                    })
-                                    .catch(err => reject(err))
-                            } else if (results[idx].news_type == 2) {
-                                //console.log("21")
-                                db.getRsts("select *\
-                                from news_shares\
-                                where group_id = '"+ results[idx].group_id + "'\
-                                ")
-                                    .then(files => {
-                                        countDetails++;
-                                        results[idx].medias = files;
-                                        if (countDetails == results.length) {
-                                            resolve();
-                                        };
-                                    })
-                                    .catch(err => reject(err))
-                            } else {
-                                //console.log("01")
-                                countDetails++;
-                                if (countDetails == results.length) {
-                                    resolve();
-                                };
-                            }
+                                .then(files => {
+                                    countDetails++;
+                                    results[idx].medias = files;
+                                    if (countDetails == results.length) {
+                                        resolve();
+                                    };
+                                })
+                                .catch(err => reject(err))
                         }
                     }
                 })
@@ -118,6 +95,7 @@ class ResourceHandler {
     }
 
     postNewsFiles(req, res) {
+        console.log(req.form_data)
         let groupId = req.form_data.params.group_id ? req.form_data.params.group_id : req.user.username + '-' + new Date().getTime();
         var count_max = req.form_data.params.count_file;
         let saveDb = new Promise((resolve, reject) => {
@@ -126,7 +104,6 @@ class ResourceHandler {
                 {
                     group_id: groupId
                     , content: req.form_data.params.content ? req.form_data.params.content : ""
-                    , news_type: req.form_data.params.image ? 2 : 1
                     , share_status: req.form_data.params.share_status
                     , title: req.form_data.params.title
                     , user: req.user.username
@@ -135,55 +112,42 @@ class ResourceHandler {
             );
             db.insert(sqlInsertGroup)
                 .then(data => {
-                    if (req.form_data.params.image) {
-                        let sqlInsertGroup = arrObj.convertSqlFromJson(
-                            "news_shares",
-                            {
-                                group_id: groupId
-                                , url: req.form_data.params.image
-                            }
-                        );
-                        db.insert(sqlInsertGroup)
-                            .then(data => resolve(data))
-                            .catch(err => reject(err))
-                    } else {
-                        if (count_max > 0) {
-                            for (let key in req.form_data.files) {
-                                let sqlInsert = arrObj.convertSqlFromJson(
-                                    "news_files",
-                                    {
-                                        group_id: groupId
-                                        , url: req.form_data.files[key].url
-                                        , file_name: req.form_data.files[key].file_name
-                                        , file_type: req.form_data.files[key].file_type
-                                        , file_date: req.form_data.params['origin_date_' + key]
-                                        , file_size: req.form_data.files[key].file_size
-                                        , user: req.user.username
-                                        , time: new Date().getTime()
+                    if (count_max > 0) {
+                        for (let key in req.form_data.files) {
+                            let sqlInsert = arrObj.convertSqlFromJson(
+                                "news_files",
+                                {
+                                    group_id: groupId
+                                    , url: req.form_data.files[key].url
+                                    , file_name: req.form_data.files[key].file_name
+                                    , file_type: req.form_data.files[key].file_type
+                                    , file_date: req.form_data.params['origin_date_' + key]
+                                    , file_size: req.form_data.files[key].file_size
+                                    , user: req.user.username
+                                    , time: new Date().getTime()
+                                }
+                                , ["url"]
+                            );
+                            db.insert(sqlInsert)
+                                .then(data1 => {
+                                    resolve(data1);
+                                })
+                                .catch(err => {
+                                    if (err.code === "SQLITE_CONSTRAINT") {
+                                        db.update(sqlInsert)
+                                            .then(data2 => {
+                                                resolve(data2);
+                                            })
+                                            .catch(err1 => {
+                                                reject(err1);
+                                            })
+                                    } else {
+                                        reject(err);
                                     }
-                                    , ["url"]
-                                );
-                                db.insert(sqlInsert)
-                                    .then(data1 => {
-                                        resolve(data1);
-                                    })
-                                    .catch(err => {
-                                        if (err.code === "SQLITE_CONSTRAINT") {
-                                            db.update(sqlInsert)
-                                                .then(data2 => {
-                                                    resolve(data2);
-                                                })
-                                                .catch(err1 => {
-                                                    reject(err1);
-                                                })
-                                        } else {
-                                            reject(err);
-                                        }
-                                    })
-                            }
-                        } else {
-                            resolve("insert news without any file")
+                                })
                         }
+                    } else {
+                        resolve("insert news without any file")
                     }
                 })
                 .catch(err => reject(err))
