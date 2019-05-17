@@ -34,6 +34,7 @@ gmap-test/
 #ignore log file service
 logs/*.log
 service.pid
+cert/*.pem
 
 create-oracle-from-excel.js
 test-oracle-private.js

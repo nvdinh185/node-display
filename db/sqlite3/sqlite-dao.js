@@ -1,8 +1,8 @@
-
 "use strict"
-
 /**
- * doi tuong sqlite-dao - cuong.dq version 3.0 
+ * version 3.1 
+ * doi tuong sqlite-dao - cuong.dq 
+ * 
  * repaired 20190105: col.value !=undefined && !=null 
  */
 const sqlite3 = require('sqlite3').verbose();
@@ -18,7 +18,6 @@ class SQLiteDAO {
       }
     })
   }
-
 
   /**
    * 
