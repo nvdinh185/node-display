@@ -1,12 +1,20 @@
 "use strict"
+
 /**
- * process post data from client
- * return:
- * req.form_data -save file to json
- * req.json_data -convert to json
+ * version 1.0
+ * cuongdq
+ * create 01/12/2018
+ * Thực hiện nhận dữ liệu post lên từ JsonData hoặc từ FormData
+ * Lưu file vào đường dẫn định trước qua biến dirUpload
+ * và trả kết quả cho req.json_data hoặc req.form_data
+ * 
+ * các đường dẫn lưu file sẽ sắp xếp theo tháng/ngày /giờ(nếu cần)
+ * 
  */
-const fs = require('fs');
+//đường dẫn lưu file khi nhận FormData ở đâu?
 const dirUpload = 'upload_files';
+
+const fs = require('fs');
 const systempath = require('path');
 const mime = require('mime-types');
 const formidable = require('formidable');
@@ -81,7 +89,7 @@ var formProcess = (req, res, next) => {
                     , file_size: files[key].size
                     , file_type: contentType }, //gia tri bien duoc bind vao bindVars.p_in_0,1,...n
             writable: false, //khong cho phep sua du lieu sau khi gan gia tri vao
-            enumerable: true //cho phep for (let key in obj)
+            enumerable: true //cho phep gan thanh thuoc tinh truy van sau khi hoan thanh
           });
 
         }

@@ -1,13 +1,15 @@
 "use strict"
 
 /**
- * Tao RSA KEY
- * return {id: publickey, key: privateKey}
- * sign/verify, encrypt/decrypt by rsa and encrypt/decrypt by crypto
+ * version 1.0
+ * cuongdq
+ * create 01/05/2019
+ * 
+ * Các thuật toán mã hóa, giải mã, ký và chứng thực
+ * 
  */
 
 const NodeRSA = require('node-rsa');
-
 const crypto = require('crypto');
 const algorithm = 'aes-256-gcm';
 const key = 'cuongdq@3500888$cryptotestkey032';

@@ -2,7 +2,7 @@
 
 /**
  * array-object - cuong.dq
- * version 1.4
+ * version 1.5
  * 07/05/2019
  * 
  * createObject,
