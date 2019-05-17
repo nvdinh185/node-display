@@ -276,7 +276,7 @@ export class HomeNewsPage {
     await this.apiContact.getPublicUsers(true);
     //lay cac danh ba public
     this.contacts = this.apiContact.getUniqueContacts();
-    //lay cac tin cua user public
+    //neu chua dang nhap thi lay cac tin cua user public
     if (!this.userInfo) this.getHomeNews(true);
   }
 
