@@ -6,7 +6,7 @@ import { ApiLocationService } from './apiLocationService';
 import { ApiMapService } from './apiMapService';
 
 @Injectable()
-export class ApiChatService {
+export class ApiSiteManagerService {
 
     curSiteList: any = [];
 

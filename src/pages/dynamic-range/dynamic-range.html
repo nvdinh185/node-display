@@ -53,7 +53,7 @@
 						<ion-label color="primary" *ngIf="it.name" text-wrap style="text-align: justify; font-size: 1.3em">{{it.name}}</ion-label>
 						<ion-item class="input-item" *ngFor="let detail of it.details">
 							<ion-label color="primary" text-wrap style="text-align: justify;">{{detail.name?detail.name:detail.hint}}</ion-label>
-							<ion-select [(ngModel)]="detail.value" style="background-color: rgb(103, 112, 230); color:whitesmoke; border-radius: 1em;">
+							<ion-select [(ngModel)]="detail.value" style="background-color: rgb(0, 190, 73); color:whitesmoke; border-radius: 1em;">
 								<ion-option *ngFor="let mySet of detail.options" value="{{mySet.value}}" >{{mySet.name}}</ion-option>
 							</ion-select>
 						</ion-item>
@@ -64,7 +64,7 @@
 						<ion-label color="primary" *ngIf="it.name" text-wrap style="text-align: justify; font-size: 1.3em">{{it.name}}</ion-label>
 						<ion-item class="input-item" *ngFor="let detail of it.details">
 							<ion-label color="primary" text-wrap style="text-align: justify;">{{detail.name}}</ion-label>
-							<ion-checkbox color="primary" [(ngModel)]="detail.value"></ion-checkbox>
+							<ion-checkbox color="secondary" [(ngModel)]="detail.value"></ion-checkbox>
 						</ion-item>
 					</div>
 

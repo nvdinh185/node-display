@@ -88,6 +88,9 @@ import { UrlClickPipe } from '../pipes/url-click';
 import { LinkifyPipe } from '../pipes/linkify';
 import { StringsConv } from '../pipes/pipe-strings';
 import { TreeForm } from '../components/tree-form/tree-form';
+import { DynamicHomePage } from '../pages/dynamic-home/dynamic-home';
+import { ImageCard } from '../components/image-card/image-card';
+import { ContentCard } from '../components/content-card/content-card';
 
 
 @NgModule({
@@ -95,6 +98,8 @@ import { TreeForm } from '../components/tree-form/tree-form';
     MyApp,
     TreeView,
     TreeForm,
+    ImageCard,
+    ContentCard,
     LoginPage,
     QrBarCodePage,
     QrBarScannerPage,
@@ -116,6 +121,7 @@ import { TreeForm } from '../components/tree-form/tree-form';
     DynamicMediasPage,
     DynamicListOrderPage,
     DynamicChartPage,
+    DynamicHomePage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
@@ -155,6 +161,8 @@ import { TreeForm } from '../components/tree-form/tree-form';
     MyApp,
     TreeView,
     TreeForm,
+    ImageCard,
+    ContentCard,
     LoginPage,
     QrBarCodePage,
     QrBarScannerPage,
@@ -176,6 +184,7 @@ import { TreeForm } from '../components/tree-form/tree-form';
     DynamicMediasPage,
     DynamicListOrderPage,
     DynamicChartPage,
+    DynamicHomePage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
