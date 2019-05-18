@@ -79,9 +79,15 @@ export class DynamicTreePage {
 
   dynamicTreeForm: any = {
                         title: "Cây menu nhập liệu"
-                        , buttons: [
+                        , headers: [
                           {color:"primary", icon:"arrow-dropup-circle", next:"COLLAPSE"}
                           ,{color:"primary", icon:"arrow-dropdown-circle", next:"EXPAND"}
+                        ]
+                        , buttons: [
+                          {color:"primary", icon:"arrow-dropup-circle", name:"Thu hẹp", next:"COLLAPSE"}
+                          ,{color:"primary", icon:"arrow-dropdown-circle", name:"Mở rộng", next:"EXPAND"}
+                          ,{color:"primary", name:"Reset", next:"RESET"}
+                          ,{color:"primary", name:"Xử lý", next:"SEND"}
                         ]
                         , items: [
                           {
@@ -206,6 +212,7 @@ export class DynamicTreePage {
 
   // Xử lý sự kiện click button theo id
   onClick(btn) {
+    console.log('duyet ket qua',btn, this.dynamicTreeForm.items);
       this.next(btn);
   }
 
