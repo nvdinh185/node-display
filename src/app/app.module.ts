@@ -87,12 +87,14 @@ import { NewlinePipe } from '../pipes/new-line';
 import { UrlClickPipe } from '../pipes/url-click';
 import { LinkifyPipe } from '../pipes/linkify';
 import { StringsConv } from '../pipes/pipe-strings';
+import { TreeForm } from '../components/tree-form/tree-form';
 
 
 @NgModule({
   declarations: [
     MyApp,
     TreeView,
+    TreeForm,
     LoginPage,
     QrBarCodePage,
     QrBarScannerPage,
@@ -152,6 +154,7 @@ import { StringsConv } from '../pipes/pipe-strings';
   entryComponents: [
     MyApp,
     TreeView,
+    TreeForm,
     LoginPage,
     QrBarCodePage,
     QrBarScannerPage,

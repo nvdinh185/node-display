@@ -1,3 +1,6 @@
+/**
+ * tu dong mo rong textarea khi go
+ */
 import { ElementRef, HostListener, Directive, OnInit } from '@angular/core';
 
 @Directive({

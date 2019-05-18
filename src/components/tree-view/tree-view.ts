@@ -1,3 +1,6 @@
+/**
+ * cap menu dong dung hien thi dong mo cay
+ */
 import { Component, Input } from '@angular/core';
 
 @Component({

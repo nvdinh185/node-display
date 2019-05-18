@@ -76,11 +76,80 @@ export class DynamicTreePage {
                         ]
                     };
 
+
+  dynamicTreeForm: any = {
+                        title: "Cây menu nhập liệu"
+                        , buttons: [
+                          {color:"primary", icon:"arrow-dropup-circle", next:"COLLAPSE"}
+                          ,{color:"primary", icon:"arrow-dropdown-circle", next:"EXPAND"}
+                        ]
+                        , items: [
+                          {
+                            id: 1,               //mã của node cây
+                            type: "title",       //kiểu hiển thị title
+                            name: "I. Nhà Trạm", //title hiển thị
+                            is_more: true,       //hiển thị nút more
+                            subs: [              //có hiển thị lá cây con 
+                              {
+                                id: 2,           //mã của node cây
+                                type: "detail",  //Kiểu hiển thị chỉ giá trị không
+                                name: "Mã trạm", //đề mục chi tiết
+                                avatar:"https://icdn.dantri.com.vn/thumb_w/640/2019/03/02/531510014249880849060024764118135794040832-n-1551502898256.jpg",
+                                value: "DNTK01", //Giá trị hiển thị không sử dụng thay đổi nhập liệu
+                                subs: [{
+                                  id: 3,           //mã của node cây
+                                  type: "select",  //Kiểu hiển thị chọn 1 nội dung
+                                  name: "Hãy lựa chọn đánh giá nhé", //đề mục chi tiết
+                                  value: -1,
+                                  options: [{ name: "N/A", value: -1 }
+                                            , { name: "Đạt", value: 1 }
+                                            , { name: "Không đạt", value: 0 }] 
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                          ,
+                          {
+                            id: 4,           //mã của node cây
+                            type: "detail",  //Kiểu hiển thị chỉ giá trị không
+                            name: "Mã trạm", //đề mục chi tiết
+                            value: "Đây là trạm thông tin DNTK02 - Ở Đà nẵng thanh khê ... ", //Giá trị hiển thị không sử dụng thay đổi nhập liệu
+                            subs: [{
+                              id: 5,           //mã của node cây
+                              type: "select",  //Kiểu hiển thị chọn 1 nội dung
+                              name: "Vị trí phòng máy nơi đặt MDF đảm bảo an ninh, an toàn chống ngập lụt",
+                              value: 5,
+                              options: [{ name: "0 Điểm", value: 0 }
+                                        , { name: "1 Điểm", value: 1 }
+                                        , { name: "2 Điểm", value: 2 }
+                                        , { name: "3 Điểm", value: 3 }
+                                        , { name: "4 Điểm", value: 4 }
+                                        , { name: "5 Điểm", value: 5 }
+                                      ] 
+                              }
+                              ,
+                              {
+                                id: 6,           //mã của node cây
+                                type: "range-star",  //Kiểu hiển thị chọn 1 nội dung
+                                name: "Mặt cười",
+                                icon: "happy",
+                                color:"star",
+                                value: 5, 
+                                min: 0, 
+                                max: 10
+                              }
+                            ]
+                          }
+                        ]
+                    };
+
   callback: any; // ham goi lai khai bao o trang root gui (neu co)
   step: any;     // buoc thuc hien xuat phat trang root goi (neu co)
   parent:any;    // Noi goi this
 
   callbackTreeView:any;
+  callbackTreeForm:any;
 
   constructor(private platform: Platform
     , private viewCtrl: ViewController
@@ -97,12 +166,16 @@ export class DynamicTreePage {
     this.parent = this.navParams.get("parent");
 
     this.callbackTreeView = this.callbackTree;
+    this.callbackTreeForm = this.callbackTree;
   }
 
   resetForm() {
     
   }
 
+  changeRootForm(event){
+    console.log('parent', event);
+  }
 
   callbackTree = function(item, idx, parent, isMore:boolean){
     if (item.visible){
@@ -118,8 +191,8 @@ export class DynamicTreePage {
   }.bind(this)
 
   onClickHeader(btn){
-    if (btn.next==="EXPAND")this.dynamicTree.items.forEach(el=>this.expandCollapseAll(el,true))
-    if (btn.next==="COLLAPSE")this.dynamicTree.items.forEach(el=>this.expandCollapseAll(el,false))
+    if (btn.next==="EXPAND")this.dynamicTreeForm.items.forEach(el=>this.expandCollapseAll(el,true))
+    if (btn.next==="COLLAPSE")this.dynamicTreeForm.items.forEach(el=>this.expandCollapseAll(el,false))
   }
 
   expandCollapseAll(el,isExpand:boolean){
