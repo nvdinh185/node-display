@@ -14,7 +14,7 @@
             <div *ngIf="idx===0">
                 <strong *ngIf="urlInfo.content||(urlInfo.images&&urlInfo.images.length>0)">{{urlInfo.hostname}}</strong>
                 <p text-wrap><strong *ngIf="urlInfo.title&&(urlInfo.content||(urlInfo.images&&urlInfo.images.length>0))">{{urlInfo.title}}</strong></p>
-                <p text-wrap [innerHtml]="urlInfo.content | newline | slice:0:50"></p>
+                <p text-wrap [innerHtml]="urlInfo.content | newline | slice:0:300"></p>
                 <div *ngIf="urlInfo.images&&urlInfo.images.length>0" class="background-height">
                     <image-card [imageData] = "urlInfo.images" (onClickSub)="onClickMedia($event)"></image-card>
                 </div>
@@ -28,7 +28,7 @@
         <div *ngFor="let urlInfo of contentData | linkify:'urlInfos'; let idx = index;">
             <strong *ngIf="urlInfo.content||(urlInfo.images&&urlInfo.images.length>0)">{{urlInfo.hostname}}</strong>
             <p text-wrap><strong *ngIf="urlInfo.title&&(urlInfo.content||(urlInfo.images&&urlInfo.images.length>0))">{{urlInfo.title}}</strong></p>
-            <p text-wrap [innerHtml]="urlInfo.content | newline | slice:0:50"></p>
+            <p text-wrap [innerHtml]="urlInfo.content | newline | slice:0:300"></p>
             <div *ngIf="urlInfo.images&&urlInfo.images.length>0" class="background-height">
                 <image-card [imageData] = "urlInfo.images" (onClickSub)="onClickMedia($event)"></image-card>
             </div>
