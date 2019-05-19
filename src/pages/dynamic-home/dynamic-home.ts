@@ -166,6 +166,7 @@ export class DynamicHomePage {
           items.forEach((el, idx) => {
             let index = this.dynamicTree.items
               .findIndex(x => x.group_id === el.group_id);
+            //console.log(idx,el, index);  
             if (index >= 0) {
               //this.dynamicTree.items.splice(index, 1, el);
             } else {
@@ -207,33 +208,13 @@ export class DynamicHomePage {
     }
     //console.log('json_data',json_data);
 
-    return this.apiAuth.postDynamicForm(ApiStorageService.mediaServer
-      + "/db/public-groups", json_data, true)
+    return this.apiAuth.getDynamicUrl('assets/data/url-info.json')
       .then(data => {
-
-        //console.log('public-groups',data);
-
         let items = [];
+        let i = 0;
         data.forEach(el => {
-
-          let medias = [];
-          if (el.medias) {
-            el.medias.forEach(e => {
-              e.src = ApiStorageService.mediaServer + "/db/get-file/" + encodeURI(e.url);
-              medias.push(e);
-            })
-          }
-
-          el.content = "Đây là tin tức test thử tuoitre.vn có từng link liên kết https://c3.mobifone.vn thêm trang https://dantri.com.vn https://tuoitre.vn/dan-cho-ca-doi-nay-duoc-dat-chan-len-cau-vam-cong-20190519113706327.htm"
-          el.medias = medias;
-          el.actions = {
-            like: { name: "LIKE", color: "primary", icon: "thumbs-up", next: "LIKE" }
-            , comment: { name: "COMMENT", color: "primary", icon: "chatbubbles", next: "COMMENT" }
-            , share: { name: "SHARE", color: "primary", icon: "share-alt", next: "SHARE" }
-          }
-
+          el.group_id = ++i + '-' + Date.now()
           items.push(el);
-
         });
 
         if (items.length > 0) this.curPageIndex++;
@@ -311,10 +292,17 @@ export class DynamicHomePage {
 
   onClickMedia(event) {
     console.log('media',event);
+    //view all image
+  }
+
+  onClickImage(event) {
+    console.log('image',event);
+    //view all image
   }
 
   onClickContent(event){
     console.log('content',event);
+    //popup inappBrowser link
   }
 
   //neu user cua user = voi user dang login
