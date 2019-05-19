@@ -6,7 +6,6 @@ import { ApiStorageService } from '../../services/apiStorageService';
 import { ApiChatService } from '../../services/apiChatService';
 import { HomeChatPage } from '../home-chat/home-chat';
 import { FriendsPage } from '../friends/friends';
-import { DynamicCardSocialPage } from '../dynamic-card-social/dynamic-card-social';
 
 @Component({
   selector: 'page-dynamic-home',
@@ -15,7 +14,7 @@ import { DynamicCardSocialPage } from '../dynamic-card-social/dynamic-card-socia
 export class DynamicHomePage {
 
   dynamicTree: any = {
-    title: "Home",
+    title: "Trang chủ mẫu",
     items: []
   };
 
@@ -225,6 +224,7 @@ export class DynamicHomePage {
             })
           }
 
+          el.content = "Đây là tin tức test thử có từng link liên kết https://c3.mobifone.vn thêm trang https://dantri.com.vn"
           el.medias = medias;
           el.actions = {
             like: { name: "LIKE", color: "primary", icon: "thumbs-up", next: "LIKE" }
@@ -242,53 +242,6 @@ export class DynamicHomePage {
 
       })
       .catch(err => { return [] })
-  }
-
-
-  getPrivateNews() {
-
-    if (this.userInfo) {
-
-      let loading = this.loadingCtrl.create({
-        content: 'Đợi lấy dữ liệu cá nhân...'
-      });
-      loading.present();
-      //chuyen thu tuc lay thong tin sang keo len, keo xuong
-      this.apiAuth.getDynamicUrl(ApiStorageService.mediaServer + "/db/list-groups?limit=6&offset=0", true)
-        .then(data => {
-
-          let items = [];
-          data.forEach(el => {
-
-            let medias = [];
-            if (el.medias) {
-              el.medias.forEach(e => {
-                e.image = ApiStorageService.mediaServer + "/db/get-file/" + encodeURI(e.url);
-                medias.push(e);
-              })
-            }
-
-            el.medias = medias;
-            //actions va results se lay tu csdl quyen thiet lap cua nguoi post len
-            el.actions = {
-              like: { name: "LIKE", color: "primary", icon: "thumbs-up", next: "LIKE" }
-              , comment: { name: "COMMENT", color: "primary", icon: "chatbubbles", next: "COMMENT" }
-              , share: { name: "SHARE", color: "primary", icon: "share-alt", next: "SHARE" }
-            }
-
-            items.push(el);
-
-          });
-
-          // this.dynamicTree.items = items;
-          // this.apiStorage.saveHome(this.dynamicTree);
-
-          loading.dismiss();
-        })
-        .catch(err => {
-          loading.dismiss();
-        })
-    }
   }
 
   // Xử lý sự kiện click button theo id
@@ -357,9 +310,12 @@ export class DynamicHomePage {
   }
 
   onClickMedia(event) {
-    console.log(event);
+    console.log('media',event);
   }
 
+  onClickContent(event){
+    console.log('content',event);
+  }
 
   //neu user cua user = voi user dang login
   onClickShortDetails(item) {

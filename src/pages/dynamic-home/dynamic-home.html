@@ -52,6 +52,9 @@
 						<!-- Tiêu đề thông tin và các điều hướng bản tin này -->
 
 						<!-- Nội dung thông tin được view và điều hướng xem thông tin -->
+						<div *ngIf="it.content">
+							<content-card [contentData] = "it.content" [showDetails]="true" (onClickSub)="onClickContent($event)"></content-card>
+						</div>
 
 						<!-- Các hình ảnh hiển thị cuối cùng -->
 						<div *ngIf="it.medias" class="background-height">

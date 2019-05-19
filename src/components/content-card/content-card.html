@@ -1,0 +1,37 @@
+<div *ngIf="contentData">
+    <!-- Hiển thị nội dung chuyển đổi \n, url ra link, url.image ra thẻ ảnh??? 
+        chỉ hiển thị short nội dung, còn lại nút more... -->
+    <p text-wrap [innerHtml]="contentData | newline | linkify"></p>
+
+    <!-- Hiển thị một ảnh đại diện trong các link lấy được
+        gồm ảnh, domain có liên kết với tin url gốc + title của link
+        như short detail trong link share của facebook
+        Một ảnh đại diện, một domain và một title
+        Toàn bộ nội dung hiển thị đó được gắng trong một thẻ card để bấm vào là gọi inapp
+     -->
+
+
+    <!-- Hiển thị nội dung chi tiết của các link lấy được nếu cho phép showDetails -->
+    <div *ngIf="showDetails && (contentData | linkify:'urlInfos')?.length>0">
+        <div *ngFor="let urlInfo of contentData | linkify:'urlInfos'; let idx = index;">
+            <p text-wrap [innerHtml]="urlInfo.content | newline"></p>
+        </div>
+    </div>
+ 
+    <!-- Hiển thị các ảnh lấy được trong các link tổ chức như image-card
+        "images":[
+        {"src":"https://icdn.dantri.com.vn/zoom/327_245//2019/05/08/hoang-duc-18519-1557296743711.jpg"
+        ,"alt":"Thầy Park sẽ sắp xếp nhân sự ở đội tuyển và U23 Việt Nam như thế nào?"}
+        ]
+     -->
+
+    <!-- Hiển thị các link cho nút bấm inappBrowser sử dụng trong app trên ios và android -->
+    <ion-buttons *ngIf="(contentData | linkify:'links')?.length>0">
+        <button *ngFor="let url of contentData | linkify:'links'; let idx = index;" 
+        ion-button round outline 
+        (click)="onClickItem(url)">
+            Xem link {{(idx + 1)}}
+        </button>
+    </ion-buttons>
+
+</div>
