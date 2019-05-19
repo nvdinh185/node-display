@@ -28,7 +28,7 @@
 	</ion-toolbar>
 </ion-header>
 
-<ion-content no-padding class="background-page gradient">
+<ion-content no-padding class="background-page">
 
 	<!-- Phần component để nhập tin tức -->
 
@@ -43,12 +43,12 @@
 	
     <ion-grid no-padding>
 		<ion-row no-padding>
-			<ion-col no-padding class="background-card gradient grid-border" text-center 
+			<ion-col no-padding class="background-card grid-border" text-center 
 			col-12 col-xl-4 col-lg-6 col-md-6 col-sm-6
 			*ngFor="let it of dynamicTree?.items">
 					
 				<ion-row no-padding *ngIf="it">
-					<ion-col no-padding class="background-card gradient card-background-parent">
+					<ion-col no-padding class="background-card card-background-parent">
 						<!-- Tiêu đề thông tin và các điều hướng bản tin này -->
 
 						<!-- Nội dung thông tin được view và điều hướng xem thông tin -->
@@ -60,6 +60,7 @@
 						<div *ngIf="it.medias" class="background-height">
 							<image-card [imageData] = "it.medias" (onClickSub)="onClickMedia($event)"></image-card>
 						</div>
+						
 					</ion-col>
 				</ion-row>
 

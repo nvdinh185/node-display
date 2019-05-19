@@ -219,12 +219,12 @@ export class DynamicHomePage {
           let medias = [];
           if (el.medias) {
             el.medias.forEach(e => {
-              e.image = ApiStorageService.mediaServer + "/db/get-file/" + encodeURI(e.url);
+              e.src = ApiStorageService.mediaServer + "/db/get-file/" + encodeURI(e.url);
               medias.push(e);
             })
           }
 
-          el.content = "Đây là tin tức test thử có từng link liên kết https://c3.mobifone.vn thêm trang https://dantri.com.vn"
+          el.content = "Đây là tin tức test thử tuoitre.vn có từng link liên kết https://c3.mobifone.vn thêm trang https://dantri.com.vn https://tuoitre.vn/dan-cho-ca-doi-nay-duoc-dat-chan-len-cau-vam-cong-20190519113706327.htm"
           el.medias = medias;
           el.actions = {
             like: { name: "LIKE", color: "primary", icon: "thumbs-up", next: "LIKE" }

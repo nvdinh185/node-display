@@ -20,6 +20,7 @@ export class ContentCard {
     
     //sự kiện sinh ra truyền giá trị con cho cấp cha 1 cấp
     @Output() onClickSub = new EventEmitter();
+    @Output() onClickImage = new EventEmitter();
     
     constructor() { }
 
@@ -27,6 +28,10 @@ export class ContentCard {
     //thì sự kiện này được sinh ra
     onClickItem(link){
         this.onClickSub.emit({link});
+    }
+
+    onClickMedia(event){
+        this.onClickImage.emit(event);
     }
 
 }
