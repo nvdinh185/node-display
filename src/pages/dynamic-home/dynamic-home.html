@@ -61,7 +61,7 @@
 						<div *ngIf="it.content">
 							<content-card 
 							[contentData] = "it.content" 
-							[showDetails]="false" 
+							[showDetails]="it.show_detail" 
 							(onClickSub)="onClickContent($event)"
 							(onClickImage)="onClickImage($event)"
 							></content-card>
