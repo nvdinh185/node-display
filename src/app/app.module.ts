@@ -89,6 +89,9 @@ import { StringsConv } from '../pipes/pipe-strings';
 import { TreeForm } from '../components/tree-form/tree-form';
 import { MaintenanceSheetPage } from '../pages/maintenance-sheet/maintenance-sheet';
 import { TreeFormMaintenance } from '../components/tree-form-maintenance/tree-form-maintenance';
+import { DynamicHomePage } from '../pages/dynamic-home/dynamic-home';
+import { ImageCard } from '../components/image-card/image-card';
+import { ContentCard } from '../components/content-card/content-card';
 
 
 @NgModule({
@@ -96,6 +99,8 @@ import { TreeFormMaintenance } from '../components/tree-form-maintenance/tree-fo
     MyApp,
     TreeView,
     TreeForm,
+    ImageCard,
+    ContentCard,
     LoginPage,
     QrBarCodePage,
     QrBarScannerPage,
@@ -117,6 +122,7 @@ import { TreeFormMaintenance } from '../components/tree-form-maintenance/tree-fo
     DynamicMediasPage,
     DynamicListOrderPage,
     DynamicChartPage,
+    DynamicHomePage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
@@ -157,6 +163,8 @@ import { TreeFormMaintenance } from '../components/tree-form-maintenance/tree-fo
     MyApp,
     TreeView,
     TreeForm,
+    ImageCard,
+    ContentCard,
     LoginPage,
     QrBarCodePage,
     QrBarScannerPage,
@@ -178,6 +186,7 @@ import { TreeFormMaintenance } from '../components/tree-form-maintenance/tree-fo
     DynamicMediasPage,
     DynamicListOrderPage,
     DynamicChartPage,
+    DynamicHomePage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,

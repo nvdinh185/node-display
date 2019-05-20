@@ -34,6 +34,7 @@ import { ReviewMaintenancePage } from '../pages/review-maintenance/review-mainte
 import { DocumentsPage } from '../pages/documents/documents';
 import { HomeNewsPage } from '../pages/home-news/home-news';
 import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
+import { DynamicHomePage } from '../pages/dynamic-home/dynamic-home';
 
 
 @Component({
@@ -258,28 +259,35 @@ export class MyApp {
             size: "1.3em",
             subs: [
               {
-                name: "3.2.1 Mẫu danh sách quẹt nút click",
+                name: "3.2.1 Mẫu trang chủ tin tức kiểu nhập tin share, comment...",
+                click: true,
+                next: DynamicHomePage,
+                icon: "home"
+              }
+              ,
+              {
+                name: "3.2.2 Mẫu danh sách quẹt nút click",
                 click: true,
                 next: DynamicListPage,
                 icon: "paper"
               }
               ,
               {
-                name: "3.2.1 Mẫu Chart",
+                name: "3.2.3 Mẫu Biểu đồ Chart",
                 click: true,
                 next: DynamicChartPage,
                 icon: "paper"
               }
               ,
               {
-                name: "3.2.2 Mẫu danh sách bảng, liệt kê & sắp xếp lại",
+                name: "3.2.4 Mẫu danh sách bảng, liệt kê & sắp xếp lại",
                 click: true,
                 next: DynamicListOrderPage,
                 icon: "reorder"
               }
               ,
               {
-                name: "3.2.3 Mẫu danh sách theo cây FamilyTree",
+                name: "3.2.5 Mẫu danh sách theo cây FamilyTree",
                 click: true,
                 next: DynamicTreePage,
                 icon: "menu"
