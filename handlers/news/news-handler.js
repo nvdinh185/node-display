@@ -95,7 +95,7 @@ class ResourceHandler {
     }
 
     postNewsFiles(req, res) {
-        console.log(req.form_data)
+        console.log("post: ", req.form_data)
         let groupId = req.form_data.params.group_id ? req.form_data.params.group_id : req.user.username + '-' + new Date().getTime();
         var count_max = req.form_data.params.count_file;
         let saveDb = new Promise((resolve, reject) => {

@@ -32,7 +32,7 @@ export class HomeMenuPage {
 
   isLoaded: boolean = true;
 
-  mySocket:any;
+  mySocket: any;
   unreadMssages: any;
   privateMessages: any;
   roomsMessages: any;
@@ -40,7 +40,7 @@ export class HomeMenuPage {
   chatRooms: any;
   chatFriends: any;
   chatNewFriends: any;
-  
+
 
   constructor(
     private apiStorage: ApiStorageService
@@ -67,7 +67,7 @@ export class HomeMenuPage {
 
         //console.log('Contact for new',this.contacts);
         //them danh ba cua nguoi login vao
-        if (this.userInfo&&this.userInfo.data) {
+        if (this.userInfo && this.userInfo.data) {
           if (!this.contacts[this.userInfo.username]) {
             Object.defineProperty(this.contacts, this.userInfo.username, {
               value: {
@@ -80,10 +80,10 @@ export class HomeMenuPage {
               writable: true, enumerable: true, configurable: true
             });
           } else {
-            if (this.userInfo.data.image){
+            if (this.userInfo.data.image) {
               this.contacts[this.userInfo.username].image = this.userInfo.data.image;
               this.contacts[this.userInfo.username].avatar = this.userInfo.data.avatar ? this.userInfo.data.avatar : this.userInfo.data.image;
-            } 
+            }
           }
         }
         //doi 3 giay sau neu login tu dong bang token
@@ -135,7 +135,7 @@ export class HomeMenuPage {
 
     this.chatRooms = chattingData.rooms;
     this.chatFriends = chattingData.friends;
-    
+
     this.chatNewFriends = chattingData.new_friends;
 
 
@@ -146,7 +146,7 @@ export class HomeMenuPage {
     if (isRenew) {
       this.lastPageIndex = this.curPageIndex > 0 ? this.curPageIndex : this.lastPageIndex;
       this.curPageIndex = 0;
-    }else{
+    } else {
       this.lastPageIndex = this.curPageIndex > this.lastPageIndex ? this.curPageIndex : this.lastPageIndex;
     }
     this.getJsonPostNews(this.userInfo ? true : false)
@@ -362,25 +362,25 @@ export class HomeMenuPage {
   onClickMedia(idx, item) {
     //console.log('picture click', idx, item);
     let paragraphs = [];
-    if (item.medias){
+    if (item.medias) {
       item.medias.forEach(el => {
         paragraphs.push({
           medias: [
-            { image: el.image}
+            { image: el.image }
           ]
         })
       });
     }
     let formData = {
-      title: this.contacts[item.user]&&this.contacts[item.user].fullname?this.contacts[item.user].fullname +(this.contacts[item.user].nickname?"("+this.contacts[item.user].nickname+")":""):item.user
+      title: this.contacts[item.user] && this.contacts[item.user].fullname ? this.contacts[item.user].fullname + (this.contacts[item.user].nickname ? "(" + this.contacts[item.user].nickname + ")" : "") : item.user
       , buttons: [
         { color: "danger", icon: "close", next: "CLOSE" }
       ]
       , items: [
         {
           short_detail: {
-            avatar: this.contacts[item.user]&&this.contacts[item.user].avatar?this.contacts[item.user].avatar:"assets/imgs/no-image-go.jpg"
-            , h1: this.contacts[item.user]&&this.contacts[item.user].fullname?this.contacts[item.user].fullname:this.contacts[item.user]&&this.contacts[item.user].nickname?this.contacts[item.user].nickname:item.user
+            avatar: this.contacts[item.user] && this.contacts[item.user].avatar ? this.contacts[item.user].avatar : "assets/imgs/no-image-go.jpg"
+            , h1: this.contacts[item.user] && this.contacts[item.user].fullname ? this.contacts[item.user].fullname : this.contacts[item.user] && this.contacts[item.user].nickname ? this.contacts[item.user].nickname : item.user
             , note: item.time
             , action: { color: "primary", icon: "more", next: "MORE" }
           }
@@ -388,7 +388,7 @@ export class HomeMenuPage {
             p: item.content //ghi noi dung bai viet
             , paragraphs: paragraphs
             //ghi nickname cua user viet bai
-            , note:this.contacts[item.user]&&this.contacts[item.user].nickname?this.contacts[item.user].nickname:this.contacts[item.user]&&this.contacts[item.user].fullname?this.contacts[item.user].fullname:item.user
+            , note: this.contacts[item.user] && this.contacts[item.user].nickname ? this.contacts[item.user].nickname : this.contacts[item.user] && this.contacts[item.user].fullname ? this.contacts[item.user].fullname : item.user
           }
           , results: item.results
           , actions: item.actions
@@ -408,14 +408,14 @@ export class HomeMenuPage {
   onClickShortDetails(item) {
     //console.log('short details', this.userInfo.username, item.user);
     if (this.userInfo
-      &&item.user===this.userInfo.username){
+      && item.user === this.userInfo.username) {
       console.log('Menu của user, có quyền ẩn tin tức này hoặc chia sẻ với quyền hạn bạn bè, public, ...');
-    }else{
+    } else {
       //day la tin tuc cua nguoi khac, minh khong muon hien thi thi report thong tin nay
       //
       console.log('Cần report tin tức này hoặc ẩn tin tức này trên trang của mình...');
     }
-    
+
   }
 
   onClickAvatars(btn, item) {

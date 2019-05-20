@@ -135,8 +135,8 @@
 
                     <div *ngIf="it.content">
                         <p text-wrap [innerHtml]="it.content | newline | linkify"></p>
-                        <button ion-button (click)="isCheck = !isCheck">Xem chi tiết</button>
-                        <div *ngIf="(it.content | linkify:'urlInfos')?.length>0 && isCheck">
+                        <button ion-button (click)="isShow = !isShow">Xem chi tiết</button>
+                        <div *ngIf="(it.content | linkify:'urlInfos')?.length>0 && isShow">
                             <div *ngFor="let urlInfo of it.content | linkify:'urlInfos'; let idx = index;">
                                 <p text-wrap [innerHtml]="urlInfo.content | newline"></p>
                                 <img src="{{urlInfo.image}}" />
