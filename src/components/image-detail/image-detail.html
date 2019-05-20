@@ -1,0 +1,8 @@
+<div *ngIf="imageData">
+    <div *ngFor="let md of imageData">
+        <!-- Hiển thị từng ảnh với kích cỡ thật khác nhau theo độ rộng của component -->
+        <img *ngIf="md.src" class="one-image" [src]="md.src" alt="{{md.alt}}" tappable (click)="onClickMedia(md.src)"/>
+        <p text-wrap>{{md.alt}}<p>
+        <!-- Cho phép các nút bình luận, thích theo từng ảnh nếu cần -->
+    </div>
+</div>

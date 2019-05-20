@@ -6,6 +6,7 @@ import { ApiStorageService } from '../../services/apiStorageService';
 import { ApiChatService } from '../../services/apiChatService';
 import { HomeChatPage } from '../home-chat/home-chat';
 import { FriendsPage } from '../friends/friends';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'page-dynamic-home',
@@ -45,6 +46,7 @@ export class DynamicHomePage {
             , private apiAuth: ApiAuthService
             , private apiStorage: ApiStorageService
             , private loadingCtrl: LoadingController
+            , private inAppBrowser: InAppBrowser
             , private modalCtrl: ModalController
             , private events: Events
           ) { }
@@ -292,17 +294,27 @@ export class DynamicHomePage {
 
   onClickMedia(event) {
     console.log('media',event);
-    //view all image
+    //Đọc các hỉnh ở it.medias 
   }
 
   onClickImage(event) {
     console.log('image',event);
-    //view all image
+    //đọc các hình ở link callback, popup cửa sổ hình ảnh lên cho phép comment từng hình???
+
+    // this.modalCtrl
+    // .create(ssss, {images:event.original})
+    // .present();
+
   }
 
-  onClickContent(event){
-    console.log('content',event);
+  onClickOpenLink(event){
+    //console.log('content',event);
     //popup inappBrowser link
+    if (event.link){
+      var target = "_blank"; //mo trong inappbrowser
+      var options = "hidden=no,toolbar=yes,location=yes,presentationstyle=fullscreen,clearcache=yes,clearsessioncache=yes";
+      this.inAppBrowser.create(event.link, target, options);
+    }
   }
 
   //neu user cua user = voi user dang login

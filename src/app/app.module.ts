@@ -92,6 +92,7 @@ import { TreeFormMaintenance } from '../components/tree-form-maintenance/tree-fo
 import { DynamicHomePage } from '../pages/dynamic-home/dynamic-home';
 import { ImageCard } from '../components/image-card/image-card';
 import { ContentCard } from '../components/content-card/content-card';
+import { ImageDetail } from '../components/image-detail/image-detail';
 
 
 @NgModule({
@@ -100,6 +101,7 @@ import { ContentCard } from '../components/content-card/content-card';
     TreeView,
     TreeForm,
     ImageCard,
+    ImageDetail,
     ContentCard,
     LoginPage,
     QrBarCodePage,
@@ -164,6 +166,7 @@ import { ContentCard } from '../components/content-card/content-card';
     TreeView,
     TreeForm,
     ImageCard,
+    ImageDetail,
     ContentCard,
     LoginPage,
     QrBarCodePage,
