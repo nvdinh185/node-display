@@ -21,6 +21,8 @@ export class ContentCard {
     //sự kiện sinh ra truyền giá trị con cho cấp cha 1 cấp
     @Output() onClickSub = new EventEmitter();
     @Output() onClickImage = new EventEmitter();
+
+    maxCharacter = 500; //số ký tự một lần hiển thị ra
     
     constructor() { }
 
@@ -34,4 +36,7 @@ export class ContentCard {
         this.onClickImage.emit(event);
     }
 
+    readMore(obj){
+        obj.is_readmore = (!obj.is_readmore?this.maxCharacter:obj.is_readmore)+this.maxCharacter;
+    }
 }

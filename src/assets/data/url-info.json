@@ -1,6 +1,7 @@
 [
     {
-        "content":"Đọc báo dân trí tại https://dantri.com.vn để biết các tin tức nhanh nhất",
+        "content":"Đọc báo dân trí tại https://dantri.com.vn để biết các tin tức nhanh nhất. Trang tuoitre.vn tin tức phản biện tạm được. Trang https://thanhnien.vn giờ đọc tin thấy không có gì phản biện hay cả",
+        "show_detail":true,
         "url_info": [
             {
                 "hostname": "dantri.com.vn",
@@ -137,5 +138,6 @@
     ,
     {
         "content":"https://dantri.com.vn/phap-luat/hanh-trinh-nhap-phai-tu-luyen-cuong-tin-den-giet-nguoi-giau-xac-trong-be-tong-20190519133532811.htm"
+        ,"show_detail":true
     }
 ]

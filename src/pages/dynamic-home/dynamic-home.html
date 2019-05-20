@@ -41,16 +41,17 @@
         </ion-refresher-content>
 	</ion-refresher>
 	
+	<!-- offset-xl-3 col-xl-6 
+	offset-lg-2 col-lg-8
+	offset-md-1 col-md-10 
+	col-sm-12 -->
+	
     <ion-grid no-padding>
 		<ion-row no-padding>
 			<ion-col no-padding 
 			class="background-card grid-border" 
 			text-center 
 			col-12 
-			offset-xl-3 col-xl-6 
-			offset-lg-2 col-lg-8
-			offset-md-1 col-md-10 
-			col-sm-12
 			*ngFor="let it of dynamicTree?.items">
 					
 				<ion-row no-padding *ngIf="it">
