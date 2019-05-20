@@ -6,6 +6,7 @@ import { ApiAutoCompleteService } from '../../services/apiAutoCompleteService';
 import { AutoCompleteComponent } from 'ionic2-auto-complete';
 import { StringsConv } from '../../pipes/pipe-strings';
 import { DynamicFormWebPage } from '../dynamic-form-web/dynamic-form-web';
+import { MaintenanceSheetPage } from '../maintenance-sheet/maintenance-sheet';
 
 @Component({
   selector: 'page-maintenance-list',
@@ -111,8 +112,7 @@ export class MaintenanceListPage {
     return new Promise((resolve, reject) => {
       // ktra va gan du lieu vao obj
       if (res.data) {
-        let index = this.dynamicList.items.findIndex(x => x.maintenance_sheet_id === res.data.id);
-        // console.log('index update:', index);
+        let index = this.dynamicList.items.findIndex(x => x.maintenance_sheet_id === Number(res.data.id));
         //ktra co index thi remove khoi danh sach
         if (index > -1) {
           this.dynamicList.items.splice(index, 1);
@@ -153,7 +153,7 @@ export class MaintenanceListPage {
   }
 
   searchSelect(ev, what) {
-    console.log('select item', ev);
+    // console.log('select item', ev);
     //hoi xem dong y chon dua vao ko?
     if (what==='SELECTED') {
       this.alertCtrl.create({
@@ -180,10 +180,11 @@ export class MaintenanceListPage {
               // console.log("item xu ly: ", ev);
               this.apiAuth.postDynamicForm(this.server + "/site-plan", ev, true)
               .then(result => {
-                console.log(result.status);
-                if (result.status === 'NOK') {
+                // console.log(result.status);
+                if (result.status) {
                   this.presentAlert('Thông báo', result.message);
-                } else if (result.status === 'OK') {
+                } else {
+                  ev.maintenance_sheet_id = result.id;
                   this.dynamicList.items.unshift(ev);
                 }
               })
@@ -225,7 +226,12 @@ export class MaintenanceListPage {
   }
 
   onClickItem(it) {
-    console.log(it);
+    this.navCtrl.push(MaintenanceSheetPage
+      , {
+        parent: this,
+        callback: this.callbackRebuild,
+        cycle: it
+      });
   }
 
   async onClickDetails(item: ItemSliding, it: any, other_it: any, func: string) {
@@ -233,7 +239,7 @@ export class MaintenanceListPage {
     btn.item = it; */
     
     if (func === 'MOVE') {
-      // console.log('item',it);
+      console.log('item',it);
       
       this.options = [];
       await this.apiAuth.getDynamicUrl(this.server + '/get-users', true)
@@ -252,7 +258,7 @@ export class MaintenanceListPage {
         ]
         , items: [
           { type: "title", name: "CHỌN USER" }
-          , { type: "text", key: "id", disabled: true, name: "Mã phiếu bảo dưỡng", input_type: "text", value: "Mã phiếu: " + it.maintenance_sheet_id, icon: "alarm" }
+          , { type: "text", key: "maintenance_sheet_id", disabled: true, name: "Mã phiếu bảo dưỡng", input_type: "text", value: "Mã phiếu: " + it.maintenance_sheet_id, icon: "alarm" }
           , { type: "text", key: "cycle", disabled: true, name: "Quý bảo dưỡng", input_type: "text", value: this.quarter_name, icon: "ios-bookmark-outline" }
           , { type: "text", key: "site_id", disabled: true, name: "Site", input_type: "text", value: it.site_id, icon: "ios-color-wand-outline" }
           , { type: "select", key: "users", name: "Chọn User chuyển", value: "1", options: this.options }
@@ -274,6 +280,15 @@ export class MaintenanceListPage {
         , callback: this.callbackRebuild
         , form: data
       });
+    }
+
+    if (func === 'MAINTAIN') {
+      this.navCtrl.push(MaintenanceSheetPage
+        , {
+          parent: this,
+          callback: this.callbackRebuild,
+          cycle: other_it
+        });
     }
 
   }

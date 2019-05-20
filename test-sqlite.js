@@ -1,7 +1,7 @@
 "use strict"
 
 const SQLiteDAO = require('./db/sqlite3/sqlite-dao');
-const dbFile = './db/database/mlmt-site-manager-v7.db';
+const dbFile = './db/database/mlmt-site-manager-v8.db';
 const db = new SQLiteDAO(dbFile);
 
 const arrObj = require('./utils/array-object');
@@ -64,7 +64,12 @@ setTimeout(() => {
          where type=1")
     .then(data=>{
      let dataS  =  arrObj.createTree(data,'id','parent_id', null);
-        console.log(dataS);
+        // console.log(dataS);
+        // console.log(dataS[0]);
+        console.log(JSON.stringify(dataS));
+        // console.log(typeof dataS[0].$children[0].$children[0].$children[0]);
+        // console.log(typeof dataS[0].$children[0].$children[0]);
+        // console.log(Object.keys(dataS));
     }); */
     db.getRsts("select *\
          from maintenance_sheet\
@@ -73,4 +78,5 @@ setTimeout(() => {
      //let dataS  =  arrObj.createTree(data,'id','parent_id', null);
         console.log(data);
     });
+    // console.log(JSON.parse('[{ "name": "N/A", "value": "-1" }]'));
 }, 1000);

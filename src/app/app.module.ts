@@ -81,13 +81,14 @@ import { PostNewsPage } from '../pages/post-news/post-news';
 import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list';
 import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
 import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
-import { SearchSitePage } from '../pages/search-site/search-site';
 import { ApiAutoSiteService } from '../services/mlmt/apiAutoSiteService';
 import { NewlinePipe } from '../pipes/new-line';
 import { UrlClickPipe } from '../pipes/url-click';
 import { LinkifyPipe } from '../pipes/linkify';
 import { StringsConv } from '../pipes/pipe-strings';
 import { TreeForm } from '../components/tree-form/tree-form';
+import { MaintenanceSheetPage } from '../pages/maintenance-sheet/maintenance-sheet';
+import { TreeFormMaintenance } from '../components/tree-form-maintenance/tree-form-maintenance';
 
 
 @NgModule({
@@ -133,7 +134,8 @@ import { TreeForm } from '../components/tree-form/tree-form';
     MaintenanecePage,
     MaintenanceListPage,
     AddMaintenancePage,
-    SearchSitePage,
+    MaintenanceSheetPage,
+    TreeFormMaintenance,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
@@ -186,7 +188,8 @@ import { TreeForm } from '../components/tree-form/tree-form';
     MaintenanecePage,
     MaintenanceListPage,
     AddMaintenancePage,
-    SearchSitePage,
+    MaintenanceSheetPage,
+    TreeFormMaintenance,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,

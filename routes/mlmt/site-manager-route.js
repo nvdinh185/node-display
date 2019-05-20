@@ -76,4 +76,11 @@ router.get('/get-users'
     , handlers.getUsers       //lay thong tin user
 );
 
+//lay du lieu de hien thi form bao duong
+router.get('/get-maintenance-sheet'
+    , tokenHandler.getTokenNext    //req.token
+    , tokenHandler.verifyProxyTokenNext //lay req.user tu req.token new co
+    , handlers.getMaintenanceList       //lay du lieu form bao duong
+);
+
 module.exports = router;

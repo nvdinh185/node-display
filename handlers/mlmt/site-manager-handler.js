@@ -5,7 +5,7 @@
 const arrObj = require('../../utils/array-object');
 
 const SQLiteDAO = require('../../db/sqlite3/sqlite-dao');
-const dbFile = './db/database/mlmt-site-manager-v7.db';
+const dbFile = './db/database/mlmt-site-manager-v8.db';
 const db = new SQLiteDAO(dbFile);
 
 class Handler {
@@ -448,8 +448,10 @@ class Handler {
          from maintenance_list\
          where type=1")
         .then(results => {
+            // console.log('data:', results);
+            let resultsTree  =  arrObj.createTree(results,'id','parent_id', null);
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(JSON.stringify(results
+            res.end(JSON.stringify(resultsTree
                 , (key, value) => {
                     if (value === null) { return undefined; }
                     return value;
@@ -457,6 +459,7 @@ class Handler {
             ));
         })
         .catch(err => {
+            // console.log('loi:', err);
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(JSON.stringify([]));
         });
@@ -486,18 +489,18 @@ class Handler {
     async postSiteToPlan(req, res, next) {
         //console.log('req.user', req.user);
         // console.log('req.json_data', req.json_data);
-        if (req.json_data.maintenance_sheet_id) {
+        if (!req.json_data.maintenance_sheet_id) {
             let rec = await db.getRst("select id\
                                             ,user_fullname\
                                     from maintenance_sheet\
-                                    where sites_id = '"+req.json_data.id+"'\
-                                        and maintenance_cycles_id = '"+req.json_data.cycle.id+"'\
+                                    where sites_id = '"+ req.json_data.id + "'\
+                                        and maintenance_cycles_id = '"+ req.json_data.cycle.id + "'\
                                     ");
             // console.log(req.json_data.cycle.id);
             // console.log("Rst: ",rec);
             if (typeof rec !== 'undefined') {
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ status:'NOK', message: 'Site này đã được bảo dưỡng bởi ' + rec.user_fullname }));
+                res.end(JSON.stringify({ status: 'NOK', message: 'Site này đã được bảo dưỡng bởi ' + rec.user_fullname }));
             } else {
                 let user = await db.getRst("select id\
                                     ,username\
@@ -518,7 +521,7 @@ class Handler {
                                     ,role\
                                     ,status\
                                     from users\
-                                    where username = '"+req.user.username+"'\
+                                    where username = '"+ req.user.username + "'\
                                     ");
 
                 let obj = {
@@ -531,56 +534,81 @@ class Handler {
                     , quarter: req.json_data.cycle.quarter
                     , create_time: Date.now() //milisecond
                 }
-        
+
                 let sql = arrObj.convertSqlFromJson("maintenance_sheet", obj, []);
-        
+
                 //console.log('insert', sql);
 
                 db.insert(sql)
-                .then(x=>{
-                    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                    res.end(JSON.stringify({ status: 'OK', message: 'Thành công' }));
-
-                })
-                .catch(err=>{
-                    res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
-                    res.end(JSON.stringify({status: 'ERR', message:"Lỗi thêm mới Kế hoạch"}
-                        , (key, value) => {
-                            if (value === null) { return undefined; }
-                            return value;
-                        }
-                    ));
-                });
+                    .then(x => {
+                        // res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                        // res.end(JSON.stringify({ status: 'OK', message: 'Thành công' }));
+                        db.getRst("SELECT  id\
+                        FROM maintenance_sheet\
+                        order by id desc\
+                        LIMIT 1\
+                        OFFSET 0\
+                        ")
+                        .then(rst=>{
+                            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                            res.end(JSON.stringify(rst
+                                , (key, value) => {
+                                    if (value === null) { return undefined; }
+                                    return value;
+                                }
+                            ));
+                        })
+                        .catch(err=>{
+                            console.log('Loi them ke hoach',err);
+                            res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+                            res.end(JSON.stringify({error:err, message:"Lỗi thêm mới Kế hoạch"}
+                                , (key, value) => {
+                                    if (value === null) { return undefined; }
+                                    return value;
+                                }
+                            ));
+                        })
+                    })
+                    .catch(err => {
+                        res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+                        res.end(JSON.stringify({ status: 'ERR', message: "Lỗi thêm mới Kế hoạch" }
+                            , (key, value) => {
+                                if (value === null) { return undefined; }
+                                return value;
+                            }
+                        ));
+                    });
             }
         } else {
+            let idArr = req.json_data.maintenance_sheet_id.split(" ");
             let optionArr = req.json_data.users.split("-");
             let obj = {
-                id: req.json_data.id
+                id: idArr[2]
                 , users_id: optionArr[0]
                 , user_fullname: optionArr[1]
                 , update_time: Date.now() //milisecond
             }
-
+            // console.log('obj:', obj)
             let sql = arrObj.convertSqlFromJson("maintenance_sheet", obj, ["id"]);
             // console.log('sql:', sql);
             db.update(sql)
-            .then(data => {
-                //update xong
-                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ status: 'OK', id: obj.id, message: 'Thành công' }));
-            })
-            .catch(err => {
+                .then(data => {
+                    //update xong
+                    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                    res.end(JSON.stringify({ status: 'OK', id: obj.id, message: 'Thành công' }));
+                })
+                .catch(err => {
                     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
-                    res.end(JSON.stringify({error:err, message:"Lỗi cập nhập Chuyển bảo dưỡng"}
+                    res.end(JSON.stringify({ error: err, message: "Lỗi cập nhập Chuyển bảo dưỡng" }
                         , (key, value) => {
                             if (value === null) { return undefined; }
                             return value;
                         }
                     ));
-    
+
                 });
         }
-        
+
 
     }
 

@@ -4,6 +4,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 */
 @Pipe({ name: 'strings' })
 export class StringsConv implements PipeTransform {
+    arr = [];
     transform(value: any, args: any): any {
         if (args === 'STATUS') {
             if (typeof value === 'undefined' || value === '0')
@@ -13,5 +14,15 @@ export class StringsConv implements PipeTransform {
             }
         }
         
+        if (args === 'JSON') {
+            if(!value) return null;
+            return JSON.parse(value);
+        }
+
+        if (args === 'DEFAULT') {
+            // if(!value) return null;
+            // this.arr = JSON.parse(value);
+            return -1;
+        }
     }
 }
