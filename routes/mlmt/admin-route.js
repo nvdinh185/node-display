@@ -6,7 +6,7 @@
 
 const router = require('express').Router();
 
-const tokenHandler = require('../../utils/token-handler');
+const tokenHandler = require('../../utils/token-proxy');
 
 const handlers = require('../../handlers/mlmt/admin-handler');
 

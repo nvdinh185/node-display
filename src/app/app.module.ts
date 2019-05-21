@@ -81,18 +81,28 @@ import { PostNewsPage } from '../pages/post-news/post-news';
 import { MaintenanceListPage } from '../pages/maintenance-list/maintenance-list';
 import { ApiAutoCompleteService } from '../services/apiAutoCompleteService';
 import { DynamicChartPage } from '../pages/dynamic-chart/dynamic-chart';
-import { SearchSitePage } from '../pages/search-site/search-site';
 import { ApiAutoSiteService } from '../services/mlmt/apiAutoSiteService';
 import { NewlinePipe } from '../pipes/new-line';
 import { UrlClickPipe } from '../pipes/url-click';
 import { LinkifyPipe } from '../pipes/linkify';
 import { StringsConv } from '../pipes/pipe-strings';
+import { TreeForm } from '../components/tree-form/tree-form';
+import { MaintenanceSheetPage } from '../pages/maintenance-sheet/maintenance-sheet';
+import { TreeFormMaintenance } from '../components/tree-form-maintenance/tree-form-maintenance';
+import { DynamicHomePage } from '../pages/dynamic-home/dynamic-home';
+import { ImageCard } from '../components/image-card/image-card';
+import { ContentCard } from '../components/content-card/content-card';
+import { ImageDetail } from '../components/image-detail/image-detail';
 
 
 @NgModule({
   declarations: [
     MyApp,
     TreeView,
+    TreeForm,
+    ImageCard,
+    ImageDetail,
+    ContentCard,
     LoginPage,
     QrBarCodePage,
     QrBarScannerPage,
@@ -114,6 +124,7 @@ import { StringsConv } from '../pipes/pipe-strings';
     DynamicMediasPage,
     DynamicListOrderPage,
     DynamicChartPage,
+    DynamicHomePage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
@@ -131,7 +142,8 @@ import { StringsConv } from '../pipes/pipe-strings';
     MaintenanecePage,
     MaintenanceListPage,
     AddMaintenancePage,
-    SearchSitePage,
+    MaintenanceSheetPage,
+    TreeFormMaintenance,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,
@@ -152,6 +164,10 @@ import { StringsConv } from '../pipes/pipe-strings';
   entryComponents: [
     MyApp,
     TreeView,
+    TreeForm,
+    ImageCard,
+    ImageDetail,
+    ContentCard,
     LoginPage,
     QrBarCodePage,
     QrBarScannerPage,
@@ -173,6 +189,7 @@ import { StringsConv } from '../pipes/pipe-strings';
     DynamicMediasPage,
     DynamicListOrderPage,
     DynamicChartPage,
+    DynamicHomePage,
     GoogleMapPage,
     HomeChatPage,
     HandDrawPage,
@@ -183,7 +200,8 @@ import { StringsConv } from '../pipes/pipe-strings';
     MaintenanecePage,
     MaintenanceListPage,
     AddMaintenancePage,
-    SearchSitePage,
+    MaintenanceSheetPage,
+    TreeFormMaintenance,
     ReviewMaintenancePage,
     DocumentsPage,
     HomeNewsPage,

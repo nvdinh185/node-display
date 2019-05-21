@@ -131,4 +131,9 @@ const linkify = (plainText)=>{
     return {content:valueLinkify,urls:links};
 }
 
-console.log(linkify('abc www.mobifone.vn trang mang.vn abc'))
+//console.log(linkify('abc www.mobifone.vn trang mang.vn abc'))
+
+
+var regex = /([\w-]+\.)+[\w-]+/;
+var domain_search = regex.exec('acbb http://c3.mobifone.vn/hand');
+console.log('domain',domain_search);

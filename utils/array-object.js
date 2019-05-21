@@ -2,7 +2,14 @@
 
 /**
  * array-object - cuong.dq
- * version 1.4
+ * version 2.0
+ * 18/05/2019
+ * convertTree2Order: 
+ * Chuyển đổi array cấu trúc cây (cha, con) 
+ * trở về cấu trúc phẳng được sắp xếp theo thứ tự 
+ * như connect by của oracle
+ * 
+ * version 1.5
  * 07/05/2019
  * 
  * createObject,
@@ -148,6 +155,31 @@ const createTree = (arrIn, idKey, parentKey, startWith, level) => {
     }
 }
 
+/**
+ * Chuyen doi cay co cau truc parent-subs/$children...->root:$id,$parent_id,$level
+ * @param {*} treeIn 
+ * @param {*} idSub 
+ * @param {*} level 
+ */
+const convertTree2Order = (treeIn, idSub, id, parent_id, level) => {
+
+    let myId = id? id : 1;
+    let myLevel = level ? level : 1;
+    var roots = [];
+
+    treeIn.forEach((el,idx)=>{
+        el.$id = myId;
+        el.$parent_id = parent_id;
+        roots.push(el);
+        if (el[idSub]){
+            roots = roots.concat(convertTree2Order(el[idSub], idSub, (myId+1), myId, (myLevel + 1) ))
+        }
+        myId = roots.length + 1;
+    });
+
+    return roots;
+}
+
 
 const isEquikeylent = (a, b, isSameKey, isSameValue) => { //la giong nhau cau truc hoan toan isSame
     let aProps = Object.getOwnPropertyNames(a);
@@ -204,6 +236,7 @@ module.exports = {
 
     createTreeOrder: createTreeOrder,  //sap xep lai trat tu theo cay
     createTree: createTree,  //tao tree -->children
+    convertTree2Order: convertTree2Order,  //tao array from tree (the sample TreeOrder)
 
     compare2Objects: isEquikeylent, //so sanh 2 object
     getMatrix: getMatrix, //tao ma tran in

@@ -88,28 +88,29 @@ export class HomeNewsPage {
     // console.log("456", this.contacts)
     this.dynamicCards.title = "Đây là trang tin của " + (this.userInfo ? this.userInfo.username : "Public")
     if (reNews) {
-      //this.lastPageIndex = this.curPageIndex > 0 ? this.curPageIndex : this.lastPageIndex;
-      this.dynamicCards.items = []
+      this.lastPageIndex = this.curPageIndex > 0 ? this.curPageIndex : this.lastPageIndex;
+      //this.dynamicCards.items = []
       this.curPageIndex = 0;
     } else {
-      //this.lastPageIndex = this.curPageIndex > this.lastPageIndex ? this.curPageIndex : this.lastPageIndex;
+      this.lastPageIndex = this.curPageIndex > this.lastPageIndex ? this.curPageIndex : this.lastPageIndex;
+      this.curPageIndex = this.curPageIndex < this.lastPageIndex ? this.lastPageIndex : this.curPageIndex;
     }
     this.getJsonPostNews()
       .then(data => {
-        //console.log(data)
         if (reNews) {
-          //let isHaveNew = false;
+          console.log("new: ", data)
+          let isHaveNew = 0;
           data.reverse().forEach((el, idx) => {
             let index = this.dynamicCards.items
               .findIndex(x => x.group_id === el.group_id);
             if (index < 0) {
               this.dynamicCards.items.unshift(el);
-              //isHaveNew = true;
+              isHaveNew++;
             }
           })
-          //if (isHaveNew && this.lastPageIndex > 0) this.lastPageIndex--;
+          if (isHaveNew >= 2 && this.curPageIndex > 0) this.curPageIndex = this.lastPageIndex + 1;
         } else {
-          //this.curPageIndex = this.curPageIndex < this.lastPageIndex ? this.lastPageIndex : this.curPageIndex;
+          console.log("data: ", data)
           data.forEach((el, idx) => {
             let index = this.dynamicCards.items
               .findIndex(x => x.group_id === el.group_id);
@@ -118,6 +119,9 @@ export class HomeNewsPage {
             }
           })
         }
+        console.log("length: ", this.dynamicCards.items.length)
+        console.log("curPageIndex: ", this.curPageIndex)
+        console.log("lastPageIndex: ", this.lastPageIndex)
       })
       .catch(err => console.log(err))
   }

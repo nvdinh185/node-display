@@ -11,58 +11,66 @@ const arr1=[
     ,{id:10,pid:1,data:'j'}
 ];
 
-//ok nhu oracle
-const createTreeOrder = (arrIn, idKey, parentKey, startWith, level, arrOut) => {
-    let myLevel = level?level:1;
-    if (arrIn && arrOut && arrIn.length > arrOut.length) {
-        let parents = arrIn.filter(x => 
-        (x[parentKey] === startWith)
-        ||(startWith==null&&x[parentKey]==undefined)
-        ||(startWith==undefined&&x[parentKey]==null)
-        )
-        if (parents) {
-            parents.forEach(el => {
-                el.$level = myLevel;
-                arrOut.push(el);
-                createTreeOrder(arrIn, idKey, parentKey, el[idKey], myLevel + 1, arrOut)
-            });
+const tree1=[
+    {
+      key: 1,               //mã của node cây
+      type: "title",       //kiểu hiển thị title
+      name: "I. Nhà Trạm", //title hiển thị
+      is_more: true,       //hiển thị nút more
+      subs: [              //có hiển thị lá cây con 
+        {
+          key: 2,           //mã của node cây
+          type: "detail",  //Kiểu hiển thị chỉ giá trị không
+          name: "Mã trạm", //đề mục chi tiết
+          avatar:"https://icdn.dantri.com.vn/thumb_w/640/2019/03/02/531510014249880849060024764118135794040832-n-1551502898256.jpg",
+          value: "DNTK01", //Giá trị hiển thị không sử dụng thay đổi nhập liệu
+          subs: [{
+            key: 3,           //mã của node cây
+            type: "select",  //Kiểu hiển thị chọn 1 nội dung
+            name: "Hãy lựa chọn đánh giá nhé", //đề mục chi tiết
+            value: -1,
+            options: [{ name: "N/A", value: -1 }
+                      , { name: "Đạt", value: 1 }
+                      , { name: "Không đạt", value: 0 }] 
+            }
+          ]
         }
+      ]
     }
-}
-
-
-const createTreeSub = (arrIn,idKey,parentKey,startWith,level)=>{
-    let myLevel = level?level:1;
-    var roots = arrIn.filter(x=>
-        (x[parentKey] === startWith)
-        ||(startWith==null&&x[parentKey]==undefined)
-        ||(startWith==undefined&&x[parentKey]==null)
-        );
-    if (roots&&roots.length>0){
-         roots.forEach(el => {
-            el.$level= myLevel;
-            el.$children = createTreeSub(arrIn,idKey,parentKey,el[idKey],myLevel+1)
-        })
-        return roots;
-    }else {
-        let leafChildren = arrIn.find(x=>x[idKey]===startWith);
-        if (leafChildren){
-            leafChildren.$is_leaf = 1;
+    ,
+    {
+      key: 4,           //mã của node cây
+      type: "detail",  //Kiểu hiển thị chỉ giá trị không
+      name: "Mã trạm", //đề mục chi tiết
+      value: "Đây là trạm thông tin DNTK02 - Ở Đà nẵng thanh khê ... ", //Giá trị hiển thị không sử dụng thay đổi nhập liệu
+      subs: [{
+        key: 5,           //mã của node cây
+        type: "select",  //Kiểu hiển thị chọn 1 nội dung
+        name: "Vị trí phòng máy nơi đặt MDF đảm bảo an ninh, an toàn chống ngập lụt",
+        value: 5,
+        options: [{ name: "0 Điểm", value: 0 }
+                  , { name: "1 Điểm", value: 1 }
+                  , { name: "2 Điểm", value: 2 }
+                  , { name: "3 Điểm", value: 3 }
+                  , { name: "4 Điểm", value: 4 }
+                  , { name: "5 Điểm", value: 5 }
+                ] 
         }
-        return undefined;
+        ,
+        {
+          key: 6,           //mã của node cây
+          type: "range-star",  //Kiểu hiển thị chọn 1 nội dung
+          name: "Mặt cười",
+          icon: "happy",
+          color:"star",
+          value: 5, 
+          min: 0, 
+          max: 10
+        }
+      ]
     }
-}
-
-// let outPut = [];
-// createTreeOrder(arr1,"id","pid",null,0,outPut);
-// console.log('kq',outPut);
-
-// console.log('subtree'
-// , JSON.stringify(createTreeSub(arr1,"id","pid",2))
-// );
-
-//order array
+  ];
 
 const utils = require('./utils/array-object');
 
-console.log(utils.sortArray(arr1,"pid",true));
+console.log(utils.convertTree2Order(tree1,"subs"));

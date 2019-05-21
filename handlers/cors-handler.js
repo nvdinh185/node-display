@@ -1,6 +1,9 @@
 
 "use strict"
-
+/**
+ * ver 1.1
+ * log --> origin + url
+ */
 const url = require('url');
 
 //chi cho phep cac domain chua cac thong tin nhu sau moi duoc phep truy cap
@@ -30,7 +33,7 @@ class CorsHandler {
     cors(req, res, next) {
 
        //console.log('*** req.method',req.method);
-       console.log('*** req.url',req.url);
+       //console.log('*** req.url',req.url);
        //console.log('*** req.headers',req.headers);
        //console.log('*** req.url_parse',url.parse(req.url, true, false));
       
@@ -61,8 +64,9 @@ class CorsHandler {
       let Access_Control_Request_Method = req.header&&req.headers['access-control-request-method']?req.headers['access-control-request-method']:'';
       let Access_Control_Request_Credentials = req.header&&req.headers['access-control-request-credentials']?req.headers['access-control-request-credentials']:'';
 
-      //console.log('req.headers.origin...', origin);
-     
+      console.log('origin:', origin, 'req:' , req.url);
+      //console.log('*** req.url',req.url);
+
       if (validateOrigin(origin)){ //
         req.origin = origin;
         //console.log('Access-Control-Allow-Origin: ', req.origin);

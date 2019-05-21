@@ -1,5 +1,11 @@
 "use strict"
-
+/**
+ * version 2.0
+ * cuongdq
+ * 19/05/2019
+ * get url content, device, screen shot
+ * 
+ */
 const request = require('request');
 const url = require('url');
 const systempath = require('path');
@@ -59,15 +65,26 @@ const returnShotInfoUrl = (req, res, next) =>{
                      if ($title.length>10) return true;
                    });
                }
+               
+               let $content ="";
+               $( "p" ).each( (i, el ) => {
+                if ($(el).text()) $content += $(el).text().trim() + "\n";
+                if ($content.length>1500) return true;
+              });                                               
+
                let $src,$alt;
+               let $srcs = [];
                $( "img" ).each( (i, el ) => {
                    let src = $(el).attr('src');
                    let alt = $(el).attr('alt');
                    if (alt) alt = alt.trim();
                    let ext = src.replace(/^.*\./, '');
-                   if ((!$src||!$alt)&&ext&&ext.toLowerCase()==='jpg'){
-                        $src = src;
-                        $alt = alt;
+                   if (ext&&ext.toLowerCase()==='jpg'){
+                       if (!$src||!$alt){
+                           $src = src;
+                           $alt = alt;
+                       }
+                       $srcs.push({src:src,alt: alt})
                    }
                });
 
@@ -77,7 +94,9 @@ const returnShotInfoUrl = (req, res, next) =>{
                    url: req.paramS.url,
                    title: $title,
                    image: $src,
-                   alt : $alt
+                   alt : $alt,
+                   content: $content,
+                   images: $srcs
                }));
             } else {
                 res.writeHead(404, { 'Content-Type': 'application/json' });
