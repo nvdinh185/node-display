@@ -89,7 +89,6 @@ export class HomeNewsPage {
     this.dynamicCards.title = "Đây là trang tin của " + (this.userInfo ? this.userInfo.username : "Public")
     if (reNews) {
       this.lastPageIndex = this.curPageIndex > 0 ? this.curPageIndex : this.lastPageIndex;
-      //this.dynamicCards.items = []
       this.curPageIndex = 0;
     } else {
       this.lastPageIndex = this.curPageIndex > this.lastPageIndex ? this.curPageIndex : this.lastPageIndex;
@@ -108,7 +107,7 @@ export class HomeNewsPage {
               isHaveNew++;
             }
           })
-          if (isHaveNew >= 1 && this.curPageIndex < this.lastPageIndex) { this.curPageIndex = this.lastPageIndex + 1; console.log("yes"); }
+          if (isHaveNew >= 1 && this.curPageIndex < this.lastPageIndex) this.curPageIndex = this.lastPageIndex + 1
         } else {
           console.log("data: ", data)
           data.forEach((el, idx) => {
