@@ -108,7 +108,7 @@ export class HomeNewsPage {
               isHaveNew++;
             }
           })
-          if (isHaveNew >= 2 && this.curPageIndex > 0) this.curPageIndex = this.lastPageIndex + 1;
+          if (isHaveNew >= 1 && this.curPageIndex < this.lastPageIndex) { this.curPageIndex = this.lastPageIndex + 1; console.log("yes"); }
         } else {
           console.log("data: ", data)
           data.forEach((el, idx) => {
