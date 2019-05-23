@@ -86,7 +86,7 @@ export class HomeNewsPage {
 
   getHomeNews(reNews?: boolean) {
     // console.log("456", this.contacts)
-    this.dynamicCards.title = "Đây là trang tin của " + (this.userInfo ? this.userInfo.username : "Public")
+    this.dynamicCards.title = "Đây là trang tin của1 " + (this.userInfo ? this.userInfo.username : "Public")
     if (reNews) {
       this.lastPageIndex = this.curPageIndex > 0 ? this.curPageIndex : this.lastPageIndex;
       this.curPageIndex = 0;
