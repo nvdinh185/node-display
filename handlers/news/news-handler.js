@@ -1,6 +1,3 @@
-"use strict"
-
-
 const fs = require('fs');
 const mime = require('mime-types');
 const systempath = require('path');

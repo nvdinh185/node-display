@@ -3,7 +3,6 @@ import { NavController, LoadingController, ModalController, NavParams, Events } 
 import { ApiImageService } from '../../services/apiImageService';
 import { DynamicFormWebPage } from '../dynamic-form-web/dynamic-form-web';
 import { ApiAuthService } from '../../services/apiAuthService';
-import { ApiStorageService } from '../../services/apiStorageService';
 
 @Component({
   selector: 'page-post-news',

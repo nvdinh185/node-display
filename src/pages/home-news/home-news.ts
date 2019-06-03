@@ -28,43 +28,9 @@ export class HomeNewsPage {
 
   ngOnInit() {
     this.refreshNews();
-    this.events.subscribe('event-main-login-checked'
-      , (data => {
-        this.userInfo = data.user;
-        this.contacts = this.apiContact.getUniqueContacts();
-        //console.log("this.userInfo: ", this.userInfo)
-        if (this.userInfo) {
-          if (!this.contacts[this.userInfo.username]) {
-            Object.defineProperty(this.contacts, this.userInfo.username, {
-              value: {
-                fullname: this.userInfo.data.fullname,
-                nickname: this.userInfo.data.nickname,
-                image: this.userInfo.data.image ? this.userInfo.data.image : undefined,
-                avatar: this.userInfo.data.avatar ? this.userInfo.data.avatar : this.userInfo.data.image,
-                relationship: ['private']
-              },
-              writable: true, enumerable: true, configurable: true
-            });
-          } else {
-            if (this.userInfo.data.image) {
-              this.contacts[this.userInfo.username].image = this.userInfo.data.image;
-              this.contacts[this.userInfo.username].avatar = this.userInfo.data.avatar ? this.userInfo.data.avatar : this.userInfo.data.image;
-            }
-          }
-        }
-        //setTimeout(() => {
-        //console.log("contacts: ", this.contacts)
-        this.getHomeNews(true);
-        //}, 3000);
-      })
-    )
     this.events.subscribe('postok', () => {
       this.getHomeNews(true);
     });
-    /* setTimeout(() => {
-      console.log("curentpage", this.curPageIndex)
-      console.log("lastpage", this.lastPageIndex)
-    }, 2000) */
   }
 
   dynamicCards = {
@@ -80,8 +46,8 @@ export class HomeNewsPage {
     await this.apiContact.getPublicUsers(true);
     //lay cac danh ba public
     this.contacts = this.apiContact.getUniqueContacts();
-    //neu chua dang nhap thi lay cac tin cua user public
-    if (!this.userInfo) this.getHomeNews(true);
+    console.log("this.contacts: ", this.contacts)
+    this.getHomeNews(true);
   }
 
   getHomeNews(reNews?: boolean) {
