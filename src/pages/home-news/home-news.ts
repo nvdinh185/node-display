@@ -84,9 +84,6 @@ export class HomeNewsPage {
             }
           })
         }
-        console.log("length: ", this.dynamicCards.items.length)
-        console.log("curPageIndex: ", this.curPageIndex)
-        console.log("lastPageIndex: ", this.lastPageIndex)
       })
       .catch(err => console.log(err))
   }
@@ -123,7 +120,6 @@ export class HomeNewsPage {
               medias.push(e);
             })
           }
-
           el.medias = medias;
           el.actions = {
             like: { name: "LIKE", color: "primary", icon: "thumbs-up", next: "LIKE" }
