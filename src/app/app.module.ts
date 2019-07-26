@@ -20,13 +20,11 @@ import { RequestInterceptor } from '../interceptors/requestInterceptor';
 import { ApiContactService } from '../services/apiContactService';
 import { ApiImageService } from '../services/apiImageService';
 import { Contacts } from '@ionic-native/contacts';
-import { PostNewsPage } from '../pages/post-news/post-news';
 
 @NgModule({
   declarations: [
     MyApp,
     HomeNewsPage,
-    PostNewsPage,
     TimeAgoPipe,
     LinkifyPipe,
     NewlinePipe,
@@ -41,7 +39,6 @@ import { PostNewsPage } from '../pages/post-news/post-news';
   entryComponents: [
     MyApp,
     HomeNewsPage,
-    PostNewsPage
   ],
   providers: [
     StatusBar,

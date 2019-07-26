@@ -21,11 +21,6 @@
 </ion-header>
 
 <ion-content no-padding class="background-page gradient">
-    <ion-refresher (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Load dữ liệu mới hơn..."
-            refreshingSpinner="circles" refreshingText="Đang tải...">
-        </ion-refresher-content>
-    </ion-refresher>
     <ion-grid no-padding>
         <ion-row>
             <ion-col col-12 offset-xl-3 col-xl-6 offset-lg-3 col-lg-6 offset-md-2 col-md-8 col-sm-12
@@ -137,7 +132,7 @@
                         <p text-wrap [innerHtml]="it.content | newline | linkify"></p>
                         <button ion-button (click)="isShow = !isShow">Xem chi tiết</button>
                         <div *ngIf="(it.content | linkify:'urlInfos')?.length>0 && isShow">
-                            <div *ngFor="let urlInfo of it.content | linkify:'urlInfos'; let idx = index;">
+                            <div *ngFor="let urlInfo of it.content | linkify:'urlInfos'">
                                 <p text-wrap [innerHtml]="urlInfo.content | newline"></p>
                                 <img src="{{urlInfo.image}}" />
                             </div>
@@ -203,8 +198,4 @@
             </ion-col>
         </ion-row>
     </ion-grid>
-    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
-        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Load dữ liệu cũ hơn...">
-        </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
 </ion-content>
