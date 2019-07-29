@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
 import { ApiContactService } from '../../services/apiContactService';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'page-home-news',
@@ -13,7 +14,8 @@ export class HomeNewsPage {
   contacts = {}
   isShow = false;
 
-  constructor(public modalCtrl: ModalController
+  constructor(private inAppBrowser: InAppBrowser,
+    public modalCtrl: ModalController
     , private auth: ApiAuthService
     , private apiContact: ApiContactService
   ) { }
@@ -77,17 +79,33 @@ export class HomeNewsPage {
         let items = [];
         data.forEach(el => {
           let medias = [];
+          let files = [];
           if (el.medias) {
             el.medias.forEach(e => {
-              if (e.url.includes("upload_files")) {
-                e.image = linkFile + e.url;
+              if (e.type == 1) {
+                if (e.url.includes("upload_files")) {
+                  e.image = linkFile + e.url;
+                } else {
+                  e.image = e.url;
+                }
+                medias.push(e);
               } else {
-                e.image = e.url;
+                let src = "assets/imgs/file.png";
+                if (e.file_type !== undefined && e.file_type !== null) {
+                  if (e.file_type.toLowerCase().indexOf("pdf") >= 0) src = "assets/imgs/pdf.png";
+                  if (e.file_type.toLowerCase().indexOf("word") >= 0) src = "assets/imgs/word.png";
+                }
+                files.push({
+                  src: src,
+                  url: linkFile + e.url,
+                  alt: e.file_name,
+                  file_type: e.file_type
+                })
               }
-              medias.push(e);
             })
           }
           el.medias = medias;
+          el.files = files;
           el.actions = {
             like: { name: "LIKE", color: "primary", icon: "thumbs-up", next: "LIKE" }
             , comment: { name: "COMMENT", color: "primary", icon: "chatbubbles", next: "COMMENT" }
@@ -136,5 +154,9 @@ export class HomeNewsPage {
         return items;
       })
       .catch(err => { return [] })
+  }
+
+  onClickViewFile(obj) {
+    this.inAppBrowser.create(obj.url);
   }
 }

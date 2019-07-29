@@ -20,6 +20,7 @@ import { RequestInterceptor } from '../interceptors/requestInterceptor';
 import { ApiContactService } from '../services/apiContactService';
 import { ApiImageService } from '../services/apiImageService';
 import { Contacts } from '@ionic-native/contacts';
+import { ImageFileSrcPipe } from '../pipes/pipe-src';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { Contacts } from '@ionic-native/contacts';
     TimeAgoPipe,
     LinkifyPipe,
     NewlinePipe,
+    ImageFileSrcPipe
   ],
   imports: [
     BrowserModule,
