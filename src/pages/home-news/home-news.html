@@ -9,11 +9,9 @@
         <ion-title *ngIf="!isSearch">{{dynamicCards?.title}}</ion-title>
 
         <ion-buttons end *ngFor="let btn of dynamicCards?.buttons">
-            <button *ngIf="!isSearch" class="badge-background" ion-button icon-only color="{{btn.color}}"
+            <button class="badge-background" ion-button icon-only color="{{btn.color}}"
                 (click)="onClickHeader(btn)">
                 <ion-icon name="{{btn.icon}}"></ion-icon>
-                <ion-badge class="badge-alert" color="danger" *ngIf="btn.alerts">
-                    {{ (btn.alerts?.length>99?'99+':btn.alerts?.length) }}</ion-badge>
             </button>
         </ion-buttons>
 
