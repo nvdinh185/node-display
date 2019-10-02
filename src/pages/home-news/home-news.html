@@ -123,7 +123,7 @@
 
                     <!-- Nội dung hiển thị ở đây -->
                     <div *ngIf="it.content && it.medias.length==0 && it.files.length==0">
-                        <p text-wrap [innerHtml]="it.content | newline | linkify"></p>
+                        <p text-wrap [innerHtml]="it.content | linkify"></p>
                         <button ion-button (click)="isShow = !isShow">Xem chi tiết</button>
                         <div *ngIf="(it.content | linkify:'urlInfos')?.length>0 && isShow">
                             <div *ngFor="let urlInfo of it.content | linkify:'urlInfos'">
