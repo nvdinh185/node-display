@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController } from 'ionic-angular';
 import { ApiAuthService } from '../../services/apiAuthService';
-import { ApiContactService } from '../../services/apiContactService';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'page-home-news',
@@ -12,12 +10,10 @@ export class HomeNewsPage {
 
   server = "http://localhost:9238/site-manager/news"
   contacts = {}
-  isShow = false;
 
-  constructor(private inAppBrowser: InAppBrowser,
+  constructor(
     public modalCtrl: ModalController
-    , private auth: ApiAuthService
-    , private apiContact: ApiContactService
+    , private apiAuth: ApiAuthService
   ) { }
 
   ngOnInit() {
@@ -29,17 +25,15 @@ export class HomeNewsPage {
 
   dynamicCards = {
     title: ""
-    , buttons: [
-      { color: "primary", icon: "photos", next: "ADD" }
-    ]
     , items: []
   }
 
-  async refreshNews() {
-    //chay ham nay de KHOI TAO CAC USER PUBLIC
-    await this.apiContact.getPublicUsers(true);
-    //lay cac danh ba public
-    this.contacts = this.apiContact.getUniqueContacts();
+  refreshNews() {
+    this.contacts = {
+      903500888: { fullname: "Cuong Test", avatar: "/assets/imgs/m2.png" },
+      766777123: { fullname: "NV Định", avatar: "/assets/imgs/m1.png" }
+    };
+
     console.log("this.contacts: ", this.contacts)
     this.getHomeNews();
   }
@@ -74,7 +68,7 @@ export class HomeNewsPage {
       offset: offset,
       follows: follows
     }
-    return this.auth.postDynamicForm(this.server + "/get-news", json_data, true)
+    return this.apiAuth.postDynamicForm(this.server + "/get-news", json_data)
       .then(data => {
         let items = [];
         data.forEach(el => {
@@ -83,11 +77,8 @@ export class HomeNewsPage {
           if (el.medias) {
             el.medias.forEach(e => {
               if (e.type == 1) {
-                if (e.url.includes("upload_files")) {
-                  e.image = linkFile + e.url;
-                } else {
-                  e.image = e.url;
-                }
+                e.image = linkFile + e.url;
+                e.src = linkFile + e.url;
                 medias.push(e);
               } else {
                 let src = "assets/imgs/file.png";
@@ -154,9 +145,5 @@ export class HomeNewsPage {
         return items;
       })
       .catch(err => { return [] })
-  }
-
-  onClickViewFile(obj) {
-    this.inAppBrowser.create(obj.url);
   }
 }

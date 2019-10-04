@@ -43,7 +43,7 @@ export class LinkifyPipe implements PipeTransform {
             let urlInfos = [];
             links.forEach(async el=>{
                 try{
-                    let urlInfo = await this.apiAuth.getDynamicUrl(ApiStorageService.authServer + "/ext-public/shot-info-url?url="+el);
+                    let urlInfo = await this.apiAuth.getDynamicUrl("https://c3.mobifone.vn/api/ext-public/shot-info-url?url="+el);
                     urlInfos.push(urlInfo);
                 }catch{}
             })

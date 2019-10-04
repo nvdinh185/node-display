@@ -29,17 +29,12 @@ class ResourceHandler {
     }
 
     getNewsList(req, res) {
-        //req.user,
-        //req.json_data.follows,
-        //req.json_data.limit
-        //req.json_data.offset
         let users = "";
         if (req.json_data.follows.length > 0) {
             req.json_data.follows.forEach(el => {
                 users += (users === "" ? "" : ",") + "'" + el + "'";
             });
         }
-        //console.log("users: ", users)
         db.getRsts("select *\
                     from news\
                     where user in ("+ users + ")\

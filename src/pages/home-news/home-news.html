@@ -8,12 +8,6 @@
 
         <ion-title>{{dynamicCards?.title}}</ion-title>
 
-        <ion-buttons end *ngFor="let btn of dynamicCards?.buttons">
-            <button class="badge-background" ion-button icon-only color="{{btn.color}}" (click)="onClickHeader(btn)">
-                <ion-icon name="{{btn.icon}}"></ion-icon>
-            </button>
-        </ion-buttons>
-
     </ion-toolbar>
 </ion-header>
 
@@ -27,84 +21,80 @@
                     <ion-item class="background-card gradient grid-border" *ngIf="it.short_detail">
                         <ion-avatar item-start>
                             <img *ngIf="userInfo?.username==it.user" [src]="userInfo?.data?.image">
-                            <img *ngIf="userInfo?.username!=it.user&&contacts[it.user]&&contacts[it.user].avatar"
+                            <img *ngIf="userInfo?.username!=it.user && contacts[it.user] && contacts[it.user].avatar"
                                 [src]="contacts[it.user].avatar">
-                            <img *ngIf="userInfo?.username!=it.user&&!(contacts[it.user]&&contacts[it.user].avatar)"
+                            <img *ngIf="userInfo?.username!=it.user && !(contacts[it.user] && contacts[it.user].avatar)"
                                 src="assets/imgs/no-image-go.jpg">
                         </ion-avatar>
-                        <ion-title>{{contacts[it.user]&&contacts[it.user].fullname?contacts[it.user].fullname:it.user}}
+                        <ion-title>{{contacts[it.user] && contacts[it.user].fullname?contacts[it.user].fullname:it.user}}
                         </ion-title>
                         <p *ngIf="it.short_detail?.p" text-wrap>{{it.short_detail?.p}}</p>
                         <ion-note item-end *ngIf="it.short_detail?.note">{{it.short_detail?.note | timeAgo}}</ion-note>
                         <button item-end icon-only ion-button clear small *ngIf="it.short_detail?.action"
-                            color="{{it.short_detail?.action?.color}}"
-                            (click)="onClickShortDetails(it.short_detail?.action, it)">
+                            color="{{it.short_detail?.action?.color}}">
                             <ion-icon name="{{it.short_detail?.action?.icon}}"></ion-icon>
                         </button>
                     </ion-item>
 
-
                     <!-- 1 pics -->
-                    <div class="one-image card-background-page" *ngIf="it.medias && it.medias.length===1"
-                        (click)="onClickMedia(0,it)">
+                    <div class="one-image card-background-page" *ngIf="it.medias && it.medias.length===1">
                         <img [src]="it.medias[0].image" />
                     </div>
 
                     <!-- 2 pics -->
                     <ion-row *ngIf="it.medias && it.medias.length===2">
-                        <ion-col no-padding class="padding-col card-background-page" (click)="onClickMedia(0,it)">
-                            <!-- <div class="image-height-2" [style.background-image]="'url('+it.medias[0].image+')'"></div> -->
+                        <ion-col no-padding class="padding-col card-background-page">
                             <img class="image-height-2" [src]="it.medias[0].image" />
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" (click)="onClickMedia(1,it)">
+                        <ion-col no-padding class="padding-col card-background-page">
                             <div class="image-height-2" [style.background-image]="'url('+it.medias[1].image+')'"></div>
                         </ion-col>
                     </ion-row>
 
                     <!-- 3 pics -->
                     <ion-row *ngIf="it.medias && it.medias.length===3">
-                        <ion-col no-padding class="padding-col card-background-page" col-12 (click)="onClickMedia(0,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-12>
                             <div class="image-height-1" [style.background-image]="'url('+it.medias[0].image+')'"></div>
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" col-6 (click)="onClickMedia(1,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-6>
                             <div class="image-height-2" [style.background-image]="'url('+it.medias[1].image+')'"></div>
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" col-6 (click)="onClickMedia(2,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-6>
                             <div class="image-height-2" [style.background-image]="'url('+it.medias[2].image+')'"></div>
                         </ion-col>
                     </ion-row>
 
                     <!-- 4 pics -->
                     <ion-row *ngIf="it.medias && it.medias.length===4">
-                        <ion-col no-padding class="padding-col card-background-page" col-6 (click)="onClickMedia(0,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-6>
                             <div class="image-height-2" [style.background-image]="'url('+it.medias[0].image+')'"></div>
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" col-6 (click)="onClickMedia(1,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-6>
                             <div class="image-height-2" [style.background-image]="'url('+it.medias[1].image+')'"></div>
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" col-6 (click)="onClickMedia(2,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-6>
                             <div class="image-height-2" [style.background-image]="'url('+it.medias[2].image+')'"></div>
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" col-6 (click)="onClickMedia(3,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-6>
                             <div class="image-height-2" [style.background-image]="'url('+it.medias[3].image+')'"></div>
                         </ion-col>
                     </ion-row>
 
                     <!-- 5+ pics -->
                     <ion-row *ngIf="it.medias && it.medias.length>=5">
-                        <ion-col no-padding class="padding-col card-background-page" col-6 (click)="onClickMedia(0,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-6>
                             <div class="image-height-2" [style.background-image]="'url('+it.medias[0].image+')'"></div>
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" col-6 (click)="onClickMedia(1,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-6>
                             <div class="image-height-2" [style.background-image]="'url('+it.medias[1].image+')'"></div>
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" col-4 (click)="onClickMedia(2,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-4>
                             <div class="image-height-3" [style.background-image]="'url('+it.medias[2].image+')'"></div>
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" col-4 (click)="onClickMedia(3,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-4>
                             <div class="image-height-3" [style.background-image]="'url('+it.medias[3].image+')'"></div>
                         </ion-col>
-                        <ion-col no-padding class="padding-col card-background-page" col-4 (click)="onClickMedia(4,it)">
+                        <ion-col no-padding class="padding-col card-background-page" col-4>
                             <div class="image-height-3" [style.background-image]="'url('+it.medias[4].image+')'"></div>
                             <div class="card-title" *ngIf="it.medias.length>5">+{{(it.medias.length-5)}}</div>
                         </ion-col>
@@ -112,11 +102,11 @@
 
                     <!-- Các file đính kèm không phải loại type==1 để hiển thị liệt kê kiểu file (type==0)-->
                     <ion-item *ngFor="let file of it.files">
-                        <ion-avatar item-start tappable (click)="onClickViewFile(file)">
+                        <ion-avatar item-start tappable>
                             <img src="{{file | imageSrc}}">
                         </ion-avatar>
                         <ion-label>{{file.alt}}</ion-label>
-                        <button item-end icon-only ion-button clear color="primary" (click)="onClickViewFile(file)">
+                        <button item-end icon-only ion-button clear color="primary">
                             <ion-icon name="cloud-download"></ion-icon>
                         </button>
                     </ion-item>
@@ -124,8 +114,7 @@
                     <!-- Nội dung hiển thị ở đây -->
                     <div *ngIf="it.content && it.medias.length==0 && it.files.length==0">
                         <p text-wrap [innerHtml]="it.content | linkify"></p>
-                        <button ion-button (click)="isShow = !isShow">Xem chi tiết</button>
-                        <div *ngIf="(it.content | linkify:'urlInfos')?.length>0 && isShow">
+                        <div *ngIf="(it.content | linkify:'urlInfos')?.length>0">
                             <div *ngFor="let urlInfo of it.content | linkify:'urlInfos'">
                                 <p text-wrap [innerHtml]="urlInfo.content | newline"></p>
                                 <img src="{{urlInfo.image}}" />
@@ -168,23 +157,19 @@
                     <!-- Các nút thể hiện hành động like, comment, share -->
                     <ion-row no-padding *ngIf="it.actions">
                         <ion-col text-center>
-                            <button *ngIf="it.actions.like" ion-button clear small color="{{it.actions.like.color}}"
-                                (click)="onClickActions(it.actions.like, it)" icon-start>
+                            <button *ngIf="it.actions.like" ion-button clear small color="{{it.actions.like.color}}" icon-start>
                                 <ion-icon name="{{it.actions.like.icon}}"></ion-icon>
                                 {{it.actions.like.name}}
                             </button>
                         </ion-col>
                         <ion-col text-center>
-                            <button *ngIf="it.actions.comment" ion-button clear small
-                                color="{{it.actions.comment.color}}" (click)="onClickActions(it.actions.comment, it)"
-                                icon-start>
+                            <button *ngIf="it.actions.comment" ion-button clear small color="{{it.actions.comment.color}}" icon-start>
                                 <ion-icon name='{{it.actions.comment.icon}}'></ion-icon>
                                 {{it.actions.comment.name}}
                             </button>
                         </ion-col>
                         <ion-col text-center>
-                            <button *ngIf="it.actions.share" ion-button clear small color="{{it.actions.share.color}}"
-                                (click)="onClickActions(it.actions.share, it)" icon-start>
+                            <button *ngIf="it.actions.share" ion-button clear small color="{{it.actions.share.color}}" icon-start>
                                 <ion-icon name='{{it.actions.share.icon}}'></ion-icon>
                                 {{it.actions.share.name}}
                             </button>
